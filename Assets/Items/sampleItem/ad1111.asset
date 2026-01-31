@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f184903f4784d7ab8c416d397158d3, type: 3}
+  m_Name: ad1111
+  m_EditorClassIdentifier: Assembly-CSharp::FoodItem
+  itemName: ad1111
+  itemType: 1
+  icon: {fileID: -1965206602, guid: d554d7cb1a85e4aceb359cd6c0a266e3, type: 3}
+  hungerRestore: 1111
