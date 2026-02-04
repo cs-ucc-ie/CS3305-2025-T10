@@ -80,7 +80,7 @@ public class SoilPlot : InteractableObject
 
     private void TryPlantFromSelectedSlot(InventoryManager inventory)
     {
-        InventorySlot slot = inventory.GetSelectedSlot();
+        InventorySlot slot = inventory.GetSelectedQuickSlot();
         if (slot == null)
         {
             Debug.Log("SoilPlot: no selected slot (没有选中的槽位).");
