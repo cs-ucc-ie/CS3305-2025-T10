@@ -22,6 +22,7 @@ public class UIController : MonoBehaviour
     public bool IsInventoryShown => isInventoryShown;
     private float panelHiddenY;
     private float panelShownY = 0f;
+    private float originalTimeScale;
 
     void Awake()
     {
@@ -93,7 +94,16 @@ public class UIController : MonoBehaviour
         RefreshInventoryContent();
 
         // freeze game time 
-        Time.timeScale = isInventoryShown ? 0f : 1f;
+        // Time.timeScale = isInventoryShown ? 0f : 1f;
+        if (isInventoryShown)
+        {
+            originalTimeScale = Time.timeScale;
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = originalTimeScale;
+        }
     }
 
     public void RefreshInventoryContent()

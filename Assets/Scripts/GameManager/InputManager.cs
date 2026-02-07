@@ -5,6 +5,7 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance;
     public static event Action OnInteractPressed;
     public static event Action OnDashPressed;
+    public static event Action OnSlowTimePressed;
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseInput { get; private set; }
 
@@ -57,6 +58,12 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             OnDashPressed?.Invoke();
+        }
+
+        // press space to slow time
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnSlowTimePressed?.Invoke();
         }
 
         // if inventory shown, unlock cursor

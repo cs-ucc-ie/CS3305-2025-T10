@@ -32,7 +32,7 @@ public class AbilityDash : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
-    public void Use()
+    private void Use()
     {
         if (!abilityEnabled)
         {
