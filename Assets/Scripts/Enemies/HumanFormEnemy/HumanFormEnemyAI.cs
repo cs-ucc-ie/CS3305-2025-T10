@@ -163,6 +163,17 @@ public class HumanFormEnemyAI : EnemyAI
     {
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
         motor.StopMovement();
+        // disable collider
+        Collider collider = GetComponent<Collider>();
+        if (collider != null) collider.enabled = false;
+        CharacterController characterController = GetComponent<CharacterController>();
+        if (characterController != null) characterController.enabled = false;
+        // disable this script after playing death animation
+        if (animator.IsCurrentAnimationDone())
+        {
+            this.enabled = false;
+        }
+
     }
 
     private void UpdateIdleState()
