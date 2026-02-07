@@ -22,10 +22,7 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-    void Start()
-    {
         // 5 available slots
         for (int i = 0; i < 5; i++)
         {

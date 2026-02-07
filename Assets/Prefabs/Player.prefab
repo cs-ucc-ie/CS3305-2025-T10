@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 2959778291415159210}
   - component: {fileID: 8655954709836765011}
   - component: {fileID: 7675531566143311705}
+  - component: {fileID: 1653562349816467494}
+  - component: {fileID: 6369710169437817388}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -227,6 +229,36 @@ MonoBehaviour:
   enemyKnockbackForce: 5
   enemyKnockbackDuration: 0.5
   hungerCost: 5
+--- !u!114 &1653562349816467494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009986316265098504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6c49b1b93b5425493e1f4b839c5212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbilitySlowTime
+  abilityEnabled: 1
+  slowTimeScale: 1.2
+  hungerReduceInterval: 0.3
+--- !u!114 &6369710169437817388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009986316265098504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6c49b1b93b5425493e1f4b839c5212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbilitySlowTime
+  abilityEnabled: 1
+  slowTimeScale: 1.2
+  hungerReduceInterval: 0.3
 --- !u!1 &3991947765461603280
 GameObject:
   m_ObjectHideFlags: 0

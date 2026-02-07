@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class VolumeController : MonoBehaviour
 {
     public static VolumeController Instance;
-    public Volume volume;
+    private Volume volume;
     private ColorAdjustments colorAdjustments;
 
     void OnEnable()

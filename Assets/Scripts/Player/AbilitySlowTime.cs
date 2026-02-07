@@ -32,6 +32,10 @@ public class AbilitySlowTime : MonoBehaviour
             {
                 PlayerStatsManager.Instance.ReduceHunger(1);
                 hungerReduceTimer = 0f;
+                if (PlayerStatsManager.Instance.CurrentHunger <= 0)
+                {
+                    ToggleSlowTime(); // automatically disable slow time if hunger runs out
+                }
             }
         }
     }
