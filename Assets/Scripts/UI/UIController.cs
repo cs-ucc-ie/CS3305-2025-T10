@@ -35,22 +35,18 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void OnEnable()
-    {
-        // PlayerStatsManager.Instance.OnPlayerDied += RefreshPlayerStats;
-        PlayerStatsManager.Instance.OnPlayerHungerChanged += RefreshHunger;
-        PlayerStatsManager.Instance.OnPlayerHealthChanged += RefreshHealth;
-    }
-
     void OnDisable()
     {
         // PlayerStatsManager.Instance.OnPlayerDied += RefreshPlayerStats;
-        PlayerStatsManager.Instance.OnPlayerHungerChanged -= RefreshHunger;
-        PlayerStatsManager.Instance.OnPlayerHealthChanged -= RefreshHealth;
+        PlayerStatsManager.OnPlayerHungerChanged -= RefreshHunger;
+        PlayerStatsManager.OnPlayerHealthChanged -= RefreshHealth;
     }
 
     void Start()
     {
+        PlayerStatsManager.OnPlayerHungerChanged += RefreshHunger;
+        PlayerStatsManager.OnPlayerHealthChanged += RefreshHealth;
+
         // calculate folded panel height
         float panelHeight = panel.rect.height;
         panelHiddenY = - (panelHeight - panelVisibleHeight);

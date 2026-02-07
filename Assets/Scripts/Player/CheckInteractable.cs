@@ -7,12 +7,12 @@ public class CheckInteractable : MonoBehaviour
 
     void Start()
     {
-        InputManager.Instance.OnInteractPressed += TryInteract;
+        InputManager.OnInteractPressed += TryInteract;
     }
 
     void OnDisable()
     {
-        InputManager.Instance.OnInteractPressed -= TryInteract;
+        InputManager.OnInteractPressed -= TryInteract;
     }
 
     public void TryInteract()
