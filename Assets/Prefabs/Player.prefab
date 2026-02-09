@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 2959778291415159210}
   - component: {fileID: 8655954709836765011}
   - component: {fileID: 7675531566143311705}
-  - component: {fileID: 1653562349816467494}
   - component: {fileID: 6369710169437817388}
   m_Layer: 0
   m_Name: Player
@@ -226,24 +225,9 @@ MonoBehaviour:
   dashDuration: 1
   dashCooldown: 1
   gravityNeutralize: 8
-  enemyKnockbackForce: 5
-  enemyKnockbackDuration: 0.5
+  enemyKnockbackForce: 10
+  enemyKnockbackDuration: 0.3
   hungerCost: 5
---- !u!114 &1653562349816467494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2009986316265098504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e6c49b1b93b5425493e1f4b839c5212, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AbilitySlowTime
-  abilityEnabled: 1
-  slowTimeScale: 1.2
-  hungerReduceInterval: 0.3
 --- !u!114 &6369710169437817388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,8 +241,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbilitySlowTime
   abilityEnabled: 1
-  slowTimeScale: 1.2
-  hungerReduceInterval: 0.3
+  slowTimeScale: 0.2
+  hungerReduceInterval: 0.2
 --- !u!1 &3991947765461603280
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +453,7 @@ Transform:
   m_GameObject: {fileID: 5504350161759980217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.746, y: 0, z: -0.053}
+  m_LocalPosition: {x: 0.19, y: -0.41, z: 0.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

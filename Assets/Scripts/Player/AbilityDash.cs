@@ -40,7 +40,7 @@ public class AbilityDash : MonoBehaviour
             return;
         }
 
-        if (Time.time - lastDashTime < dashCooldown)
+        if (Time.unscaledTime - lastDashTime < dashCooldown)
         {
             Debug.Log("Dash is on cooldown!");
             return;
@@ -67,7 +67,7 @@ public class AbilityDash : MonoBehaviour
             dashDirection = transform.forward;
         }
 
-        lastDashTime = Time.time;
+        lastDashTime = Time.unscaledTime;
 
         // stop previous dash if still dashing
         if (dashCoroutine != null)
@@ -84,7 +84,7 @@ public class AbilityDash : MonoBehaviour
 
         while (elapsedTime < dashDuration)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             float t = elapsedTime / dashDuration;
 
             // 使用缓出曲线 (ease-out)：开始快，然后逐渐慢下来
@@ -92,12 +92,12 @@ public class AbilityDash : MonoBehaviour
             float easedT = 1f - Mathf.Pow(1f - t, 3f);
 
             // 计算当前帧应该移动的距离
-            float previousT = Mathf.Max(0, (elapsedTime - Time.deltaTime) / dashDuration);
+            float previousT = Mathf.Max(0, (elapsedTime - Time.unscaledDeltaTime) / dashDuration);
             float previousEasedT = 1f - Mathf.Pow(1f - previousT, 3f);
 
             float deltaDistance = (easedT - previousEasedT) * dashDistance;
             Vector3 movement = dashDirection * deltaDistance;
-            movement.y += gravityNeutralize * Time.deltaTime; // 抵消部分重力
+            movement.y += gravityNeutralize * Time.unscaledDeltaTime; // 抵消部分重力
 
             characterController.Move(movement);
 

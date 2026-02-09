@@ -2,12 +2,17 @@ using System;
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance;
 
     [Header("GameObject References")]
+    [SerializeField] private Sprite weaponCrosshair;
+    [SerializeField] private Sprite interactableObjectCrosshair;
+    [SerializeField] private Image crosshairImageRenderer;
+    [SerializeField] private TextMeshProUGUI interactPromptText;
     [SerializeField] private TextMeshProUGUI playerHealthText;
     [SerializeField] private TextMeshProUGUI playerHungerText;
     [SerializeField] private RectTransform panel;
@@ -24,6 +29,22 @@ public class UIController : MonoBehaviour
     private float panelShownY = 0f;
     private float originalTimeScale;
 
+    private void OnEnable()
+    {
+        PlayerStatsManager.OnPlayerHungerChanged += RefreshHunger;
+        PlayerStatsManager.OnPlayerHealthChanged += RefreshHealth;
+        CheckInteractable.onInteractableObjectFound += ChangeToInteractCrosshair;
+        CheckInteractable.onNoInteractableObject += ChangeToAttackCrosshair;
+    }
+
+    void OnDisable()
+    {
+        PlayerStatsManager.OnPlayerHungerChanged -= RefreshHunger;
+        PlayerStatsManager.OnPlayerHealthChanged -= RefreshHealth;
+        CheckInteractable.onInteractableObjectFound -= ChangeToInteractCrosshair;
+        CheckInteractable.onNoInteractableObject -= ChangeToAttackCrosshair;
+    }
+
     void Awake()
     {
         if (Instance == null)
@@ -36,18 +57,8 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void OnDisable()
-    {
-        // PlayerStatsManager.Instance.OnPlayerDied += RefreshPlayerStats;
-        PlayerStatsManager.OnPlayerHungerChanged -= RefreshHunger;
-        PlayerStatsManager.OnPlayerHealthChanged -= RefreshHealth;
-    }
-
     void Start()
     {
-        PlayerStatsManager.OnPlayerHungerChanged += RefreshHunger;
-        PlayerStatsManager.OnPlayerHealthChanged += RefreshHealth;
-
         // calculate folded panel height
         float panelHeight = panel.rect.height;
         panelHiddenY = - (panelHeight - panelVisibleHeight);
@@ -86,6 +97,18 @@ public class UIController : MonoBehaviour
         float moveStep = panelMoveSpeed * Time.unscaledDeltaTime;
         pos.y = Mathf.MoveTowards(pos.y, targetY, moveStep);
         panel.anchoredPosition = pos;
+    }
+
+    private void ChangeToInteractCrosshair(String prompt)
+    {
+        crosshairImageRenderer.sprite = interactableObjectCrosshair;
+        interactPromptText.text = prompt;
+    }
+
+    private void ChangeToAttackCrosshair()
+    {
+        crosshairImageRenderer.sprite = weaponCrosshair;
+        interactPromptText.text = "";
     }
 
     public void ToggleFoldablePanel()
