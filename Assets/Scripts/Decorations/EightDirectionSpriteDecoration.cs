@@ -17,11 +17,17 @@ public class EightDirectionSpriteDecoration : MonoBehaviour
         spriteRenderer.transform.forward = Camera.main.transform.forward;
         Vector3 toCamera = Camera.main.transform.position - transform.position;
         toCamera.y = 0f;
+        //Vector3 currentRotation = spriteRenderer.transform.rotation.eulerAngles;
+        spriteRenderer.transform.rotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
         if (toCamera.sqrMagnitude > 0.0001f)
         {
             float angle = Vector3.SignedAngle(transform.forward, toCamera, Vector3.up);
             EightDirection dir = AngleToDirection(angle);
-            spriteRenderer.sprite = sprites[(int)dir];
+            // Ensure the index is within bounds
+            if ((int)dir >= 0 && (int)dir < sprites.Length)
+                spriteRenderer.sprite = sprites[(int)dir];
+            else
+                Debug.LogWarning("Direction index out of bounds: " + (int)dir);
         }
     }
 
