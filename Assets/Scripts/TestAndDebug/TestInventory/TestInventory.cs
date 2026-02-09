@@ -11,6 +11,7 @@ public class TestInventory : MonoBehaviour
     void Start()
     {
         InventoryManager.Instance.AddItem(sampleMedicine, 10);  // 增加物品
+        InventoryManager.Instance.AddItem(sampleFood, 10);  // 增加物品
         InventoryManager.Instance.GetItemCount(sampleMedicine); // 获得物品数量
         InventoryManager.Instance.GetSelectedQuickSlot();            // 获取当前选中的物品栏
         InventoryManager.Instance.GetSlots();                   // 获取所有物品栏
