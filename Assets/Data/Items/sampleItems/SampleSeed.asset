@@ -15,3 +15,12 @@ MonoBehaviour:
   itemName: SampleSeed
   itemType: 0
   icon: {fileID: 0}
+  cropItem: {fileID: 11400000, guid: de0749cc6648646c1b9cad447544fa77, type: 2}
+  growSeconds: 4
+  harvestAmount: 1
+  growthSprites:
+  - {fileID: 2103258619, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
+  - {fileID: 13597643, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
+  - {fileID: -396588048, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
+  - {fileID: -551651322, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
+  - {fileID: -825800348, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
