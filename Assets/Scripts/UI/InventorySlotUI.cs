@@ -37,12 +37,16 @@ public class InventorySlotUI : MonoBehaviour
 
     void RefreshSlotContent()
     {
-        if (slot != null)
+        if (slot != null && slot.item != null)
         {
-            icon.sprite = slot.item.icon;
-
             countText.text = slot.count.ToString();
             nameText.text = slot.item.name;
+        }
+        else
+        {
+            // 槽位为空或物品被删除
+            countText.text = "";
+            nameText.text = "";
         }
     }
 
