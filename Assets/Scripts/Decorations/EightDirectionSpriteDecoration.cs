@@ -26,8 +26,6 @@ public class EightDirectionSpriteDecoration : MonoBehaviour
             // Ensure the index is within bounds
             if ((int)dir >= 0 && (int)dir < sprites.Length)
                 spriteRenderer.sprite = sprites[(int)dir];
-            else
-                Debug.LogWarning("Direction index out of bounds: " + (int)dir);
         }
     }
 
