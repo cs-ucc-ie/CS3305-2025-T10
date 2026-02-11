@@ -15,6 +15,8 @@ public abstract class WeaponFramework : MonoBehaviour
     protected float nextFireTime = 0f;
     protected bool isReloading = false;
 
+    public abstract bool TryReload();
+
     public bool TryStartLoadBullet(BulletItem bullet)
     {
         if (isReloading) return false;

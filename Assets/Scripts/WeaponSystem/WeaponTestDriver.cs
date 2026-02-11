@@ -1,13 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponTestDriver : MonoBehaviour
 {
-    [SerializeField] private ShotgunWeapon shotgun;
+    [SerializeField] private List<WeaponFramework> weapons = new List<WeaponFramework>();
+
+    private WeaponFramework currentlyEquipped;
+    private int currentWeaponIndex = 0;
+
+
 
     private void Awake()
     {
-        if (shotgun == null)
-            shotgun = GetComponent<ShotgunWeapon>();
+        if (currentlyEquipped == null)
+            currentlyEquipped = weapons[currentWeaponIndex];
     }
 
     void Update()
@@ -15,15 +21,31 @@ public class WeaponTestDriver : MonoBehaviour
         // Reload one shell
         if (Input.GetKeyDown(KeyCode.R))
         {
-            bool started = shotgun.TryReloadOneShell();
+            bool started = currentlyEquipped.TryReload();
             Debug.Log("Reload started: " + started);
         }
 
         // Fire
         if (Input.GetMouseButtonDown(0))
         {
-            bool fired = shotgun.Fire();
+            bool fired = currentlyEquipped.Fire();
             Debug.Log("Fired: " + fired);
         }
+
+        // Swap weapons
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            CycleWeapon();
+        }
+    }
+
+    private void CycleWeapon()
+    {
+        currentWeaponIndex ++;
+        if (currentWeaponIndex >= weapons.Count)
+        {
+            currentWeaponIndex = 0;
+        }
+        currentlyEquipped = weapons[currentWeaponIndex];
     }
 }
