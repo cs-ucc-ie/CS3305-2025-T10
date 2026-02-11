@@ -19,9 +19,9 @@ public class PlayerStatsManager : MonoBehaviour
     [SerializeField] private int hungerReduceAmount ;     // how much hunger to reduce each interval
     private float starveDamageTimer = 0f, hungerTickTimer = 0f;
 
-    public event Action<int> OnPlayerHealthChanged;
-    public event Action<int> OnPlayerHungerChanged;
-    public event Action OnPlayerDied;
+    public static event Action<int> OnPlayerHealthChanged;
+    public static event Action<int> OnPlayerHungerChanged;
+    public static event Action OnPlayerDied;
     
     private void Awake()
     {

@@ -3,14 +3,14 @@ using System.Linq;
 using UnityEngine;
 
 public enum HumanFormEnemyAnimationState { Idle, Walk, WeaponAttackStartUp, WeaponAttack, MeleeAttack, Hurt, Dead }
-public enum HumanFormEnemyDirection { Front, FrontLeft, Left, BackLeft, Back, BackRight, Right, FrontRight }
+public enum EightDirection { Front, FrontLeft, Left, BackLeft, Back, BackRight, Right, FrontRight }
 
 [System.Serializable]
 class HumanFormEnemySpriteMapping
 {
     public int index;
     public HumanFormEnemyAnimationState state;
-    public HumanFormEnemyDirection direction;
+    public EightDirection direction;
     public int frame;
 }
 
@@ -30,7 +30,7 @@ public class HumanFormEnemyAnimator : MonoBehaviour
     private List<HumanFormEnemySpriteMapping> spriteMappings;
     private SpriteRenderer spriteRenderer;
     private HumanFormEnemyAnimationState animationState;
-    private HumanFormEnemyDirection animationDirection;
+    private EightDirection animationDirection;
 
     private bool isAnimationDone;
     private int currentFrame;
@@ -42,7 +42,7 @@ public class HumanFormEnemyAnimator : MonoBehaviour
         spriteMappings = GenerateMappings(sprites, walkFrames, weaponAttackStartUpFrames, weaponAttackFrames,
             meleeAttackFrames, idleFrames, hurtFrames, deadFrames);
         animationState = HumanFormEnemyAnimationState.Idle;
-        animationDirection = HumanFormEnemyDirection.Front;
+        animationDirection = EightDirection.Front;
         currentFrame = 0;
         frameTimer = 0f;
     }
@@ -58,7 +58,7 @@ public class HumanFormEnemyAnimator : MonoBehaviour
         {
             for (int frame = 0; frame < frames; frame++)
             {
-                foreach (HumanFormEnemyDirection dir in System.Enum.GetValues(typeof(HumanFormEnemyDirection)))
+                foreach (EightDirection dir in System.Enum.GetValues(typeof(EightDirection)))
                 {
                     mappings.Add(new HumanFormEnemySpriteMapping
                     {
@@ -102,7 +102,7 @@ public class HumanFormEnemyAnimator : MonoBehaviour
         if (toCamera.sqrMagnitude > 0.0001f)
         {
             float angle = Vector3.SignedAngle(transform.forward, toCamera, Vector3.up);
-            HumanFormEnemyDirection dir = AngleToDirection(angle);
+            EightDirection dir = AngleToDirection(angle);
             animationDirection = dir;
         }
 
@@ -153,24 +153,24 @@ public class HumanFormEnemyAnimator : MonoBehaviour
         return isAnimationDone;
     }
 
-    private HumanFormEnemyDirection AngleToDirection(float angle)
+    private EightDirection AngleToDirection(float angle)
     {
         if (angle >= -22.5f && angle < 22.5f)
-            return HumanFormEnemyDirection.Front;
+            return EightDirection.Front;
         else if (angle >= 22.5f && angle < 67.5f)
-            return HumanFormEnemyDirection.FrontRight;
+            return EightDirection.FrontRight;
         else if (angle >= 67.5f && angle < 112.5f)
-            return HumanFormEnemyDirection.Right;
+            return EightDirection.Right;
         else if (angle >= 112.5f && angle < 157.5f)
-            return HumanFormEnemyDirection.BackRight;
+            return EightDirection.BackRight;
         else if (angle >= 157.5f || angle < -157.5f)
-            return HumanFormEnemyDirection.Back;
+            return EightDirection.Back;
         else if (angle >= -157.5f && angle < -112.5f)
-            return HumanFormEnemyDirection.BackLeft;
+            return EightDirection.BackLeft;
         else if (angle >= -112.5f && angle < -67.5f)
-            return HumanFormEnemyDirection.Left;
+            return EightDirection.Left;
         else
-            return HumanFormEnemyDirection.FrontLeft; // -67.5 ~ -22.5
+            return EightDirection.FrontLeft; // -67.5 ~ -22.5
     }
 
 }

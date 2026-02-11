@@ -2,12 +2,17 @@ using System;
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance;
 
     [Header("GameObject References")]
+    [SerializeField] private Sprite weaponCrosshair;
+    [SerializeField] private Sprite interactableObjectCrosshair;
+    [SerializeField] private Image crosshairImageRenderer;
+    [SerializeField] private TextMeshProUGUI interactPromptText;
     [SerializeField] private TextMeshProUGUI playerHealthText;
     [SerializeField] private TextMeshProUGUI playerHungerText;
     [SerializeField] private RectTransform panel;
@@ -22,6 +27,23 @@ public class UIController : MonoBehaviour
     public bool IsInventoryShown => isInventoryShown;
     private float panelHiddenY;
     private float panelShownY = 0f;
+    private float originalTimeScale;
+
+    private void OnEnable()
+    {
+        PlayerStatsManager.OnPlayerHungerChanged += RefreshHunger;
+        PlayerStatsManager.OnPlayerHealthChanged += RefreshHealth;
+        CheckInteractable.onInteractableObjectFound += ChangeToInteractCrosshair;
+        CheckInteractable.onNoInteractableObject += ChangeToAttackCrosshair;
+    }
+
+    void OnDisable()
+    {
+        PlayerStatsManager.OnPlayerHungerChanged -= RefreshHunger;
+        PlayerStatsManager.OnPlayerHealthChanged -= RefreshHealth;
+        CheckInteractable.onInteractableObjectFound -= ChangeToInteractCrosshair;
+        CheckInteractable.onNoInteractableObject -= ChangeToAttackCrosshair;
+    }
 
     void Awake()
     {
@@ -33,20 +55,6 @@ public class UIController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    void OnEnable()
-    {
-        // PlayerStatsManager.Instance.OnPlayerDied += RefreshPlayerStats;
-        PlayerStatsManager.Instance.OnPlayerHungerChanged += RefreshHunger;
-        PlayerStatsManager.Instance.OnPlayerHealthChanged += RefreshHealth;
-    }
-
-    void OnDisable()
-    {
-        // PlayerStatsManager.Instance.OnPlayerDied += RefreshPlayerStats;
-        PlayerStatsManager.Instance.OnPlayerHungerChanged -= RefreshHunger;
-        PlayerStatsManager.Instance.OnPlayerHealthChanged -= RefreshHealth;
     }
 
     void Start()
@@ -91,13 +99,34 @@ public class UIController : MonoBehaviour
         panel.anchoredPosition = pos;
     }
 
+    private void ChangeToInteractCrosshair(String prompt)
+    {
+        crosshairImageRenderer.sprite = interactableObjectCrosshair;
+        interactPromptText.text = prompt;
+    }
+
+    private void ChangeToAttackCrosshair()
+    {
+        crosshairImageRenderer.sprite = weaponCrosshair;
+        interactPromptText.text = "";
+    }
+
     public void ToggleFoldablePanel()
     {
         isInventoryShown = !isInventoryShown;
         RefreshInventoryContent();
 
         // freeze game time 
-        Time.timeScale = isInventoryShown ? 0f : 1f;
+        // Time.timeScale = isInventoryShown ? 0f : 1f;
+        if (isInventoryShown)
+        {
+            originalTimeScale = Time.timeScale;
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = originalTimeScale;
+        }
     }
 
     public void RefreshInventoryContent()

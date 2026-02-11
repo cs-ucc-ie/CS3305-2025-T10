@@ -37,3 +37,17 @@ When [`InputManager`](./InputManager.md) invoke an `OnInteractPressed` event, `C
 See [`CameraBob.cs`](../Assets/Scripts/Player/CameraBob.cs) 
 
 Read input from [`InputManager`](./InputManager.md), and apply bobbing effect to camera.
+
+## AbilityDash
+
+See [`AbilityDash.cs`](../Assets/Scripts/Player/AbilityDash.cs)
+
+When [`InputManager`](./InputManager.md) invoke an `OnDashPressed` event, `AbilityDash` will cause player dash forward, allowing player to dash over cliff, or push enemy back.
+
+## AbilitySlowTime
+
+See [`AbilitySlowTime.cs`](../Assets/Scripts/Player/AbilitySlowTime.cs)
+
+When [`InputManager`](./InputManager.md) invoke an `OnSlowTimePressed` event, `AbilitySlowTime` will set `Time.timeScale` to a smaller value.
+
+It also invokes an `OnSlowTimeEnabled` / `OnSlowTimeDisabled` event, to tell [`Volume.md`](./Volume.md) to decrease saturation.

@@ -3,7 +3,9 @@ using System;
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
-    public event Action OnInteractPressed;
+    public static event Action OnInteractPressed;
+    public static event Action OnDashPressed;
+    public static event Action OnSlowTimePressed;
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseInput { get; private set; }
 
@@ -21,7 +23,7 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;                  
+        Cursor.visible = false;
     }
     void Update()
     {
@@ -45,13 +47,25 @@ public class InputManager : MonoBehaviour
             Debug.Log("Interact logic should be here");
             OnInteractPressed?.Invoke();
         }
-        
+
         // press ESC to toggle inventory ui
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UIController.Instance.ToggleFoldablePanel();
         }
-        
+
+        // press left shift to dash
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            OnDashPressed?.Invoke();
+        }
+
+        // press space to slow time
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnSlowTimePressed?.Invoke();
+        }
+
         // if inventory shown, unlock cursor
         if (UIController.Instance.IsInventoryShown)
         {
@@ -64,10 +78,10 @@ public class InputManager : MonoBehaviour
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;   
+            Cursor.visible = false;
             float x = Input.GetAxisRaw("Horizontal");
             float y = Input.GetAxisRaw("Vertical");
-            MoveInput = new Vector2(x, y);     
+            MoveInput = new Vector2(x, y);
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
             MouseInput = new Vector2(mouseX, mouseY);

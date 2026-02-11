@@ -40,12 +40,12 @@ public class PlayerMovement : MonoBehaviour
         currentVelocity = Vector3.MoveTowards(
             currentVelocity,
             targetVelocity,
-            accel * Time.deltaTime
+            accel * Time.unscaledDeltaTime
         );
 
     currentVelocity.y = gravity;
 
         Vector3 move = transform.TransformDirection(currentVelocity);
-    _charController.Move(move * Time.deltaTime);
+    _charController.Move(move * Time.unscaledDeltaTime);
     }
 }
