@@ -58,7 +58,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 47b45649a81d24803be54d7870a078f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f5cf6a6d094459f83a55b39c6d13ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HumanFormEnemyAI
-  health: 100
+  health: 1
   damageCumulativeTillStun: 25
   hurtStunDuration: 0.5
   aiState: 0

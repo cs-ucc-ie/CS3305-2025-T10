@@ -42,7 +42,7 @@ public class QuickSlotUI : MonoBehaviour
 
     void RefreshQuickSlotContent()
     {
-        slot = InventoryManager.Instance.quickSlots[index];
+        slot = InventoryManager.Instance.QuickSlots[index];
 
         if (slot != null && slot.item != null)
         {

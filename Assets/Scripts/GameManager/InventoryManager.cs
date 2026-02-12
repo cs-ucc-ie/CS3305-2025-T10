@@ -6,11 +6,12 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     [SerializeField] private List<InventorySlot> allSlots = new();
-    public List<InventorySlot> quickSlots = new();
+    [SerializeField] private List<InventorySlot> quickSlots = new();
     [SerializeField] private int selectedQuickSlotIndex = 0;
     public event Action OnQuickSlotsChanged;                // change of quick slots e.g. now referring to another slot
     public event Action<int> OnQuickSlotIndexChanged;       // change of selected quick slot index
     public event Action OnInventoryChanged;                 // change of inventory slot e.g. count reduced
+    public List<InventorySlot> QuickSlots => quickSlots;
 
     void Awake()
     {
@@ -127,6 +128,18 @@ public class InventoryManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetSlots(List<InventorySlot> slots)
+    {
+        allSlots = slots;
+        OnInventoryChanged?.Invoke();
+    }
+
+    public void SetQuickSlots(List<InventorySlot> slots)
+    {
+        quickSlots = slots;
+        OnQuickSlotsChanged?.Invoke();
     }
 }
 
