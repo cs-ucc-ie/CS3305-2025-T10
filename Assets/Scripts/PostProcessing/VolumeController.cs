@@ -9,6 +9,8 @@ public class VolumeController : MonoBehaviour
     public static VolumeController Instance;
     private Volume volume;
     private ColorAdjustments colorAdjustments;
+    private Vignette vignette;
+    private bool vignetteOverrideState;
 
     [SerializeField] private float duration = 3f;
     private float elapsed = 0f;
@@ -54,6 +56,7 @@ public class VolumeController : MonoBehaviour
     {
         volume = GetComponentInChildren<Volume>();
         volume.profile.TryGet(out colorAdjustments);
+        volume.profile.TryGet(out vignette);
         ResetPostProcessing();
     }
 
@@ -73,6 +76,12 @@ public class VolumeController : MonoBehaviour
             colorAdjustments.colorFilter.value = Color.white;
             colorAdjustments.saturation.value = 0f;
         }
+        if (vignette != null)
+        {
+            vignetteOverrideState = false;
+            vignette.color.value = Color.black;
+            vignette.intensity.value = 0f;
+        }
     }
 
     public void QuickRedFlash(){
@@ -81,13 +90,28 @@ public class VolumeController : MonoBehaviour
 
     private IEnumerator QuickRedFlashCoroutine()
     {
-        colorAdjustments.colorFilter.overrideState = true;
-        colorAdjustments.colorFilter.value = new Color(1f, 0.8f, 0.8f, 0.01f);
+        if (vignette == null) yield break;
+        
+        vignetteOverrideState = true;
+        vignette.color.value = new Color(1f, 0.2f, 0.2f, 1f); // Red vignette color
+        vignette.intensity.value = 0.5f; // Max intensity for the flash
+        
         yield return new WaitForSeconds(0.1f);
-        // if already in the middle of a fade to red, don't reset to white
-        if (colorAdjustments.colorFilter.value.a > 0.01f) yield break;
-        colorAdjustments.colorFilter.value = Color.white;
-        colorAdjustments.colorFilter.overrideState = false;
+        
+        // Fade out the vignette
+        float fadeTime = 0.3f;
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < fadeTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / fadeTime;
+            vignette.intensity.value = Mathf.Lerp(0.5f, 0f, t);
+            yield return null;
+        }
+        
+        vignette.intensity.value = 0f;
+        vignetteOverrideState = false;
     }
 
     public void FadeToRed(System.Action onComplete)

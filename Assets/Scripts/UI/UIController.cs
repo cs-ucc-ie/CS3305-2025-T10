@@ -78,6 +78,7 @@ public class UIController : MonoBehaviour
     void Update()
     {
         UpdateFoldableInventoryAnimation();
+        UpdateCrosshair();
     }
 
     private void RefreshHunger(int currentHunger)
@@ -97,6 +98,20 @@ public class UIController : MonoBehaviour
         float moveStep = panelMoveSpeed * Time.unscaledDeltaTime;
         pos.y = Mathf.MoveTowards(pos.y, targetY, moveStep);
         panel.anchoredPosition = pos;
+    }
+
+    private void UpdateCrosshair()
+    {
+        if(isInventoryShown)
+        {
+            crosshairImageRenderer.enabled = false;
+            interactPromptText.enabled = false;
+        }
+        else
+        {
+            crosshairImageRenderer.enabled = true;
+            interactPromptText.enabled = true;
+        }
     }
 
     private void ChangeToInteractCrosshair(String prompt)
