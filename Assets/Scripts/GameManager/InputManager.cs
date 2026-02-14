@@ -44,7 +44,6 @@ public class InputManager : MonoBehaviour
         // press E to interact
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("Interact logic should be here");
             OnInteractPressed?.Invoke();
         }
 

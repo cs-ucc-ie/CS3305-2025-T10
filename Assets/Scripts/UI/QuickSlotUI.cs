@@ -33,8 +33,16 @@ public class QuickSlotUI : MonoBehaviour
         indexText.text = (index + 1).ToString();
         countText.text = "";
         markedBackground.enabled = InventoryManager.Instance.GetSelectedQuickSlotIndex() == index;
+        if (slot == null || slot.item == null)
+        {
+            icon.enabled = false;
+            return;
+        }
+        icon.enabled = true;
+        icon.sprite = slot.item.icon;
+        countText.text = slot.count.ToString();
     }
-
+    
     void RefreshMarkedBackground(int index)
     {
         markedBackground.enabled = this.index == index;
@@ -46,12 +54,13 @@ public class QuickSlotUI : MonoBehaviour
 
         if (slot != null && slot.item != null)
         {
+            icon.enabled = true;
             icon.sprite = slot.item.icon;
             countText.text = slot.count.ToString();
         }
         else
         {
-            icon.sprite = null;
+            icon.enabled = false;
             countText.text = "";
         }
     }

@@ -10,7 +10,6 @@ public class VolumeController : MonoBehaviour
     private Volume volume;
     private ColorAdjustments colorAdjustments;
     private Vignette vignette;
-    private bool vignetteOverrideState;
 
     [SerializeField] private float duration = 3f;
     private float elapsed = 0f;
@@ -45,7 +44,6 @@ public class VolumeController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -78,7 +76,6 @@ public class VolumeController : MonoBehaviour
         }
         if (vignette != null)
         {
-            vignetteOverrideState = false;
             vignette.color.value = Color.black;
             vignette.intensity.value = 0f;
         }
@@ -92,7 +89,6 @@ public class VolumeController : MonoBehaviour
     {
         if (vignette == null) yield break;
         
-        vignetteOverrideState = true;
         vignette.color.value = new Color(1f, 0.2f, 0.2f, 1f); // Red vignette color
         vignette.intensity.value = 0.5f; // Max intensity for the flash
         
@@ -111,7 +107,6 @@ public class VolumeController : MonoBehaviour
         }
         
         vignette.intensity.value = 0f;
-        vignetteOverrideState = false;
     }
 
     public void FadeToRed(System.Action onComplete)
