@@ -104,6 +104,12 @@ public class HumanFormEnemyAI : EnemyAI
         if (health <= 0)
         {
             aiState = HumanFormEnemyAIState.Dead;
+            animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+            if (audioSource != null && deathSoundClip != null)
+        {
+            audioSource.PlayOneShot(deathSoundClip, audioVolume);
+            Debug.Log("Playing death sound");
+        }
         }
         // if enough damage taken, play hurt animation
         else if (damageCumulative >= damageCumulativeTillStun)
@@ -187,16 +193,6 @@ public class HumanFormEnemyAI : EnemyAI
 
     private void UpdateDeadState()
     {
-        animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
-        if (audioSource != null && deathSoundClip != null)
-        {
-            audioSource.PlayOneShot(deathSoundClip, audioVolume);
-            Debug.Log("Playing death sound");
-        }
-        else
-        {
-            Debug.LogWarning("AudioSource or death sound clip is missing!");
-        }
         motor.StopMovement();
         // disable collider
         Collider collider = GetComponent<Collider>();
@@ -371,9 +367,10 @@ Debug.Log("can hit target");
                     Debug.LogWarning("AudioSource or attack sound clip is missing!");
                 }
                 // 发射火球，火球生成在敌人前方偏右一点
-                Vector3 spawnPos = transform.position + transform.forward.normalized * 0.2f + transform.right.normalized * 0.2f;
+                Vector3 spawnPos = transform.position + transform.forward.normalized * 1f + transform.right.normalized * 0.2f;
                 Vector3 dir = (attackTarget.position - spawnPos).normalized;
-                Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(dir));
+                GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(dir));
+                bullet.GetComponent<EnemyFireballType01>().SetFather(gameObject);
                 engageState = HumanFormEnemyEngageState.WaitAttackAnimationFinishAndFire;
                 break;
             case HumanFormEnemyEngageState.WaitAttackAnimationFinishAndFire:

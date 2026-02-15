@@ -17,6 +17,9 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private GameObject protagonistActor;
     [SerializeField] private GameObject[] chasingActors;
     [SerializeField] private GameObject door;
+    [SerializeField] private AudioClip vibeBoom;
+    [SerializeField] private AudioSource audioSourceProtagonist;
+    [SerializeField] private AudioSource audioSourceDoor;
     private HumanFormEnemyAnimator protagonistAnimator;
 
     void OnDisable()
@@ -73,14 +76,12 @@ public class CutSceneManager : MonoBehaviour
         {
             animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttackStartUp);
             yield return new WaitForSeconds(0.5f);
+            animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttack);
+            yield return new WaitUntil(() => animator.IsCurrentAnimationDone());
             // 发射火球，火球生成在敌人前方偏右一点
             Vector3 spawnPos = npcActor.transform.position + npcActor.transform.forward.normalized * 0.2f + npcActor.transform.right.normalized * 0.1f;
             Vector3 dir = npcActor.transform.forward.normalized - npcActor.transform.right.normalized * 0.1f;
-            var s = Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
-            Debug.Log("Bullet Spawned at " + spawnPos + " with direction " + dir);
-            Debug.Log(s);
-            animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttack);
-            yield return new WaitUntil(() => animator.IsCurrentAnimationDone());
+            Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
         }
         subtitleText.text = "Ahh!";
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
@@ -88,10 +89,12 @@ public class CutSceneManager : MonoBehaviour
 
     public void ProtagonistShockAtNPCDeath()
     {
+        fightingScene2Actors.SetActive(false);
         subtitleText.text = "";
         protagonistActor.SetActive(true);
         protagonistAnimator.enabled = true;
         protagonistAnimator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
+        audioSourceProtagonist.PlayOneShot(vibeBoom);
     }
 
     public void ProtagonistRunToBridge()
@@ -128,6 +131,7 @@ public class CutSceneManager : MonoBehaviour
             yield return null;
         }
         door.transform.position = endPos;
+        audioSourceDoor.PlayOneShot(vibeBoom);
     }
 
     public void BlackScreenSubtitle(String text)

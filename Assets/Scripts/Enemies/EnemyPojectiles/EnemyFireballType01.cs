@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.AI;
 
 //TODO 增加光源效果？
 public class EnemyFireballType01 : MonoBehaviour
@@ -9,6 +10,7 @@ public class EnemyFireballType01 : MonoBehaviour
     [SerializeField] private float ttl = 20f;
     [SerializeField] private float fps = 6f;
     [SerializeField] private int damage = 10;
+    public GameObject father;
     private Camera mainCam;
     private SpriteRenderer sr;
     private int currentFrame = 0;
@@ -55,6 +57,11 @@ public class EnemyFireballType01 : MonoBehaviour
         
     }
 
+    public void SetFather(GameObject father)
+    {
+        this.father = father;
+    }
+
     // 碰到墙壁或玩家后销毁
     private void OnTriggerEnter(Collider other)
     {
@@ -62,6 +69,12 @@ public class EnemyFireballType01 : MonoBehaviour
         // // 忽略自己 / 其他子弹
         // if (HasParentWithTag(other.transform, "Enemy") || HasParentWithTag(other.transform, "EnemyProjectile"))
         //     return;
+
+        if(other == father)
+        {
+            Debug.Log("Fireball hit its father, ignoring: " + other.name);
+            return;
+        }
 
         if (HasParentWithTag(other.transform, "EnemyProjectile"))
         {
