@@ -247,7 +247,7 @@ public class HumanFormEnemyAI : EnemyAI
                     {
                         Debug.Log("hit: " + hit.transform.name);
                         // 如果射线击中的是玩家
-                        if (hit.collider.CompareTag("Player"))
+                        if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
                         {
                             // 如果距离也 OK
                             if (distance <= minimumAttackDistance){

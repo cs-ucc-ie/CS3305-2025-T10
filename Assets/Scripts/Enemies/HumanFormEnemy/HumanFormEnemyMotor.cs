@@ -5,14 +5,34 @@ public class HumanFormEnemyMotor : MonoBehaviour
     private CharacterController characterController;
     private Vector3 moveTarget;
     private float moveSpeed;
+    private Quaternion targetRotation;
+    private bool isRotating = false;
+    private const float maxRotationPerFrame = 45f;
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        targetRotation = transform.rotation;
     }
 
 void Update()
 {
+    // 处理旋转
+    if (isRotating)
+    {
+        float angleToTarget = Quaternion.Angle(transform.rotation, targetRotation);
+        if (angleToTarget > 0.1f)
+        {
+            float maxRotation = maxRotationPerFrame * Time.deltaTime * 12f; // animator 6fps
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotation);
+        }
+        else
+        {
+            transform.rotation = targetRotation;
+            isRotating = false;
+        }
+    }
+
     // 未到达目标，进行移动
     if (!ArrivedAtTarget())
     {
@@ -44,8 +64,8 @@ void Update()
         direction.y = 0f;
         if (direction != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = targetRotation;
+            targetRotation = Quaternion.LookRotation(direction);
+            isRotating = true;
         }
     }
 

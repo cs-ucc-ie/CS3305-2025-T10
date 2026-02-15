@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatsManager : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class PlayerStatsManager : MonoBehaviour
     public static PlayerStatsManager Instance;
     [SerializeField] private int currentHealth, maxHealth;
     public int CurrentHealth => currentHealth;
+    public int MaxHealth => maxHealth;
     [SerializeField] private int currentHunger, maxHunger;
     public int CurrentHunger => currentHunger;
+    public int MaxHunger => maxHunger;
     [SerializeField] private int starveDamageInterval;   // how often (in seconds) to take damage when hunger is 0;
     [SerializeField] private int starveDamageAmount;     // how much damage to take when hunger is 0
     [SerializeField] private int hungerReduceInterval;   // how often (in seconds) to reduce hunger
@@ -21,8 +24,9 @@ public class PlayerStatsManager : MonoBehaviour
 
     public static event Action<int> OnPlayerHealthChanged;
     public static event Action<int> OnPlayerHungerChanged;
+    public static event Action OnPlayerDamaged;
     public static event Action OnPlayerDied;
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -33,15 +37,6 @@ public class PlayerStatsManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        currentHealth = 80;
-        maxHealth = 100;
-        currentHunger = 70;
-        maxHunger = 100;
-        starveDamageInterval = 10;
-        starveDamageAmount = 10;
-        hungerReduceInterval = 20;
-        hungerReduceAmount = 1;
     }
 
     private void Update()
@@ -77,8 +72,10 @@ public class PlayerStatsManager : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (currentHealth <= 0) return; // already dead, ignore further damage
         currentHealth  = Mathf.Max(0, currentHealth - amount);
         OnPlayerHealthChanged?.Invoke(currentHealth);
+        OnPlayerDamaged?.Invoke();
         if (currentHealth == 0) PlayerDie(); 
     }
 
@@ -100,9 +97,35 @@ public class PlayerStatsManager : MonoBehaviour
         OnPlayerHungerChanged?.Invoke(currentHunger);
     }
 
+    public void SetHealth(int current, int max)
+    {
+        currentHealth = current;
+        maxHealth = max;
+        OnPlayerHealthChanged?.Invoke(currentHealth);
+    }
+
+    public void SetHunger(int current, int max)
+    {
+        currentHunger = current;
+        maxHunger = max;
+        OnPlayerHungerChanged?.Invoke(currentHunger);
+    }
+    
     private void PlayerDie()
     {
         OnPlayerDied?.Invoke();
         Debug.Log("Player Died");
+
+        // Make the screen become red slowly (3 seconds fade from light red to dark red)
+        if (VolumeController.Instance != null)
+        {
+            VolumeController.Instance.FadeToRed(() =>
+            {
+                // go back to Bridge area after fade completes
+                SaveManager.Load();
+                Debug.Log("Loading Bridge Scene");
+                SceneManager.LoadScene("Bridge");
+            });
+        }
     }
 }
