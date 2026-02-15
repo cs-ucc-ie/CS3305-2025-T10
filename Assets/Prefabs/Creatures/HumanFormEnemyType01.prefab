@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f5cf6a6d094459f83a55b39c6d13ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HumanFormEnemyAI
-  health: 1
+  health: 50
   damageCumulativeTillStun: 25
   hurtStunDuration: 0.5
   aiState: 0

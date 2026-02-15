@@ -105,6 +105,7 @@ public class InventoryManager : MonoBehaviour
             slot.count += amount;
         else
             allSlots.Add(new InventorySlot(item, amount));
+        UIController.Instance.AddNewInformation($"Added {item.itemName} x{amount} to inventory.");
         OnInventoryChanged?.Invoke();
     }
 

@@ -115,7 +115,7 @@ public class SoilPlot : InteractableObject
         
         if (slot == null)
         {
-            Debug.Log("SoilPlot: no selected slot (没有选中的槽位).");
+            UIController.Instance.AddNewInformation("Selected item is not a seed. Please select a seed to plant.");
             return;
         }
 
@@ -124,7 +124,7 @@ public class SoilPlot : InteractableObject
         
         if (selectedItem == null || slot.count <= 0)
         {
-            Debug.Log("SoilPlot: selected slot is empty (选中槽位是空的).");
+            UIController.Instance.AddNewInformation("Selected item is not a seed. Please select a seed to plant.");
             return;
         }
 
@@ -133,7 +133,7 @@ public class SoilPlot : InteractableObject
         
         if (seed == null)
         {
-            Debug.Log("SoilPlot: selected item is not a SeedItem (选中的不是种子).");
+            UIController.Instance.AddNewInformation("Selected item is not a seed. Please select a seed to plant.");
             return;
         }
 
@@ -142,11 +142,11 @@ public class SoilPlot : InteractableObject
         bool removed = inventory.RemoveItem(seed, 1);
         Debug.Log("[TryPlantFromSelectedSlot] Remove result: " + (removed ? "SUCCESS" : "FAILED"));
         
-        if (!removed)
-        {
-            Debug.Log("SoilPlot: failed to remove seed (种子不足或删除失败).");
-            return;
-        }
+        // if (!removed)
+        // {
+        //     UIController.Instance.AddNewInformation("Failed to remove seed (种子不足或删除失败).");
+        //     return;
+        // }
 
         plantedSeed = seed;
         plantedTime = Time.time;

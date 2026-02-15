@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
@@ -28,6 +29,11 @@ public class UIController : MonoBehaviour
     private float panelHiddenY;
     private float panelShownY = 0f;
     private float originalTimeScale;
+    [Header("Information Display Setting")]
+    [SerializeField] TextMeshProUGUI informationText;
+    private List<string> informationList = new List<string>();
+    private const int maxInformationCount = 5;
+    private const float informationDisplayDuration = 3f;
 
     private void OnEnable()
     {
@@ -79,6 +85,13 @@ public class UIController : MonoBehaviour
     {
         UpdateFoldableInventoryAnimation();
         UpdateCrosshair();
+        UpdateInformation();
+    }
+
+    public void AddNewInformation(string info)
+    {
+        Debug.Log($"New information: {info}");
+        informationList.Add(info);
     }
 
     private void RefreshHunger(int currentHunger)
@@ -89,6 +102,36 @@ public class UIController : MonoBehaviour
     private void RefreshHealth(int currentHealth)
     {
         playerHealthText.text = currentHealth.ToString();
+    }
+
+    private void UpdateInformation()
+    {
+        if (informationList.Count > maxInformationCount)
+        {
+            informationList.RemoveAt(0);
+        }
+        if (informationList.Count > 0)
+        {
+            string displayText = string.Join("\n", informationList);
+            informationText.text = displayText;
+            
+            // Start a coroutine to remove the oldest information after a delay
+            StartCoroutine(RemoveOldInformationAfterDelay(informationDisplayDuration));
+        }
+        else
+        {
+            informationText.text = "";
+        }
+        
+    }
+
+    private IEnumerator RemoveOldInformationAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (informationList.Count > 0)
+        {
+            informationList.RemoveAt(0);
+        }
     }
 
     private void UpdateFoldableInventoryAnimation()
