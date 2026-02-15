@@ -50,6 +50,13 @@ public class HumanFormEnemyAI : EnemyAI
     private HumanFormEnemyAnimator animator;
     private HumanFormEnemyMotor motor;
 
+    [Header("Audio Config")]
+    [SerializeField] private AudioClip attackSoundClip;
+    [SerializeField] private AudioClip damageSoundClip;
+    [SerializeField] private AudioClip deathSoundClip;
+    [SerializeField] private float audioVolume = 1f;
+    private AudioSource audioSource;
+
     [Header("Detect Config")]
     [SerializeField] private float detectRange;
     [SerializeField] private float detectAngle;
@@ -74,6 +81,17 @@ public class HumanFormEnemyAI : EnemyAI
     {
         motor = GetComponent<HumanFormEnemyMotor>();
         animator = GetComponent<HumanFormEnemyAnimator>();
+        audioSource = GetComponent<AudioSource>();
+        
+        // Create AudioSource if it doesn't exist
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0.5f; // 3D audio
+            Debug.Log("AudioSource created on " + gameObject.name);
+        }
+        
         aiState = HumanFormEnemyAIState.Idle;
         idleState = HumanFormEnemyIdleState.AssignNewMoveTargetAndMoveTo;
         engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;
@@ -106,6 +124,15 @@ public class HumanFormEnemyAI : EnemyAI
         if (aiState == HumanFormEnemyAIState.Dead) return;
         aiState = HumanFormEnemyAIState.KnockBack;
         animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
+        if (audioSource != null && damageSoundClip != null)
+        {
+            audioSource.PlayOneShot(damageSoundClip, audioVolume);
+            Debug.Log("Playing damage sound");
+        }
+        else
+        {
+            Debug.LogWarning("AudioSource or damage sound clip is missing!");
+        }
         direction.y = 0f;
         direction.Normalize();
         hurtStunTimer = hurtStunDuration;
@@ -161,6 +188,15 @@ public class HumanFormEnemyAI : EnemyAI
     private void UpdateDeadState()
     {
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+        if (audioSource != null && deathSoundClip != null)
+        {
+            audioSource.PlayOneShot(deathSoundClip, audioVolume);
+            Debug.Log("Playing death sound");
+        }
+        else
+        {
+            Debug.LogWarning("AudioSource or death sound clip is missing!");
+        }
         motor.StopMovement();
         // disable collider
         Collider collider = GetComponent<Collider>();
@@ -325,6 +361,15 @@ Debug.Log("can hit target");
                 // 开始动画
                 motor.RotateToDirection(attackTarget.position);
                 animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttack);
+                if (audioSource != null && attackSoundClip != null)
+                {
+                    audioSource.PlayOneShot(attackSoundClip, audioVolume);
+                    Debug.Log("Playing attack sound");
+                }
+                else
+                {
+                    Debug.LogWarning("AudioSource or attack sound clip is missing!");
+                }
                 // 发射火球，火球生成在敌人前方偏右一点
                 Vector3 spawnPos = transform.position + transform.forward.normalized * 0.2f + transform.right.normalized * 0.2f;
                 Vector3 dir = (attackTarget.position - spawnPos).normalized;

@@ -17,6 +17,9 @@ public class HumanFormEnemyMotor : MonoBehaviour
 
 void Update()
 {
+    // Check if CharacterController is enabled before moving
+    if (!characterController.enabled) return;
+
     // 处理旋转
     if (isRotating)
     {

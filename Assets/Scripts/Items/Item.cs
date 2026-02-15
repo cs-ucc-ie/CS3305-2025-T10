@@ -8,7 +8,8 @@ public enum ItemType
     Material,
     Weapon,
     Key,
-    Medicine
+    Medicine,
+    Part
 }
 
 [CreateAssetMenu(menuName = "Inventory/Item")]
