@@ -60,9 +60,22 @@ public class EnemyFireballType01 : MonoBehaviour
     {
         Debug.Log("Fireball hit: " + other.name);
         
-        // 忽略自己 / 其他子弹
-        if (HasParentWithTag(other.transform, "Enemy") || HasParentWithTag(other.transform, "EnemyProjectile"))
+        // // 忽略自己 / 其他子弹
+        // if (HasParentWithTag(other.transform, "Enemy") || HasParentWithTag(other.transform, "EnemyProjectile"))
+        //     return;
+
+        if (HasParentWithTag(other.transform, "EnemyProjectile"))
             return;
+
+        if(HasParentWithTag(other.transform, "Enemy"))
+        {
+            EnemyAI enemyAI = other.GetComponentInParent<EnemyAI>();
+            if(enemyAI != null)            {
+                enemyAI.TakeDamage(damage); 
+                //Destroy(gameObject);
+                return;
+
+        }}
 
         // 命中玩家
         if(other.CompareTag("Player"))

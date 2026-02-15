@@ -1,8 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Inventory/Item/Key")]
 public class KeyItem : Item
 {
+    [SerializeField] private string prompt;
     private void OnEnable()
     {
         itemType = ItemType.Key;
@@ -10,9 +12,7 @@ public class KeyItem : Item
 
     public override bool Use()
     {
-        // it's not the player to use the key to open door, 
-        // but is the player to interact with door, 
-        // and the door will automatically remove one key from inventory
+        UIController.Instance.AddNewInformation(prompt);
         return false;
     }
 }

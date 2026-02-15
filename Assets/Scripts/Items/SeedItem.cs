@@ -19,6 +19,10 @@ public class SeedItem : Item
     [Tooltip("收获数量")]
     public int harvestAmount = 1;
 
+    [Header("Growth Sprites")]
+    [Tooltip("种子生长阶段的sprite图（可拖入5张图片）")]
+    public Sprite[] growthSprites = new Sprite[5];
+
     // 种子不允许直接使用（按 I 不会消耗）
     public override bool Use()
     {

@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef9f58a3712cb4c51ab915e4687e27ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDash
-  abilityEnabled: 1
+  abilityEnabled: 0
   dashDistance: 8
   dashDuration: 1
   dashCooldown: 1
@@ -228,6 +228,7 @@ MonoBehaviour:
   enemyKnockbackForce: 10
   enemyKnockbackDuration: 0.3
   hungerCost: 5
+  dashItem: {fileID: 11400000, guid: 0b58340679569414b8c03bd15518656b, type: 2}
 --- !u!114 &6369710169437817388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,9 +241,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6c49b1b93b5425493e1f4b839c5212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbilitySlowTime
-  abilityEnabled: 1
+  abilityEnabled: 0
   slowTimeScale: 0.2
   hungerReduceInterval: 0.2
+  slowTimeItem: {fileID: 11400000, guid: 1139eff15fa8448ab843120162ff74a0, type: 2}
 --- !u!1 &3991947765461603280
 GameObject:
   m_ObjectHideFlags: 0
