@@ -11,11 +11,27 @@ public abstract class WeaponFramework : MonoBehaviour
     [SerializeField] protected float reloadTime = 0.8f;
     [SerializeField] protected float fireInterval = 0.3f;
     [SerializeField] protected Transform firePoint;
+    [SerializeField] protected Vector3 mountPositionOffset;
+    [SerializeField] protected Vector3 mountRotationOffset;
 
     protected float nextFireTime = 0f;
     protected bool isReloading = false;
 
     public abstract bool TryReload();
+
+    public bool PositionWeapon(Transform WeaponMountPoint)
+    {
+        if (WeaponMountPoint == null)
+        {
+            Debug.Log("No mount point for weapon!");
+            return false;
+        }
+
+        transform.SetParent(WeaponMountPoint, false);
+        transform.localPosition = mountPositionOffset;
+        transform.localRotation = Quaternion.Euler(mountRotationOffset);
+        return true;
+    }
 
     public bool TryStartLoadBullet(BulletItem bullet)
     {
