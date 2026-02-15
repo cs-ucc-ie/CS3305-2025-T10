@@ -81,7 +81,7 @@ public class SoilPlot : InteractableObject
         
         if (inventory == null)
         {
-            Debug.LogWarning("SoilPlot: InventoryManager.Instance is null! 场景里没放 InventoryManager？");
+            Debug.LogWarning("SoilPlot: InventoryManager.Instance is null!");
             return;
         }
 
@@ -94,7 +94,7 @@ public class SoilPlot : InteractableObject
 
         if (state == PlotState.Growing)
         {
-            Debug.Log("→ State is Growing (还没长好).");
+            Debug.Log("→ State is Growing ");
             return;
         }
 
@@ -154,21 +154,21 @@ public class SoilPlot : InteractableObject
 
         UpdateVisual();
         UpdateInteractPrompt();
-        Debug.Log("✓ SoilPlot: planted seed (已种下): " + seed.name);
+        Debug.Log("✓ SoilPlot: planted seed: " + seed.name);
     }
 
     private void Harvest(InventoryManager inventory)
     {
         if (plantedSeed == null)
         {
-            Debug.LogWarning("SoilPlot: Mature but plantedSeed is null (成熟但没有种子记录). 重置地块。");
+            Debug.LogWarning("SoilPlot: Mature but plantedSeed is null. ");
             ResetPlot();
             return;
         }
 
         if (plantedSeed.cropItem == null)
         {
-            Debug.LogWarning("SoilPlot: plantedSeed.cropItem is null (种子没有设置 cropItem).");
+            Debug.LogWarning("SoilPlot: plantedSeed.cropItem is null.");
             return;
         }
 
@@ -177,7 +177,7 @@ public class SoilPlot : InteractableObject
 
         inventory.AddItem(plantedSeed.cropItem, amount);
 
-        Debug.Log("SoilPlot: harvested (已收获): " + plantedSeed.cropItem.name + " x" + amount);
+        Debug.Log("SoilPlot: harvested: " + plantedSeed.cropItem.name + " x" + amount);
 
         ResetPlot();
     }
