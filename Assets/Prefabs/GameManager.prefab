@@ -982,6 +982,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2844289637028677826}
   - component: {fileID: 5932530111392688536}
+  - component: {fileID: 1856815473214980027}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1021,6 +1022,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 467efde6fd89040709aae22f4b50dd92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+--- !u!114 &1856815473214980027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285496090448729228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b52ada933034ab4850dc4efd16e6e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponTestDriver
+  weapons:
+  - {fileID: 8728342395402407006, guid: eb6fcd16b46ca4dc6b7b733d0a722711, type: 3}
+  - {fileID: 2874968856775422781, guid: 5f2e57f3b0fa6462181c1f4d574bed78, type: 3}
 --- !u!1 &6528813094213186258
 GameObject:
   m_ObjectHideFlags: 0
