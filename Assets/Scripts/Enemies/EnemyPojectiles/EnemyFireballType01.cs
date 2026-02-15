@@ -58,17 +58,37 @@ public class EnemyFireballType01 : MonoBehaviour
     // 碰到墙壁或玩家后销毁
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Fireball hit: " + other.name);
         
-        // 忽略自己 / 其他子弹
-        if (HasParentWithTag(other.transform, "Enemy") || HasParentWithTag(other.transform, "EnemyProjectile"))
+        // // 忽略自己 / 其他子弹
+        // if (HasParentWithTag(other.transform, "Enemy") || HasParentWithTag(other.transform, "EnemyProjectile"))
+        //     return;
+
+        if (HasParentWithTag(other.transform, "EnemyProjectile"))
+        {
+            Debug.Log("Fireball hit enemy projectile: " + other.name);
             return;
+        }
+            
+
+        if(HasParentWithTag(other.transform, "Enemy"))
+        {
+            Debug.Log("Fireball hit enemy: " + other.name);
+            EnemyAI enemyAI = other.GetComponentInParent<EnemyAI>();
+            if(enemyAI != null)            {
+                enemyAI.TakeDamage(damage); 
+                //Destroy(gameObject);
+                return;
+
+        }}
 
         // 命中玩家
         if(other.CompareTag("Player"))
         {
+            Debug.Log("Fireball hit player: " + other.name);
             PlayerStatsManager.Instance.TakeDamage(damage);
         }
+
+        Debug.Log("Fireball hit: " + other.name);
         Destroy(gameObject);
     }
 

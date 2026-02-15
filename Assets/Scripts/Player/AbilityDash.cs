@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AbilityDash : MonoBehaviour
 {
-    public bool abilityEnabled = true;
+    public bool abilityEnabled = false;
     [SerializeField] private float dashDistance;
     [SerializeField] private float dashDuration;
     [SerializeField] private float dashCooldown;
@@ -13,6 +13,7 @@ public class AbilityDash : MonoBehaviour
     [SerializeField] private float enemyKnockbackForce;
     [SerializeField] private float enemyKnockbackDuration;
     [SerializeField] private int hungerCost;
+    [SerializeField] private Item dashItem;
     private float lastDashTime = -Mathf.Infinity;
     private CharacterController characterController;
     private Coroutine dashCoroutine;
@@ -33,11 +34,18 @@ public class AbilityDash : MonoBehaviour
     }
 
     private void Use()
-    {
+    {   
         if (!abilityEnabled)
         {
-            Debug.Log("Dash ability is disabled!");
-            return;
+            // check whether the ability is stored in inventory
+            if (dashItem != null && InventoryManager.Instance.HasItem(dashItem, 1))
+            {
+                abilityEnabled = true;
+            }
+            else
+            {
+                return;
+            }
         }
 
         if (Time.unscaledTime - lastDashTime < dashCooldown)

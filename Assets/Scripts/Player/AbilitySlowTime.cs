@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class AbilitySlowTime : MonoBehaviour
 {
-    public bool abilityEnabled = true;
+    public bool abilityEnabled = false;
     [SerializeField] private float slowTimeScale;
     [SerializeField] private float hungerReduceInterval;
     private float hungerReduceTimer;
     private bool isTimeSlowed = false;
     public static event Action OnSlowTimeEnabled;
     public static event Action OnSlowTimeDisabled;
-    
+    [SerializeField] private Item slowTimeItem;
 
     void OnEnable()
     {
@@ -44,8 +44,15 @@ public class AbilitySlowTime : MonoBehaviour
     {
         if (!abilityEnabled)
         {
-            Debug.Log("Slow Time ability is disabled!");
-            return;
+            // check whether the ability is stored in inventory
+            if (slowTimeItem != null && InventoryManager.Instance.HasItem(slowTimeItem, 1))
+            {
+                abilityEnabled = true;
+            }
+            else
+            {
+                return;
+            }
         }
 
         if (isTimeSlowed)

@@ -7,7 +7,6 @@ public class CheckInteractable : MonoBehaviour
     private InteractableObject interactableObject;
     public static Action<string> onInteractableObjectFound;
     public static Action onNoInteractableObject;
-    private bool lastTimeInteractable = false;
 
     void Start()
     {
@@ -34,16 +33,15 @@ public class CheckInteractable : MonoBehaviour
 
     void Update()
     {
-        if (CanInteract() && !lastTimeInteractable)
+        if (CanInteract())
         {
             onInteractableObjectFound?.Invoke(interactableObject.interactPrompt);
-            lastTimeInteractable = true;
         }
-        else if (!CanInteract() && lastTimeInteractable)
+        if (!CanInteract())
         {
             onNoInteractableObject?.Invoke();
-            lastTimeInteractable = false;
         }
+
     }
 
     public void TryInteract()
