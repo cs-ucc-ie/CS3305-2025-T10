@@ -230,9 +230,9 @@ MonoBehaviour:
   engageState: 0
   attackTarget: {fileID: 0}
   bulletPrefab: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
-  attackSoundClip: {fileID: 8300000, guid: 8ed6ac599dc82413d9e181f0cd94065c, type: 3}
-  damageSoundClip: {fileID: 8300000, guid: 5a48ae086642149f790c7be40a15be16, type: 3}
-  deathSoundClip: {fileID: 8300000, guid: fe1f86349ef9241ae87d267fa25a15e8, type: 3}
+  attackSoundClip: {fileID: 8300000, guid: de4bc8aeae10848548ed0489e9866b7c, type: 3}
+  damageSoundClip: {fileID: 8300000, guid: 70329a717ea2a4c6885e3713419e27f0, type: 3}
+  deathSoundClip: {fileID: 8300000, guid: 86d65770ed910403591a3cf9452fd72e, type: 3}
   audioVolume: 1
   detectRange: 10
   detectAngle: 180

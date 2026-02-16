@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 22.15549, y: 1.091, z: 15.12131}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8239688009558160294}
@@ -139,6 +139,10 @@ MonoBehaviour:
   engageState: 0
   attackTarget: {fileID: 0}
   bulletPrefab: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+  attackSoundClip: {fileID: 0}
+  damageSoundClip: {fileID: 0}
+  deathSoundClip: {fileID: 0}
+  audioVolume: 1
   detectRange: 10
   detectAngle: 180
   idleMoveMinDistance: 2
@@ -358,7 +362,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5781461103825845671}
