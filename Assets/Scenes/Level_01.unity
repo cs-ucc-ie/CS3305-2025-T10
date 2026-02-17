@@ -676,6 +676,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -689,6 +693,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.7678655
@@ -790,6 +798,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1143,6 +1155,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1756,6 +1772,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.2545297
@@ -1813,6 +1833,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: 29.78
@@ -1974,6 +1998,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 40, z: 0}
+--- !u!4 &323802838 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5973342012856151870, guid: 569d1fb7ff0854db488c62d45da2f39a, type: 3}
+  m_PrefabInstance: {fileID: 28409181}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &325888347
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2095,6 +2124,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
@@ -2386,6 +2419,10 @@ PrefabInstance:
       value: HumanFormEnemyType01 (4)
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -2406,6 +2443,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: -21.069908
@@ -2508,6 +2549,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2789,6 +2834,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
@@ -3432,6 +3481,10 @@ PrefabInstance:
       value: HumanFormEnemyType02 (5)
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -3452,6 +3505,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: 36.13
@@ -3622,6 +3679,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3904,6 +3965,10 @@ PrefabInstance:
       value: HumanFormEnemyType02 (2)
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveSpeed
       value: 0
       objectReference: {fileID: 0}
@@ -4086,6 +4151,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4591,6 +4660,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
@@ -5837,6 +5910,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6175,6 +6252,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6344,6 +6425,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6514,6 +6599,10 @@ PrefabInstance:
       value: HumanFormEnemyType01 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -6578,6 +6667,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveSpeed
       value: 0
@@ -7142,6 +7235,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.7714473
@@ -7483,6 +7580,10 @@ PrefabInstance:
       value: HumanFormEnemyType02 (8)
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -7572,6 +7673,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 2925201230935706438, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.565
@@ -7743,6 +7848,10 @@ PrefabInstance:
       value: HumanFormEnemyType01 (7)
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -7865,6 +7974,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7922,6 +8035,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
@@ -7987,6 +8104,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8360,6 +8481,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9301,6 +9426,10 @@ PrefabInstance:
       value: HumanFormEnemyType01
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -9814,6 +9943,10 @@ PrefabInstance:
       value: HumanFormEnemyType02 (4)
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
       objectReference: {fileID: 0}
@@ -9878,6 +10011,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType01 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: idleMoveMaxDistance
       value: 0
@@ -10298,6 +10435,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType02
       objectReference: {fileID: 0}
+    - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
+      propertyPath: attackTarget
+      value: 
+      objectReference: {fileID: 323802838}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: idleMoveSpeed
       value: 0
