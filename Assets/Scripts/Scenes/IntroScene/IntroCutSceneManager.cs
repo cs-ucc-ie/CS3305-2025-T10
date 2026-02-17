@@ -17,6 +17,9 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private GameObject protagonistActor;
     [SerializeField] private GameObject[] chasingActors;
     [SerializeField] private GameObject door;
+    [SerializeField] private AudioClip NPCFire;
+    [SerializeField] private AudioSource audioSourceProtagonist;
+    [SerializeField] private AudioSource audioSourceDoor;
     private HumanFormEnemyAnimator protagonistAnimator;
 
     void OnDisable()
@@ -73,14 +76,13 @@ public class CutSceneManager : MonoBehaviour
         {
             animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttackStartUp);
             yield return new WaitForSeconds(0.5f);
-            // 发射火球，火球生成在敌人前方偏右一点
-            Vector3 spawnPos = npcActor.transform.position + npcActor.transform.forward.normalized * 0.2f + npcActor.transform.right.normalized * 0.1f;
-            Vector3 dir = npcActor.transform.forward.normalized - npcActor.transform.right.normalized * 0.1f;
-            var s = Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
-            Debug.Log("Bullet Spawned at " + spawnPos + " with direction " + dir);
-            Debug.Log(s);
             animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttack);
             yield return new WaitUntil(() => animator.IsCurrentAnimationDone());
+            // 发射火球，火球生成在敌人前方偏右一点
+            audioSourceProtagonist.PlayOneShot(NPCFire);
+            Vector3 spawnPos = npcActor.transform.position + npcActor.transform.forward.normalized * 0.2f + npcActor.transform.right.normalized * 0.1f;
+            Vector3 dir = npcActor.transform.forward.normalized - npcActor.transform.right.normalized * 0.1f;
+            Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
         }
         subtitleText.text = "Ahh!";
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
@@ -88,6 +90,7 @@ public class CutSceneManager : MonoBehaviour
 
     public void ProtagonistShockAtNPCDeath()
     {
+        fightingScene2Actors.SetActive(false);
         subtitleText.text = "";
         protagonistActor.SetActive(true);
         protagonistAnimator.enabled = true;
@@ -117,10 +120,11 @@ public class CutSceneManager : MonoBehaviour
     private IEnumerator CloseDoorCoroutine()
     {
         float elapsedTime = 0f;
-        float duration = 0.5f;
+        float duration = 0.3f;
         Vector3 startPos = door.transform.position;
         Vector3 endPos = startPos + Vector3.down * 2f;
 
+        audioSourceDoor.volume = 0.8f;
         while (elapsedTime < duration)
         {
             door.transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / duration);
@@ -132,10 +136,23 @@ public class CutSceneManager : MonoBehaviour
 
     public void BlackScreenSubtitle(String text)
     {
+        fightingScene1Actors.SetActive(false);
+        fightingScene2Actors.SetActive(false);
         blackScreen.SetActive(true);
         middleText.text = text;
         subtitleText.text = "";
     }
+
+    public void EnableScene1Actors()
+    {
+        fightingScene1Actors.SetActive(true);
+    }
+
+    public void EnableScene2Actors()
+    {
+        fightingScene2Actors.SetActive(true);
+    }
+
 
     public void EndCutScene()
     {

@@ -82,7 +82,7 @@ public class HumanFormEnemyAI : EnemyAI
         motor = GetComponent<HumanFormEnemyMotor>();
         animator = GetComponent<HumanFormEnemyAnimator>();
         audioSource = GetComponent<AudioSource>();
-        
+
         // Create AudioSource if it doesn't exist
         if (audioSource == null)
         {
@@ -91,7 +91,7 @@ public class HumanFormEnemyAI : EnemyAI
             audioSource.spatialBlend = 0.5f; // 3D audio
             Debug.Log("AudioSource created on " + gameObject.name);
         }
-        
+
         aiState = HumanFormEnemyAIState.Idle;
         idleState = HumanFormEnemyIdleState.AssignNewMoveTargetAndMoveTo;
         engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;
@@ -104,6 +104,12 @@ public class HumanFormEnemyAI : EnemyAI
         if (health <= 0)
         {
             aiState = HumanFormEnemyAIState.Dead;
+            animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+            if (audioSource != null && deathSoundClip != null)
+            {
+                audioSource.PlayOneShot(deathSoundClip, audioVolume);
+                Debug.Log("Playing death sound");
+            }
         }
         // if enough damage taken, play hurt animation
         else if (damageCumulative >= damageCumulativeTillStun)
@@ -122,8 +128,17 @@ public class HumanFormEnemyAI : EnemyAI
     public override void KnockBack(Vector3 direction, float speed, float duration)
     {
         if (aiState == HumanFormEnemyAIState.Dead) return;
+        // 如果不能移动，就直接眩晕一段时间
+        if (engageMoveMaxDistance == 0)
+        {
+            hurtStunTimer = hurtStunDuration;
+            animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
+            aiState = HumanFormEnemyAIState.Hurt;
+            return;
+        }
         aiState = HumanFormEnemyAIState.KnockBack;
         animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
+
         if (audioSource != null && damageSoundClip != null)
         {
             audioSource.PlayOneShot(damageSoundClip, audioVolume);
@@ -171,7 +186,8 @@ public class HumanFormEnemyAI : EnemyAI
         if (hurtStunTimer <= 0f)
         {
             aiState = HumanFormEnemyAIState.Engage;
-            engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;}
+            engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;
+        }
 
     }
 
@@ -187,16 +203,6 @@ public class HumanFormEnemyAI : EnemyAI
 
     private void UpdateDeadState()
     {
-        animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
-        if (audioSource != null && deathSoundClip != null)
-        {
-            audioSource.PlayOneShot(deathSoundClip, audioVolume);
-            Debug.Log("Playing death sound");
-        }
-        else
-        {
-            Debug.LogWarning("AudioSource or death sound clip is missing!");
-        }
         motor.StopMovement();
         // disable collider
         Collider collider = GetComponent<Collider>();
@@ -217,6 +223,13 @@ public class HumanFormEnemyAI : EnemyAI
         switch (idleState)
         {
             case HumanFormEnemyIdleState.AssignNewMoveTargetAndMoveTo:
+                if(idleMoveMaxDistance == 0)
+                {
+                    idleState = HumanFormEnemyIdleState.AssignNewStandStillTimer;
+                    animator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
+                    break;
+                }
+                animator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
                 Vector3 target = DecideRandomMoveTarget(idleMoveMinDistance, idleMoveMaxDistance);
                 motor.RotateAndMoveTo(target, idleMoveSpeed);
                 animator.BeginAnimation(HumanFormEnemyAnimationState.Walk);
@@ -244,6 +257,12 @@ public class HumanFormEnemyAI : EnemyAI
         switch (engageState)
         {
             case HumanFormEnemyEngageState.TryMoveCloserToAttackTarget:
+                // if can not move, just check can hit target
+                if (engageMoveMaxDistance == 0)
+                {
+                    engageState = HumanFormEnemyEngageState.CheckCanHitTarget;
+                    break;
+                }
                 // 敌人和目标之间连线，检查线上是否有障碍物
                 Vector3 directionToTarget = attackTarget.position - transform.position;
                 float distanceToTarget = directionToTarget.magnitude;
@@ -273,46 +292,45 @@ public class HumanFormEnemyAI : EnemyAI
             case HumanFormEnemyEngageState.CheckCanHitTarget:
                 // 检查能否命中玩家
                 float distance = Vector3.Distance(transform.position, attackTarget.position);
-
-                // if (distance <= minimumAttackDistance)
-                // {
-                //     Debug.Log("distance ok");
-                    // 当前位置与玩家进行一次连线检测
-                    Vector3 direction = (attackTarget.position - transform.position).normalized;
-                    if (Physics.Raycast(transform.position, direction, out hit, distance))
+                Vector3 direction = (attackTarget.position - transform.position).normalized;
+                if (Physics.Raycast(transform.position, direction, out hit, distance))
+                {
+                    Debug.Log("hit: " + hit.transform.name);
+                    // 如果射线击中的是玩家
+                    if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
                     {
-                        Debug.Log("hit: " + hit.transform.name);
-                        // 如果射线击中的是玩家
-                        if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
+                        // 如果距离也 OK
+                        if (distance <= minimumAttackDistance)
                         {
-                            // 如果距离也 OK
-                            if (distance <= minimumAttackDistance){
-Debug.Log("can hit target");
+                            Debug.Log("can hit target");
                             engageState = HumanFormEnemyEngageState.BeginAttackStartupAnimation;
-                            }
-                            // 如果距离太远，就靠近     
-                            else
-                            {
-                                Debug.Log("too far to attack");
-                                
-                                engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;
-                            }
                         }
-                        else if (!hit.collider.CompareTag("EnemyProjectile")) // 到玩家的连线上有障碍物，但不是自己的子弹
+                        // 如果距离太远，就靠近     
+                        else
                         {
-                            Debug.Log("obstacle in the way");
-                            // 有障碍物，选择避开障碍物
-                            engageState = HumanFormEnemyEngageState.AssignMoveTargetToAvoidObstacle;
+                            engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;
                         }
                     }
-                    else
+                    else if (!hit.collider.CompareTag("EnemyProjectile")) // 到玩家的连线上有障碍物，但不是自己的子弹
                     {
-                        Debug.Log("no obstacle detected, can hit target");
-                        // 没有击中任何东西，说明可以命中玩家
-                        engageState = HumanFormEnemyEngageState.BeginAttackStartupAnimation;
+                        Debug.Log("obstacle in the way");
+                        // 有障碍物，选择避开障碍物
+                        engageState = HumanFormEnemyEngageState.AssignMoveTargetToAvoidObstacle;
                     }
+                }
+                else
+                {
+                    Debug.Log("no obstacle detected, can hit target");
+                    // 没有击中任何东西，说明可以命中玩家
+                    engageState = HumanFormEnemyEngageState.BeginAttackStartupAnimation;
+                }
                 break;
             case HumanFormEnemyEngageState.AssignMoveTargetToAvoidObstacle:
+                if(engageMoveMaxDistance == 0)
+                {
+                    engageState = HumanFormEnemyEngageState.CheckCanHitTarget;
+                    break;
+                }
                 // 当前没法命中玩家，只能选择新地点避开障碍物
                 // 在与玩家直线的垂直方向左右两边找到一个点，设为目标地点，向那里移动
                 Vector3 attackTargetPos = attackTarget.position;
@@ -371,9 +389,10 @@ Debug.Log("can hit target");
                     Debug.LogWarning("AudioSource or attack sound clip is missing!");
                 }
                 // 发射火球，火球生成在敌人前方偏右一点
-                Vector3 spawnPos = transform.position + transform.forward.normalized * 0.2f + transform.right.normalized * 0.2f;
+                Vector3 spawnPos = transform.position + transform.forward.normalized * 1f + transform.right.normalized * 0.2f;
                 Vector3 dir = (attackTarget.position - spawnPos).normalized;
-                Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(dir));
+                GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(dir));
+                bullet.GetComponent<EnemyFireballType01>().SetFather(gameObject);
                 engageState = HumanFormEnemyEngageState.WaitAttackAnimationFinishAndFire;
                 break;
             case HumanFormEnemyEngageState.WaitAttackAnimationFinishAndFire:
@@ -382,6 +401,12 @@ Debug.Log("can hit target");
                 engageState = HumanFormEnemyEngageState.AssignRandomMoveTarget;
                 break;
             case HumanFormEnemyEngageState.AssignRandomMoveTarget:
+                if (engageMoveMaxDistance == 0)
+                {
+                    engageState = HumanFormEnemyEngageState.CheckCanHitTarget;
+                    animator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
+                    break;
+                }
                 Vector3 randomTarget = DecideRandomMoveTarget(engageMoveMinDistance, engageMoveMaxDistance);
                 motor.RotateAndMoveTo(randomTarget, engageMoveSpeed);
                 animator.BeginAnimation(HumanFormEnemyAnimationState.Walk);

@@ -31,9 +31,10 @@ public class UIController : MonoBehaviour
     private float originalTimeScale;
     [Header("Information Display Setting")]
     [SerializeField] TextMeshProUGUI informationText;
+    [SerializeField] private  int maxInformationCount = 5;
+    [SerializeField] private float informationDisplayDuration = 2f;
     private List<string> informationList = new List<string>();
-    private const int maxInformationCount = 5;
-    private const float informationDisplayDuration = 3f;
+    private float informationDeleteTimer = 0f;
 
     private void OnEnable()
     {
@@ -114,24 +115,18 @@ public class UIController : MonoBehaviour
         {
             string displayText = string.Join("\n", informationList);
             informationText.text = displayText;
-            
-            // Start a coroutine to remove the oldest information after a delay
-            StartCoroutine(RemoveOldInformationAfterDelay(informationDisplayDuration));
+            informationDeleteTimer += Time.deltaTime;
+            if (informationDeleteTimer > informationDisplayDuration)
+            {
+                informationList.RemoveAt(0);
+                informationDeleteTimer = 0f;
+            }
         }
         else
         {
             informationText.text = "";
         }
         
-    }
-
-    private IEnumerator RemoveOldInformationAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (informationList.Count > 0)
-        {
-            informationList.RemoveAt(0);
-        }
     }
 
     private void UpdateFoldableInventoryAnimation()

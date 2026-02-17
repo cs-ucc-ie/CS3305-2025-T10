@@ -230,6 +230,10 @@ MonoBehaviour:
   engageState: 0
   attackTarget: {fileID: 0}
   bulletPrefab: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+  attackSoundClip: {fileID: 8300000, guid: de4bc8aeae10848548ed0489e9866b7c, type: 3}
+  damageSoundClip: {fileID: 8300000, guid: c55a9de1d9ec94a8c8d76357032361f3, type: 3}
+  deathSoundClip: {fileID: 8300000, guid: 61f07cb8b55c347d98d39756f351cff4, type: 3}
+  audioVolume: 1
   detectRange: 10
   detectAngle: 180
   idleMoveMinDistance: 2
@@ -239,7 +243,7 @@ MonoBehaviour:
   idleMoveSpeed: 2
   minimumAttackDistance: 8
   engageMoveSpeed: 3
-  obstacleCheckDistance: 2
+  obstacleCheckDistance: 3
   avoidObstacleDistance: 3
   engageMoveMinDistance: 3
   engageMoveMaxDistance: 5
