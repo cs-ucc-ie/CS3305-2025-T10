@@ -20,12 +20,12 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
+  m_AmbientSkyColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 0.72
   m_AmbientMode: 3
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_SubtractiveShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 00072733405cc4bfc8ffa1b889a2e726, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -8676,7 +8676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: detectAngle
@@ -48485,7 +48485,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: detectAngle
@@ -60858,7 +60858,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: detectAngle
@@ -68872,7 +68872,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2680969919184807037, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: detectAngle
@@ -80612,7 +80612,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: detectAngle
@@ -92048,7 +92048,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: detectAngle
@@ -111156,7 +111156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: detectAngle
@@ -236096,7 +236096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: detectAngle
@@ -258826,7 +258826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: detectAngle
@@ -282740,7 +282740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: detectAngle
@@ -320740,7 +320740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: health
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: detectAngle

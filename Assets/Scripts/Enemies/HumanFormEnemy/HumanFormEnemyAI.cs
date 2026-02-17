@@ -128,8 +128,17 @@ public class HumanFormEnemyAI : EnemyAI
     public override void KnockBack(Vector3 direction, float speed, float duration)
     {
         if (aiState == HumanFormEnemyAIState.Dead) return;
+        // 如果不能移动，就直接眩晕一段时间
+        if (engageMoveMaxDistance == 0)
+        {
+            hurtStunTimer = hurtStunDuration;
+            animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
+            aiState = HumanFormEnemyAIState.Hurt;
+            return;
+        }
         aiState = HumanFormEnemyAIState.KnockBack;
         animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
+
         if (audioSource != null && damageSoundClip != null)
         {
             audioSource.PlayOneShot(damageSoundClip, audioVolume);
@@ -220,6 +229,7 @@ public class HumanFormEnemyAI : EnemyAI
                     animator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
                     break;
                 }
+                animator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
                 Vector3 target = DecideRandomMoveTarget(idleMoveMinDistance, idleMoveMaxDistance);
                 motor.RotateAndMoveTo(target, idleMoveSpeed);
                 animator.BeginAnimation(HumanFormEnemyAnimationState.Walk);
