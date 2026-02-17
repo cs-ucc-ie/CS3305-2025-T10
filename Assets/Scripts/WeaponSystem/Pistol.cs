@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Shotgun : WeaponFramework
+public class pistol : WeaponFramework
 {
     [SerializeField] private BulletItem shellItem;
 
@@ -14,7 +14,7 @@ public class Shotgun : WeaponFramework
     {
         yield return new WaitForSeconds(reloadTime);
 
-        if (Magazine.Count < magazineSize && bullet != null)
+        while (Magazine.Count < magazineSize && bullet != null)
         {
             Magazine.Enqueue(bullet);
         }
