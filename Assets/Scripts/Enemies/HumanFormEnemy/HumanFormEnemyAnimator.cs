@@ -35,6 +35,7 @@ public class HumanFormEnemyAnimator : MonoBehaviour
     private bool isAnimationDone;
     private int currentFrame;
     private float frameTimer;
+    private bool stayInSpecificFrame;
 
     void Start()
     {
@@ -83,15 +84,27 @@ public class HumanFormEnemyAnimator : MonoBehaviour
 
     public void BeginAnimation(HumanFormEnemyAnimationState state)
     {
-     isAnimationDone = false;
+        isAnimationDone = false;
         if (animationState != state)
         {
             animationState = state;
             currentFrame = 0;
             frameTimer = 0f;
         }
+        stayInSpecificFrame = false;
     }
 
+    public void StayInSpecificFrame(int frame, HumanFormEnemyAnimationState state)
+    {
+        if (animationState != state)
+        {
+            animationState = state;
+            frameTimer = 0f;
+        }
+        currentFrame = frame;
+        stayInSpecificFrame = true;
+
+    }
     void Update()
     {
         // sprite renderer always face the camera
@@ -104,6 +117,18 @@ public class HumanFormEnemyAnimator : MonoBehaviour
             float angle = Vector3.SignedAngle(transform.forward, toCamera, Vector3.up);
             EightDirection dir = AngleToDirection(angle);
             animationDirection = dir;
+        }
+
+        if (stayInSpecificFrame)
+        {
+            var frameMapping = spriteMappings.FirstOrDefault(m =>
+                m.state == animationState &&
+                m.direction == animationDirection &&
+                m.frame == currentFrame);
+
+            if (frameMapping != null)
+                spriteRenderer.sprite = sprites[frameMapping.index];
+                return;
         }
 
         // play animation

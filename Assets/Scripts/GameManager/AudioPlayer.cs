@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BGMPlayer : MonoBehaviour
+public class AudioPlayer : MonoBehaviour
 {
     [SerializeField] private AudioClip bgmClip;
     private AudioSource audioSource;

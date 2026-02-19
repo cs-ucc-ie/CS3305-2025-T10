@@ -1037,6 +1037,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &751337715 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 819954122354863022, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
+  m_PrefabInstance: {fileID: 2132036446}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &905901600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1590,11 +1595,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3d502c7f4d547f6963b99cee4a9794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableDoorWithButton
-  interactPrompt: You must replace this prompt in child classes.
-  moveDistance: 2.5
-  moveDuration: 0.5
-  waitDuration: 0.5
-  doorObject: {fileID: 1710873989}
 --- !u!65 &1363882006
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2349,12 +2349,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7589068742561538663, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8382708190416647454, guid: 431d2c9cc16734488b831aaa2e9fab3c, type: 3}
       propertyPath: attackTarget
       value: 
-      objectReference: {fileID: 957020255}
+      objectReference: {fileID: 751337715}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2545,7 +2545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5160633793886494311, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: health
@@ -2554,7 +2554,7 @@ PrefabInstance:
     - target: {fileID: 6889587951869868019, guid: a15113fbebb9a4489870eaff7959dddb, type: 3}
       propertyPath: attackTarget
       value: 
-      objectReference: {fileID: 957020255}
+      objectReference: {fileID: 1919488810}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -16,6 +16,7 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private GameObject npcBulletPrefab;
     [SerializeField] private GameObject protagonistActor;
     [SerializeField] private GameObject[] chasingActors;
+    [SerializeField] private GameObject chasingProtagonistActor;
     [SerializeField] private GameObject door;
     [SerializeField] private AudioClip NPCFire;
     [SerializeField] private AudioSource audioSourceProtagonist;
@@ -29,23 +30,21 @@ public class CutSceneManager : MonoBehaviour
 
     void Start()
     {
-        gameManager = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include).gameObject;
-        Debug.Log("Found GameManager: " + gameManager.name);
-        gameManager.gameObject.SetActive(false);
         blackScreen.SetActive(true);
         middleText.text = "";
         subtitleText.text = "";
         fightingScene1Actors.SetActive(false);
         fightingScene2Actors.SetActive(false);
         npcActor.SetActive(false);
-        protagonistAnimator = protagonistActor.GetComponent<HumanFormEnemyAnimator>();
-        protagonistAnimator.enabled = false;
         protagonistActor.SetActive(false);
         door.SetActive(false);
         foreach (GameObject actor in chasingActors)
         {
             actor.SetActive(false);
         }
+        chasingProtagonistActor.SetActive(false);
+        gameManager = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include).gameObject;
+        if (gameManager != null)  gameManager.gameObject.SetActive(false);
     }
 
     public void StartFirstFightingCam()
@@ -67,12 +66,14 @@ public class CutSceneManager : MonoBehaviour
     {
         npcActor.SetActive(true);
         protagonistActor.SetActive(true);
+        protagonistAnimator = protagonistActor.GetComponent<HumanFormEnemyAnimator>();
+        protagonistAnimator.StayInSpecificFrame(0, HumanFormEnemyAnimationState.Walk);
         HumanFormEnemyAnimator npcAnimator = npcActor.GetComponent<HumanFormEnemyAnimator>();
         StartCoroutine(loopAttackAndDied(npcAnimator));
     }
     IEnumerator loopAttackAndDied(HumanFormEnemyAnimator animator)
     {
-        subtitleText.text = "Get to bridge, send the message!";
+        subtitleText.text = "kept you waiting, huh?";
         for (int i = 0; i < 3; i++)
         {
             animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttackStartUp);
@@ -85,17 +86,15 @@ public class CutSceneManager : MonoBehaviour
             Vector3 dir = npcActor.transform.forward.normalized - npcActor.transform.right.normalized * 0.1f;
             Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
         }
-        subtitleText.text = "Ahh!";
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+        subtitleText.text = "Ahh!";
     }
 
     public void ProtagonistShockAtNPCDeath()
     {
         fightingScene2Actors.SetActive(false);
         subtitleText.text = "";
-        protagonistActor.SetActive(true);
-        protagonistAnimator.enabled = true;
-        protagonistAnimator.BeginAnimation(HumanFormEnemyAnimationState.Idle);
+        protagonistAnimator.StayInSpecificFrame(0, HumanFormEnemyAnimationState.Idle);
     }
 
     public void ProtagonistRunToBridge()
@@ -104,9 +103,12 @@ public class CutSceneManager : MonoBehaviour
         {
             actor.SetActive(true);
             actor.GetComponent<HumanFormEnemyAnimator>().BeginAnimation(HumanFormEnemyAnimationState.Walk);
-            actor.GetComponent<HumanFormEnemyMotor>().MoveTo(actor.transform.position + actor.transform.forward * 40f, 3.5f);
+            actor.GetComponent<HumanFormEnemyMotor>().MoveTo(actor.transform.position + actor.transform.forward * 40f, 4f);
         }
         protagonistActor.SetActive(false);
+        chasingProtagonistActor.SetActive(true);
+        chasingProtagonistActor.GetComponent<HumanFormEnemyAnimator>().BeginAnimation(HumanFormEnemyAnimationState.Walk);
+        chasingProtagonistActor.GetComponent<HumanFormEnemyMotor>().MoveTo(chasingProtagonistActor.transform.position + chasingProtagonistActor.transform.forward * 40f, 3.5f);
         blackScreen.SetActive(false);
         middleText.text = "";
 
