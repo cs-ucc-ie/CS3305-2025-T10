@@ -102,7 +102,7 @@ public class MainMenu : MonoBehaviour
     {
         SaveManager.saveSlotIndex = slot;
         SaveManager.Load();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("IntroScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Bridge");
     }
 
     public void QuitGame()

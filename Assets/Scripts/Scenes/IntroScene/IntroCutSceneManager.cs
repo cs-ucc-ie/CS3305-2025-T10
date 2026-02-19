@@ -30,7 +30,8 @@ public class CutSceneManager : MonoBehaviour
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include).gameObject;
-        gameManager.SetActive(false);
+        Debug.Log("Found GameManager: " + gameManager.name);
+        gameManager.gameObject.SetActive(false);
         blackScreen.SetActive(true);
         middleText.text = "";
         subtitleText.text = "";

@@ -3480,8 +3480,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -650, y: 150}
-  m_SizeDelta: {x: 300, y: 50}
+  m_AnchoredPosition: {x: 410, y: 170}
+  m_SizeDelta: {x: 1000, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2008658032
 MonoBehaviour:
@@ -3503,7 +3503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: doomspace
+  m_text: Super Marine Galaxy
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bbe821a183a494a2daa78a825f17f7ee, type: 2}
   m_sharedMaterial: {fileID: -522182252857897473, guid: bbe821a183a494a2daa78a825f17f7ee, type: 2}

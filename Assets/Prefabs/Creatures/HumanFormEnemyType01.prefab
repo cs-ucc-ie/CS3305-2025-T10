@@ -140,7 +140,7 @@ MonoBehaviour:
   attackTarget: {fileID: 0}
   bulletPrefab: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
   attackSoundClip: {fileID: 8300000, guid: de4bc8aeae10848548ed0489e9866b7c, type: 3}
-  damageSoundClip: {fileID: 8300000, guid: bfb0c2c0eed5c4eb4ab153ee800740e8, type: 3}
+  damageSoundClip: {fileID: 8300000, guid: 35a86cd8fe6aa49a7adaead1cded5dc2, type: 3}
   deathSoundClip: {fileID: 8300000, guid: cf1c961cf5708465b95bbf623db847c0, type: 3}
   audioVolume: 1
   detectRange: 10

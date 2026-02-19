@@ -118,6 +118,7 @@ public class HumanFormEnemyAI : EnemyAI
             // only play hurt animation if not already in knockback state
             if (aiState != HumanFormEnemyAIState.KnockBack)
             {
+                audioSource.PlayOneShot(damageSoundClip, audioVolume);
                 hurtStunTimer = hurtStunDuration;
                 animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
                 aiState = HumanFormEnemyAIState.Hurt;
@@ -127,6 +128,8 @@ public class HumanFormEnemyAI : EnemyAI
 
     public override void KnockBack(Vector3 direction, float speed, float duration)
     {
+        audioSource.PlayOneShot(damageSoundClip, audioVolume);
+
         if (aiState == HumanFormEnemyAIState.Dead) return;
         // 如果不能移动，就直接眩晕一段时间
         if (engageMoveMaxDistance == 0)
@@ -139,15 +142,6 @@ public class HumanFormEnemyAI : EnemyAI
         aiState = HumanFormEnemyAIState.KnockBack;
         animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
 
-        if (audioSource != null && damageSoundClip != null)
-        {
-            audioSource.PlayOneShot(damageSoundClip, audioVolume);
-            Debug.Log("Playing damage sound");
-        }
-        else
-        {
-            Debug.LogWarning("AudioSource or damage sound clip is missing!");
-        }
         direction.y = 0f;
         direction.Normalize();
         hurtStunTimer = hurtStunDuration;
