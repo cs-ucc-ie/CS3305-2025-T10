@@ -5,10 +5,6 @@ public class Shotgun : WeaponFramework
 {
     [SerializeField] private BulletItem shellItem;
 
-    private void Awake()
-    {
-        
-    }
 
     protected override IEnumerator ReloadRoutine(BulletItem bullet)
     {

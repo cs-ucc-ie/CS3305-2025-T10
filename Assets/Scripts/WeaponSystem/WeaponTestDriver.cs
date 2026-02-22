@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class WeaponTestDriver : MonoBehaviour
 {
     [SerializeField] private List<WeaponFramework> weapons = new List<WeaponFramework>();
-    //stores the prefabs that will later be used to instantiate actual weapon instances.  
+    [SerializeField] protected AudioClip swapWeaponSfx;
+    [SerializeField] protected AudioSource audioSource;
     private readonly List<WeaponFramework> weaponInstances = new List<WeaponFramework>(); 
     //this is the list that stores the actual weapon instances with all the additional data like magazine content
 
@@ -36,6 +38,12 @@ public class WeaponTestDriver : MonoBehaviour
             return;
         }
 
+        audioSource = playerInstance.GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.Log("Player audio source not found!");
+            return;
+        }
         weaponInstances.Clear();
         for (int i = 0; i < weapons.Count; i++)
         {
@@ -103,6 +111,8 @@ public class WeaponTestDriver : MonoBehaviour
 
         currentlyEquipped = weaponInstances[currentWeaponIndex];
         currentlyEquipped.gameObject.SetActive(true);
+        audioSource.PlayOneShot(swapWeaponSfx);
+        Debug.Log("Swap weapon sound played");
         Debug.Log("Weapon switched to: " + currentlyEquipped.weaponName);
     }
 }
