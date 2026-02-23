@@ -31,7 +31,7 @@ public class FlashBullet : MonoBehaviour
             if (ai == null) continue;
 
             Vector3 dir = ai.transform.position - center;
-            ai.KnockBack(dir, knockSpeed, knockDuration);
+            ai.KnockBack(dir, knockSpeed, flashDuration);
         }
 
         Destroy(gameObject);
