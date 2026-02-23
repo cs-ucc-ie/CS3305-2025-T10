@@ -14,10 +14,44 @@ public abstract class WeaponFramework : MonoBehaviour
     [SerializeField] protected Vector3 mountPositionOffset;
     [SerializeField] protected Vector3 mountRotationOffset;
 
+    [Header("SFX")]
+    [SerializeField] protected AudioClip reloadSfx;
+    [SerializeField] protected AudioClip fireSfx;
+    [SerializeField] protected AudioSource weaponAudioSource;
+
     protected float nextFireTime = 0f;
     protected bool isReloading = false;
 
     public abstract bool TryReload();
+
+    protected virtual void Awake()
+    {
+        Debug.Log($"{name}: WeaponFramework Awake called");
+
+        if (weaponAudioSource != null) return;
+
+        if (firePoint != null)
+        {
+            weaponAudioSource = firePoint.GetComponent<AudioSource>();
+            if (weaponAudioSource == null)
+            {
+                weaponAudioSource = firePoint.gameObject.AddComponent<AudioSource>();
+                Debug.Log($"{name}: Added AudioSource to firePoint");
+            }
+            else
+            {
+                Debug.Log($"{name}: Found AudioSource on firePoint");
+            }
+        }
+
+        if (weaponAudioSource == null)
+        {
+            weaponAudioSource = gameObject.AddComponent<AudioSource>();
+            Debug.Log($"{name}: Added AudioSource to weapon root");
+        }
+
+        weaponAudioSource.playOnAwake = false;
+    }
 
     public bool PositionWeapon(Transform WeaponMountPoint)
     {
@@ -39,8 +73,15 @@ public abstract class WeaponFramework : MonoBehaviour
         if (Magazine.Count >= magazineSize) return false;
         if (bullet == null) return false;
 
+        if (weaponAudioSource != null && reloadSfx != null)
+        {
+            weaponAudioSource.PlayOneShot(reloadSfx);
+            Debug.Log("Reload sound played");
+        }
+
         isReloading = true;
         StartCoroutine(ReloadWrapper(bullet));
+
         return true;
     }
 
@@ -63,7 +104,15 @@ public abstract class WeaponFramework : MonoBehaviour
         bool success = bullet.Use(firePoint);
 
         if (success)
+        {
+            if (weaponAudioSource != null && fireSfx != null)
+            weaponAudioSource.PlayOneShot(fireSfx);
+            Debug.Log($"listener.pause={AudioListener.pause}, listener.volume={AudioListener.volume}");
+            Debug.Log($"source.enabled={weaponAudioSource.enabled}, go.activeInHierarchy={weaponAudioSource.gameObject.activeInHierarchy}, source.volume={weaponAudioSource.volume}");
+            Debug.Log("Fire sound played");
             nextFireTime = Time.time + fireInterval;
+        }
+            
 
         return success;
     }
