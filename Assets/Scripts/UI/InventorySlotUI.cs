@@ -40,7 +40,7 @@ public class InventorySlotUI : MonoBehaviour
         if (slot != null && slot.item != null)
         {
             countText.text = slot.count.ToString();
-            nameText.text = slot.item.name;
+            nameText.text = slot.item.itemName;
         }
         else
         {

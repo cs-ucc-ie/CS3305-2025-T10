@@ -24,9 +24,9 @@ public class SoilPlot : InteractableObject
     public SpriteRenderer growthSpriteRenderer;
 
     [Header("Interact Prompts (交互提示)")]
-    public string emptyPrompt = "Plant a seed (种植种子)";
-    public string growingPrompt = "Growing... (正在生长...)";
-    public string maturePrompt = "Harvest (收获)";
+    public string emptyPrompt = "Plant a seed";
+    public string growingPrompt = "Growing...";
+    public string maturePrompt = "Harvest";
 
     [Header("Debug")]
     [SerializeField] private PlotState state = PlotState.Empty;
@@ -115,7 +115,7 @@ public class SoilPlot : InteractableObject
         
         if (slot == null)
         {
-            UIController.Instance.AddNewInformation("Selected item is not a seed. Please select a seed to plant.");
+            UIController.Instance.AddNewInformation("Select a seed to plant.");
             return;
         }
 
@@ -124,7 +124,7 @@ public class SoilPlot : InteractableObject
         
         if (selectedItem == null || slot.count <= 0)
         {
-            UIController.Instance.AddNewInformation("Selected item is not a seed. Please select a seed to plant.");
+            UIController.Instance.AddNewInformation("Select a seed to plant.");
             return;
         }
 
@@ -133,7 +133,7 @@ public class SoilPlot : InteractableObject
         
         if (seed == null)
         {
-            UIController.Instance.AddNewInformation("Selected item is not a seed. Please select a seed to plant.");
+            UIController.Instance.AddNewInformation("Select a seed to plant.");
             return;
         }
 
