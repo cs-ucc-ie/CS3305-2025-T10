@@ -25,7 +25,7 @@ public class CutSceneManager : MonoBehaviour
 
     void OnDisable()
     {
-        gameManager.SetActive(true);
+        if (gameManager != null) gameManager.SetActive(true);
     }
 
     void Start()
@@ -43,8 +43,12 @@ public class CutSceneManager : MonoBehaviour
             actor.SetActive(false);
         }
         chasingProtagonistActor.SetActive(false);
-        gameManager = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include).gameObject;
-        if (gameManager != null)  gameManager.gameObject.SetActive(false);
+        var gameManagerObject = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include);
+        if (gameManagerObject != null)
+        {
+            gameManager = gameManagerObject.gameObject;
+            gameManager.SetActive(false);
+        }
     }
 
     public void StartFirstFightingCam()
