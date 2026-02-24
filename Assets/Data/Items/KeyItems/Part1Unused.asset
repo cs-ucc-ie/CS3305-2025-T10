@@ -15,6 +15,4 @@ MonoBehaviour:
   itemName: Commu Parts 1
   itemType: 4
   icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  prompt: Put it on the left hand of bridge
-  partType: 1
-  isUsed: 0
+  prompt: Install it on the left hand of bridge.

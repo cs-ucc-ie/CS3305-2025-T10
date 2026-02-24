@@ -22,7 +22,7 @@ public class InventorySlotUI : MonoBehaviour
         icon.sprite = this.slot.item.icon;
 
         countText.text = this.slot.count.ToString();
-        nameText.text = this.slot.item.name;
+        nameText.text = this.slot.item.itemName;
 
     }
 
