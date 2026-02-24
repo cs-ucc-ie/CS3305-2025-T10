@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
     public static event Action OnInteractPressed;
     public static event Action OnDashPressed;
     public static event Action OnSlowTimePressed;
+    public static event Action OnInventoryTogglePressed;
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseInput { get; private set; }
 
@@ -50,7 +51,7 @@ public class InputManager : MonoBehaviour
         // press ESC to toggle inventory ui
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            UIController.Instance.ToggleFoldablePanel();
+            OnInventoryTogglePressed?.Invoke();
         }
 
         // press left shift to dash
@@ -64,6 +65,9 @@ public class InputManager : MonoBehaviour
         {
             OnSlowTimePressed?.Invoke();
         }
+
+        // press q to switch between weapons
+        if (Input.GetKeyDown(KeyCode.Q)){}
 
         // if inventory shown, unlock cursor
         if (UIController.Instance.IsInventoryShown)

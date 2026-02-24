@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class QuickSlotUI : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class QuickSlotUI : MonoBehaviour
     [SerializeField] private TMP_Text indexText;
     [SerializeField] private int index;                      // quick slot index 0-4
     [SerializeField] private InventorySlot slot;
+    public static Action OnQuickSlotClicked;
     
     void OnEnable()
     {
@@ -69,5 +71,6 @@ public class QuickSlotUI : MonoBehaviour
     public void OnClick()
     {
         InventoryManager.Instance.SetQuickSlotIndex(index);
+        OnQuickSlotClicked?.Invoke();
     }
 }
