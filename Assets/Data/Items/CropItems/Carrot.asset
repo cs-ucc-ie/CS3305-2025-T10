@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItem
   itemName: Carrot
   itemType: 1
-  icon: {fileID: -2037069255, guid: eca3bce8812cd4695a4d3e4dfa4fc81b, type: 3}
+  icon: {fileID: -825800348, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
   hungerRestore: 20

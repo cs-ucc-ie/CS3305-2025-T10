@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b024e7ac1677f4e2d9735ba446419a81, type: 3}
   m_Name: CarrotSeed
   m_EditorClassIdentifier: Assembly-CSharp::SeedItem
-  itemName: CarrotSeed
+  itemName: Carrot Seed
   itemType: 0
   icon: {fileID: -825800348, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
-  cropItem: {fileID: 11400000, guid: de0749cc6648646c1b9cad447544fa77, type: 2}
+  cropItem: {fileID: 11400000, guid: 9728e87aa68e745cd92ef3a91617668a, type: 2}
   growSeconds: 4
   harvestAmount: 2
   growthSprites:

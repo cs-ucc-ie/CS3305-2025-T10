@@ -21,6 +21,7 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private AudioClip NPCFire;
     [SerializeField] private AudioSource audioSourceProtagonist;
     [SerializeField] private AudioSource audioSourceDoor;
+    [SerializeField] private GameObject hitNPCFireball;
     private HumanFormEnemyAnimator protagonistAnimator;
 
     void OnDisable()
@@ -38,6 +39,7 @@ public class CutSceneManager : MonoBehaviour
         npcActor.SetActive(false);
         protagonistActor.SetActive(false);
         door.SetActive(false);
+        hitNPCFireball.SetActive(false);
         foreach (GameObject actor in chasingActors)
         {
             actor.SetActive(false);
@@ -91,6 +93,8 @@ public class CutSceneManager : MonoBehaviour
             Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
         }
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+        yield return new WaitForSeconds(0.2f);
+        hitNPCFireball.SetActive(true);
         subtitleText.text = "Ahh!";
     }
 

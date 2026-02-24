@@ -47,13 +47,18 @@ public class SoilPlot : InteractableObject
 
     private void Update()
     {
-        // 让sprite永远面向主摄像机
-        if (growthSpriteRenderer != null && mainCamera != null && growthSpriteRenderer.gameObject.activeSelf)
-        {
-            growthSpriteRenderer.transform.rotation = Quaternion.LookRotation(
-                growthSpriteRenderer.transform.position - mainCamera.transform.position
-            );
-        }
+        // // 让sprite永远面向主摄像机
+        // if (growthSpriteRenderer != null && mainCamera != null && growthSpriteRenderer.gameObject.activeSelf)
+        // {
+        //     growthSpriteRenderer.transform.rotation = Quaternion.LookRotation(
+        //         growthSpriteRenderer.transform.position - mainCamera.transform.position
+        //     );
+        // }
+
+        // sprite renderer always face the camera
+        growthSpriteRenderer.transform.forward = Camera.main.transform.forward;
+        //Vector3 currentRotation = spriteRenderer.transform.rotation.eulerAngles;
+        growthSpriteRenderer.transform.rotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
 
         if (state == PlotState.Growing && plantedSeed != null)
         {
