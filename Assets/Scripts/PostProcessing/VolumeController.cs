@@ -16,27 +16,29 @@ public class VolumeController : MonoBehaviour
     [SerializeField] private Color startColor = new Color(1f, 0.7f, 0.7f, 1f); // light red
     [SerializeField] private Color endColor = new Color(0.6f, 0f, 0f, 1f); // dark red
 
+    private void HandleSlowTimeEnabled() => SetBlackWhite(true);
+    private void HandleSlowTimeDisabled() => SetBlackWhite(false);
+
     void OnEnable()
     {
-        AbilitySlowTime.OnSlowTimeEnabled += () => SetBlackWhite(true);
-        AbilitySlowTime.OnSlowTimeDisabled += () => SetBlackWhite(false);
+        AbilitySlowTime.OnSlowTimeEnabled += HandleSlowTimeEnabled;
+        AbilitySlowTime.OnSlowTimeDisabled += HandleSlowTimeDisabled;
         SceneManager.sceneLoaded += OnSceneLoaded;
         PlayerStatsManager.OnPlayerDamaged += QuickRedFlash;
     }
 
     void OnDisable()
     {
+        AbilitySlowTime.OnSlowTimeEnabled -= HandleSlowTimeEnabled;
+        AbilitySlowTime.OnSlowTimeDisabled -= HandleSlowTimeDisabled;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         PlayerStatsManager.OnPlayerDamaged -= QuickRedFlash;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reset post-processing when a new scene is loaded
-        if (colorAdjustments != null)
-        {
-            ResetPostProcessing();
-        }
+        InitializeVolumeReferences();
+        ResetPostProcessing();
     }
 
     private void Awake()
@@ -44,6 +46,7 @@ public class VolumeController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -52,14 +55,28 @@ public class VolumeController : MonoBehaviour
     }
     void Start()
     {
+        InitializeVolumeReferences();
+        ResetPostProcessing();
+    }
+
+    private void InitializeVolumeReferences()
+    {
         volume = GetComponentInChildren<Volume>();
+        if (volume == null || volume.profile == null)
+        {
+            colorAdjustments = null;
+            vignette = null;
+            return;
+        }
+
         volume.profile.TryGet(out colorAdjustments);
         volume.profile.TryGet(out vignette);
-        ResetPostProcessing();
     }
 
     public void SetBlackWhite(bool enabled)
     {
+        if (colorAdjustments == null) return;
+
         if (enabled)
             colorAdjustments.saturation.value = -100f;
         else
@@ -68,14 +85,17 @@ public class VolumeController : MonoBehaviour
 
     public void ResetPostProcessing()
     {
+        Debug.Log("Resetting post-processing effects to default.");
         if (colorAdjustments != null)
         {
+            Debug.Log("Resetting Color Adjustments.");
             colorAdjustments.colorFilter.overrideState = false;
             colorAdjustments.colorFilter.value = Color.white;
             colorAdjustments.saturation.value = 0f;
         }
         if (vignette != null)
         {
+            Debug.Log("Resetting Vignette.");
             vignette.color.value = Color.black;
             vignette.intensity.value = 0f;
         }
@@ -116,14 +136,23 @@ public class VolumeController : MonoBehaviour
 
     private IEnumerator FadeToRedCoroutine(System.Action onComplete)
     {
+        if (colorAdjustments == null)
+        {
+            onComplete?.Invoke();
+            yield break;
+        }
+
         elapsed = 0f; // Reset timer
         colorAdjustments.colorFilter.overrideState = true;
 
         Camera mainCamera = Camera.main;
         Vector3 startPosition = mainCamera != null ? mainCamera.transform.position : Vector3.zero;
         Vector3 endPosition = startPosition + Vector3.down * 0.5f; // Move down 0.5 unit
-        CameraBob cameraBob = mainCamera.GetComponent<CameraBob>();
-        cameraBob.enabled = false; // Disable camera bobbing during fade
+        CameraBob cameraBob = mainCamera != null ? mainCamera.GetComponent<CameraBob>() : null;
+        if (cameraBob != null)
+        {
+            cameraBob.enabled = false; // Disable camera bobbing during fade
+        }
 
         while (elapsed < duration)
         {

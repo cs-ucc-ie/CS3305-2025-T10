@@ -123,6 +123,7 @@ public class PlayerStatsManager : MonoBehaviour
             {
                 // go back to Bridge area after fade completes
                 SaveManager.Load();
+                VolumeController.Instance.ResetPostProcessing();
                 Debug.Log("Loading Bridge Scene");
                 SceneManager.LoadScene("Bridge");
             });
