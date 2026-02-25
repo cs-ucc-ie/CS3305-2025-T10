@@ -21,11 +21,12 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private AudioClip NPCFire;
     [SerializeField] private AudioSource audioSourceProtagonist;
     [SerializeField] private AudioSource audioSourceDoor;
+    [SerializeField] private GameObject hitNPCFireball;
     private HumanFormEnemyAnimator protagonistAnimator;
 
     void OnDisable()
     {
-        gameManager.SetActive(true);
+        if (gameManager != null) gameManager.SetActive(true);
     }
 
     void Start()
@@ -38,13 +39,18 @@ public class CutSceneManager : MonoBehaviour
         npcActor.SetActive(false);
         protagonistActor.SetActive(false);
         door.SetActive(false);
+        hitNPCFireball.SetActive(false);
         foreach (GameObject actor in chasingActors)
         {
             actor.SetActive(false);
         }
         chasingProtagonistActor.SetActive(false);
-        gameManager = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include).gameObject;
-        if (gameManager != null)  gameManager.gameObject.SetActive(false);
+        var gameManagerObject = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include);
+        if (gameManagerObject != null)
+        {
+            gameManager = gameManagerObject.gameObject;
+            gameManager.SetActive(false);
+        }
     }
 
     public void StartFirstFightingCam()
@@ -87,6 +93,8 @@ public class CutSceneManager : MonoBehaviour
             Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
         }
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+        yield return new WaitForSeconds(0.2f);
+        hitNPCFireball.SetActive(true);
         subtitleText.text = "Ahh!";
     }
 

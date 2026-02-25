@@ -6,6 +6,11 @@ public class InputManager : MonoBehaviour
     public static event Action OnInteractPressed;
     public static event Action OnDashPressed;
     public static event Action OnSlowTimePressed;
+    public static event Action OnSwitchWeaponPressed;
+    public static event Action OnFirePressed;
+    public static event Action OnReloadPressed;
+
+    public static event Action OnInventoryTogglePressed;
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseInput { get; private set; }
 
@@ -50,19 +55,40 @@ public class InputManager : MonoBehaviour
         // press ESC to toggle inventory ui
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            OnInventoryTogglePressed?.Invoke();
             UIController.Instance.ToggleFoldablePanel();
         }
 
         // press left shift to dash
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
+            if (UIController.Instance.IsInventoryShown) return; // don't dash when inventory is shown
             OnDashPressed?.Invoke();
         }
 
         // press space to slow time
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (UIController.Instance.IsInventoryShown) return; // don't slow time when inventory is shown
             OnSlowTimePressed?.Invoke();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            if (UIController.Instance.IsInventoryShown) return; // don't switch weapon when inventory is shown
+            OnSwitchWeaponPressed?.Invoke();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (UIController.Instance.IsInventoryShown) return; // don't fire when inventory is shown
+            OnFirePressed?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (UIController.Instance.IsInventoryShown) return; // don't reload when inventory is shown
+            OnReloadPressed?.Invoke();
         }
 
         // if inventory shown, unlock cursor

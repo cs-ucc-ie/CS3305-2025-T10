@@ -5,25 +5,15 @@ using System.Collections;
 public class ButtonSaveGame : InteractableObject
 {
     private string originalPrompt = "Save voyage log";
-    private string saveCompletePrompt = "Save Complete";
 
     void Start()
     {
-        interactPrompt = originalPrompt;
+        interactPrompt = originalPrompt + $" (Slot {SaveManager.saveSlotIndex + 1})";
     }
 
     public override void Interact()
     {
         SaveManager.Save();
-        StartCoroutine(ShowSaveComplete());
+        UIController.Instance.AddNewInformation($"Game saved to slot {SaveManager.saveSlotIndex + 1}!");
     }
-
-    private IEnumerator ShowSaveComplete()
-    {
-        // this.enabled = false;
-        // this.enabled = true;
-        interactPrompt = saveCompletePrompt;
-        yield return new WaitForSeconds(5f); 
-        interactPrompt = originalPrompt; 
-}
  }

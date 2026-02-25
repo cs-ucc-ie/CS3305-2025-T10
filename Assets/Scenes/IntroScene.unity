@@ -104333,8 +104333,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688376641}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.030380547, y: -0.25702977, z: 0.11338176, w: 0.9592483}
-  m_LocalPosition: {x: -31.739998, y: 1.2299995, z: -12.119999}
+  m_LocalRotation: {x: -0.026176924, y: 0, z: 0, w: 0.99965733}
+  m_LocalPosition: {x: 18.509998, y: 0.62999916, z: -1.1199989}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -131639,6 +131639,85 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846402515}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &846870216
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1636417959}
+    m_Modifications:
+    - target: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_Name
+      value: EnemyFireballType01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503895630437751893, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: hitAndDestroy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503895630437751893, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: hitEnemyAndDestroy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503895630437751893, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: destroyWhenHitEnemy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.587
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.091
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.3624381
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.93200785
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 137.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+--- !u!4 &846870217 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7191796194993408180, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+  m_PrefabInstance: {fileID: 846870216}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &846870218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+  m_PrefabInstance: {fileID: 846870216}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &846972810
 GameObject:
   m_ObjectHideFlags: 0
@@ -251267,6 +251346,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 846870217}
   - {fileID: 1711606371}
   - {fileID: 932687171}
   m_Father: {fileID: 1982318844}
@@ -261238,7 +261318,7 @@ MonoBehaviour:
   fightingScene1Actors: {fileID: 747280777}
   fightingScene2Actors: {fileID: 543250995}
   npcActor: {fileID: 1454061026}
-  npcBulletPrefab: {fileID: 4163307849828916521, guid: 0773417537c394dbfb4c123d6db4c100, type: 3}
+  npcBulletPrefab: {fileID: 4163307849828916521, guid: ccfaa3200bc684773a7c555e315ba193, type: 3}
   protagonistActor: {fileID: 1965247646}
   chasingActors:
   - {fileID: 1024815955}
@@ -261251,6 +261331,7 @@ MonoBehaviour:
   NPCFire: {fileID: 8300000, guid: ca6c520cafb9d4b9e9586cfd9a2b0290, type: 3}
   audioSourceProtagonist: {fileID: 1965247654}
   audioSourceDoor: {fileID: 1980647162}
+  hitNPCFireball: {fileID: 846870218}
 --- !u!114 &1693463388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261479,7 +261560,8 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: You scared...\nYou want to contact HQ for backup...
+            m_StringArgument: You were frightened...\nYou want to contact HQ for
+              backup...
             m_BoolArgument: 0
           m_CallState: 2
     - m_PersistentCalls:
@@ -264412,9 +264494,13 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1732556814047942022, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1805818916467395593, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476647841424128062, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class InteractableButtonSwitchScene : InteractableObject
+public class InteractableDoorSwitchScene : InteractableObject
 {
     [SerializeField] private String sceneName;
 

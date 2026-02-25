@@ -1,53 +1,109 @@
 # Player
 
-The player GameObject acts as the primary controller for the user. It integrates three core functional scripts.
+The player GameObject is the primary controller for the user.
 
-Player should be tagged as "Player".
+Player should be tagged as `Player`.
+
+In current implementation, the Player setup usually includes:
+
+- `CharacterController` on Player root.
+- `PlayerMovement` on Player root.
+- `CameraLookAround` (X-only) on Player root.
+- Child Camera with `CameraLookAround` (Y-only) and `CameraBob`.
+- `CheckInteractable`, `AbilityDash`, `AbilitySlowTime` on Player root.
+
+Most movement-related scripts read input from [`InputManager`](./InputManager.md).
 
 ## KeyboardMovement
 
 See [`PlayerMovement.cs`](../Assets/Scripts/Player/PlayerMovement.cs)
 
-Player movement input is read from [`InputManager`](./InputManager.md).
+`PlayerMovement` reads `MoveInput` from [`InputManager`](./InputManager.md) and moves the `CharacterController`.
 
-`PlayerMovement` handles player character controller movement, as well as giving an fake -9.8f gravity.
+Behavior summary:
+
+- Converts 2D input to local-space movement direction.
+- Uses acceleration/deceleration smoothing (`Vector3.MoveTowards`) instead of instant speed change.
+- Applies constant gravity value (`gravity`, default `-9.8f`) to Y velocity.
+- Uses `Time.unscaledDeltaTime`, so movement speed is not reduced by slow-time.
 
 ## MouseLook
 
 See [`CameraLookAround.cs`](../Assets/Scripts/Player/CameraLookAround.cs)
 
-Mouse movement input is read from [`InputManager`](./InputManager.md).
+Mouse input is read from [`InputManager`](./InputManager.md) (`MouseInput`).
 
-This script handles the mouse look functionality for a first-person camera.
+This script handles first-person look rotation.
 
-It rotates the camera and player based on mouse movement.
+Behavior summary:
 
-Remember: X axis is bind on player, Y axis is bind on camera.
+- Horizontal rotation (`MouseX`) rotates around Y axis.
+- Vertical rotation (`MouseY`) rotates camera pitch and clamps to min/max angles.
+- Typical setup uses two instances:
+	- Player root: `MouseX`
+	- Camera child: `MouseY`
+
+Remember: X axis should be bound on Player, Y axis should be bound on Camera.
 
 ## CheckInteractable
 
 See [`CheckInteractable.cs`](../Assets/Scripts/Player/CheckInteractable.cs) 
 
-Performs raycasting to detect and trigger interactable objects in the world.
+Performs raycast-based detection and interaction with nearby interactable objects.
 
-When [`InputManager`](./InputManager.md) invoke an `OnInteractPressed` event, `CheckInteractable` will perform a raycasting to detect and trigger [`InteractableObject.md`](./InteractableObject.md) in the world.
+Behavior summary:
+
+- Casts a ray from `Camera.main` forward with `interactDistance`.
+- Detects active `InteractableObject`.
+- On `InputManager.OnInteractPressed`, calls `Interact()` if target is valid.
+- Sends prompt events for UI:
+	- `onInteractableObjectFound(string interactPrompt)`
+	- `onNoInteractableObject()`
 
 ## CameraBob
 
 See [`CameraBob.cs`](../Assets/Scripts/Player/CameraBob.cs) 
 
-Read input from [`InputManager`](./InputManager.md), and apply bobbing effect to camera.
+Reads movement input from [`InputManager`](./InputManager.md) and applies camera bobbing.
+
+Behavior summary:
+
+- When moving, applies sinusoidal Y offset using `bobAmplitude` and `bobFrequency`.
+- Bob intensity scales with movement magnitude.
+- When idle, smoothly returns to base local position with `bobReturnSpeed`.
+- Runs in `LateUpdate` for stable camera transform updates.
 
 ## AbilityDash
 
 See [`AbilityDash.cs`](../Assets/Scripts/Player/AbilityDash.cs)
 
-When [`InputManager`](./InputManager.md) invoke an `OnDashPressed` event, `AbilityDash` will cause player dash forward, allowing player to dash over cliff, or push enemy back.
+Triggered by `InputManager.OnDashPressed`.
+
+Behavior summary:
+
+- Ability can be gated by inventory item (`DashAbility`) before first use.
+- Checks cooldown (`dashCooldown`) and hunger cost (`hungerCost`).
+- Uses movement input direction; if no input, dashes forward.
+- Executes dash over `dashDuration` with ease-out distance interpolation.
+- Partially offsets gravity with `gravityNeutralize` during dash.
+- Pushes nearby enemies using `EnemyAI.KnockBack(...)`.
+- Emits `OnDashUsed` event when dash starts.
 
 ## AbilitySlowTime
 
 See [`AbilitySlowTime.cs`](../Assets/Scripts/Player/AbilitySlowTime.cs)
 
-When [`InputManager`](./InputManager.md) invoke an `OnSlowTimePressed` event, `AbilitySlowTime` will set `Time.timeScale` to a smaller value.
+Triggered by `InputManager.OnSlowTimePressed`.
 
-It also invokes an `OnSlowTimeEnabled` / `OnSlowTimeDisabled` event, to tell [`Volume.md`](./Volume.md) to decrease saturation.
+Behavior summary:
+
+- Ability can be gated by inventory item (`SlowTimeAbility`) before first use.
+- Toggles global time scale between normal (`1f`) and `slowTimeScale`.
+- Updates `Time.fixedDeltaTime` to keep physics consistent during slow-time.
+- While active, drains hunger periodically (`hungerReduceInterval`).
+- Automatically disables when hunger is depleted.
+- Emits:
+	- `OnSlowTimeEnabled`
+	- `OnSlowTimeDisabled`
+
+These events are used by [`VolumeController.md`](./VolumeController.md) to apply post-processing effects (for example, reduced saturation in slow-time).

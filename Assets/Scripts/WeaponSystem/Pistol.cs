@@ -5,11 +5,6 @@ public class pistol : WeaponFramework
 {
     [SerializeField] private BulletItem shellItem;
 
-    private void Awake()
-    {
-        
-    }
-
     protected override IEnumerator ReloadRoutine(BulletItem bullet)
     {
         yield return new WaitForSeconds(reloadTime);

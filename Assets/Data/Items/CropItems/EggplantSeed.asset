@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b024e7ac1677f4e2d9735ba446419a81, type: 3}
   m_Name: EggplantSeed
   m_EditorClassIdentifier: Assembly-CSharp::SeedItem
-  itemName: 
+  itemName: Eggplant Seed
   itemType: 0
   icon: {fileID: 1727774679, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
-  cropItem: {fileID: 0}
+  cropItem: {fileID: 11400000, guid: 0b4e57bb92eea40fd9781e44625515eb, type: 2}
   growSeconds: 10
   harvestAmount: 1
   growthSprites:
-  - {fileID: -416055213, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
   - {fileID: -1860626396, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
   - {fileID: 1722314389, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
   - {fileID: 1269841458, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
   - {fileID: -1648978304, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
+  - {fileID: 1727774679, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}

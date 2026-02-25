@@ -1,0 +1,1 @@
+See [`WeaponFramework.cs`](../Assets/Scripts/WeaponSystem/WeaponFramework.cs)
