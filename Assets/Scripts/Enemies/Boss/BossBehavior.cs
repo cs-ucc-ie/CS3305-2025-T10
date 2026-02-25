@@ -43,11 +43,13 @@ public class BossBehavior : EnemyAI
 
     [Header("Object References")]
     [SerializeField] private Transform player;
-    [SerializeField] private GameObject bulletPrefab;  // Changed to match HumanFormEnemy naming
+    [SerializeField] private GameObject bulletPrefab;  // Phase 1 projectile
+    [SerializeField] private GameObject phase2BulletPrefab;  // Phase 2 projectile
     [SerializeField] private BossWeakPoint[] weakPoints;  // 四个弱点
     private BossAnimator bossAnimator;
     private BossHealthBar healthBar;
     private NavMeshAgent navAgent;
+    private Collider bossMainCollider;
 
     [Header("Audio Config")]
     [SerializeField] private AudioClip attackSoundClip;
@@ -60,6 +62,10 @@ public class BossBehavior : EnemyAI
     [SerializeField] private float rangedAttackDistance = 15f;
     [SerializeField] private float rangedAttackCooldown = 2f;
     private float rangedAttackTimer;
+
+    [Header("Attack Config - Phase 2")]
+    [SerializeField] private float phase2ThrowSpeed = 10f;
+    [SerializeField, Range(0f, 1f)] private float phase2DownBias = 0.6f;
 
     [Header("Attack Config - Phase 3")]
     [SerializeField] private float meleeAttackDistance = 3f;
@@ -89,6 +95,7 @@ public class BossBehavior : EnemyAI
         healthBar = GetComponentInChildren<BossHealthBar>();
         navAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
+        bossMainCollider = GetComponent<Collider>();
 
         // Debug: Check if healthBar was found
         if (healthBar == null)
@@ -227,7 +234,12 @@ public class BossBehavior : EnemyAI
 
             case BossPhase.Phase2_WeakPoints:
                 // Stay at medium range during phase 2
-                if (distanceToPlayer > 10f)
+                if (distanceToPlayer <= rangedAttackDistance && rangedAttackTimer <= 0)
+                {
+                    currentState = BossBehaviorState.RangedAttack;
+                    if (navAgent != null) navAgent.isStopped = true;
+                }
+                else if (distanceToPlayer > 10f)
                 {
                     MoveTowardsPlayer(8f);
                     bossAnimator.BeginAnimation(BossAnimationState.Walk);
@@ -349,12 +361,32 @@ public class BossBehavior : EnemyAI
 
     private void FireProjectile()
     {
-        if (bulletPrefab != null && player != null)
+        GameObject prefabToFire = currentPhase == BossPhase.Phase2_WeakPoints
+            ? phase2BulletPrefab
+            : bulletPrefab;
+
+        if (prefabToFire != null && player != null)
         {
             // Fire bullet from boss position + forward direction + slight offset to the right
-            Vector3 spawnPos = transform.position + transform.forward.normalized * 1f + transform.right.normalized * 0.2f;
+            Vector3 spawnPos = transform.position + transform.forward.normalized * 2f;
             Vector3 direction = (player.position - spawnPos).normalized;
-            GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(direction));
+            GameObject bullet = Instantiate(prefabToFire, spawnPos, Quaternion.LookRotation(direction));
+            EnemyFireballType01 fireballScript = bullet.GetComponent<EnemyFireballType01>();
+            if (fireballScript != null)            {
+                fireballScript.SetFather(gameObject);
+            }
+
+            if (currentPhase == BossPhase.Phase2_WeakPoints)
+            {
+                Rigidbody rb = bullet.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.isKinematic = false;
+                    rb.useGravity = true;
+                    Vector3 throwDir = (transform.forward + Vector3.down * phase2DownBias).normalized;
+                    rb.linearVelocity = throwDir * phase2ThrowSpeed;
+                }
+            }
             
             // Set father so the bullet knows who fired it
             EnemyFireballType01 fireball = bullet.GetComponent<EnemyFireballType01>();
@@ -446,7 +478,22 @@ public class BossBehavior : EnemyAI
         Debug.Log("Boss took damage: " + damage);   
         if (currentState == BossBehaviorState.Dead) return;
 
+        if (currentPhase == BossPhase.Phase2_WeakPoints)
+        {
+            // Phase 2 only takes damage from weak points
+            Debug.Log($"Phase2 hit on boss body (no damage). Remaining HP: {currentHealth}/{maxHealth}");
+            return;
+        }
+
+        ApplyDamage(damage);
+    }
+
+    private void ApplyDamage(int damage)
+    {
+        if (currentState == BossBehaviorState.Dead) return;
+
         currentHealth -= damage;
+        Debug.Log($"Boss HP after hit: {currentHealth}/{maxHealth}");
 
         // Update health bar
         if (healthBar != null)
@@ -530,6 +577,12 @@ public class BossBehavior : EnemyAI
                             weakPoint.SetActive(true);
                     }
                 }
+                // Disable boss main collider so only weak points can be hit
+                if (bossMainCollider != null)
+                {
+                    bossMainCollider.enabled = false;
+                    Debug.Log("Boss main collider disabled - only weak points can be hit now");
+                }
                 break;
 
             case BossPhase.Phase3_MeleeAttack:
@@ -541,6 +594,12 @@ public class BossBehavior : EnemyAI
                         if (weakPoint != null)
                             weakPoint.SetActive(false);
                     }
+                }
+                // Re-enable boss main collider
+                if (bossMainCollider != null)
+                {
+                    bossMainCollider.enabled = true;
+                    Debug.Log("Boss main collider re-enabled");
                 }
                 break;
         }
@@ -581,6 +640,7 @@ public class BossBehavior : EnemyAI
     // Called by weak points to deal extra damage
     public void TakeDamageFromWeakPoint(int damage)
     {
-        TakeDamage(damage);
+        Debug.Log($"Phase2 weak point hit. Damage: {damage}");
+        ApplyDamage(damage);
     }
 }
