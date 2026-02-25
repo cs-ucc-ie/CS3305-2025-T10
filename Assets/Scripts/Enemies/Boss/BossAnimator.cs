@@ -172,6 +172,11 @@ public class BossAnimator : MonoBehaviour
         return isAnimationDone;
     }
 
+    public BossAnimationState GetCurrentAnimationState()
+    {
+        return animationState;
+    }
+
     private EightDirection AngleToDirection(float angle)
     {
         if (angle >= -22.5f && angle < 22.5f)

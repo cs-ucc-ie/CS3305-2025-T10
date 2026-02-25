@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TestBossAnimator : MonoBehaviour
 {
-    public BossAnimator bossAnimator;
+    private BossAnimator bossAnimator;
     public GameObject boss;
 
     void Start()
