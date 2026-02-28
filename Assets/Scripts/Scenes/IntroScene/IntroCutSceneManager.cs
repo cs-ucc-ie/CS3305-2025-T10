@@ -11,6 +11,7 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI subtitleText;
     [SerializeField] private GameObject blackScreen;
     [SerializeField] private GameObject fightingScene1Actors;
+    [SerializeField] private GameObject[] fightingScene1MovingActors;
     [SerializeField] private GameObject fightingScene2Actors;
     [SerializeField] private GameObject npcActor;
     [SerializeField] private GameObject npcBulletPrefab;
@@ -58,6 +59,19 @@ public class CutSceneManager : MonoBehaviour
         blackScreen.SetActive(false);
         middleText.text = "";
         fightingScene1Actors.SetActive(true);
+        StartCoroutine(StartScene1Walk());
+    }
+
+    private IEnumerator StartScene1Walk()
+    {
+        foreach (GameObject actor in fightingScene1MovingActors)
+        {
+            var motor = actor.GetComponent<HumanFormEnemyMotor>();
+            motor.MoveTo(actor.transform.position + actor.transform.forward * 10f, 1f);
+            var animator = actor.GetComponent<HumanFormEnemyAnimator>();
+            yield return new WaitForSeconds(0.1f);
+            animator.BeginAnimation(HumanFormEnemyAnimationState.Walk);
+        }
     }
 
     public void StartSecondFightingCam()
