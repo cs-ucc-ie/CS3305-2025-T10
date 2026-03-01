@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum BossAnimationState { Walk, WeaponAttackStartUp, WeaponAttackOnce, WeaponAttackEnd, Dead }
+public enum BossAnimationState { Walk, WeaponAttackStartUp, WeaponAttackOnce, WeaponAttackEnd, Dash, Dead }
 
 [System.Serializable]
 class BossSpriteMapping
@@ -21,6 +21,7 @@ public class BossAnimator : MonoBehaviour
     [SerializeField] private int weaponAttackStartUpFrames;
     [SerializeField] private int weaponAttackFrames;
     [SerializeField] private int weaponAttackEndFrames;
+    [SerializeField] private int dashFrames;
     [SerializeField] private int deadFrames;
     [SerializeField] private float animationFrameRate;
     [SerializeField] private BossAnimationState animationState;
@@ -38,7 +39,7 @@ public class BossAnimator : MonoBehaviour
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         spriteMappings = GenerateMappings(sprites, walkFrames, weaponAttackStartUpFrames, weaponAttackFrames,
-            weaponAttackEndFrames, deadFrames);
+            weaponAttackEndFrames, dashFrames, deadFrames);
         animationState = BossAnimationState.Walk;
         animationDirection = EightDirection.Front;
         currentFrame = 0;
@@ -47,7 +48,7 @@ public class BossAnimator : MonoBehaviour
 
     private List<BossSpriteMapping> GenerateMappings(Sprite[] sprites,
     int walkFrames, int weaponAttackStartUpFrames, int weaponAttackFrames, int weaponAttackEndFrames,
-    int deadFrames)
+    int dashFrames, int deadFrames)
     {
         var mappings = new List<BossSpriteMapping>();
         int index = 0;
@@ -75,6 +76,7 @@ public class BossAnimator : MonoBehaviour
         // weapon attack end share the last frame of weapon attack animation, so start from frame - 1
         index -= 8;
         AddStateMappings(BossAnimationState.WeaponAttackEnd, weaponAttackEndFrames);
+        AddStateMappings(BossAnimationState.Dash, dashFrames);
         AddStateMappings(BossAnimationState.Dead, deadFrames);
         return mappings;
     }
@@ -141,12 +143,13 @@ public class BossAnimator : MonoBehaviour
                 spriteRenderer.sprite = sprites[frameMapping.index];
 
             /**
-                if walk or attack startup or attack end, loop animation
+                if walk or attack startup or attack end or dash, loop animation
                 if attack or dead, play once and stop at last frame
             **/
             if (animationState == BossAnimationState.Walk || 
             animationState == BossAnimationState.WeaponAttackStartUp ||
-            animationState == BossAnimationState.WeaponAttackEnd )
+            animationState == BossAnimationState.WeaponAttackEnd ||
+            animationState == BossAnimationState.Dash)
             {
                 int maxFrame = spriteMappings.Count(m => m.state == animationState && m.direction == animationDirection);
                 currentFrame = (currentFrame + 1) % maxFrame;
