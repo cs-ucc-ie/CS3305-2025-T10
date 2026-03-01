@@ -26,7 +26,10 @@ public class CheckInteractable : MonoBehaviour
         if (Physics.Raycast(ray, out hit, interactDistance))
         {
             interactableObject = hit.collider.gameObject.GetComponent<InteractableObject>();
-            if (interactableObject != null) return true;
+            if (interactableObject != null && interactableObject.enabled)
+            {
+                return true;
+            }
         }
         return false;
     }

@@ -47,6 +47,11 @@ public class AbilitySlowTime : MonoBehaviour
             // check whether the ability is stored in inventory
             if (slowTimeItem != null && InventoryManager.Instance.HasItem(slowTimeItem, 1))
             {
+                if(PlayerStatsManager.Instance.CurrentHunger <= 0)
+                {
+                    UIController.Instance.AddNewInformation("Not enough hunger to use Slow Time.");
+                    return;
+                }
                 abilityEnabled = true;
             }
             else

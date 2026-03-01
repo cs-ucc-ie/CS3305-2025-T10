@@ -16,6 +16,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI interactPromptText;
     [SerializeField] private TextMeshProUGUI playerHealthText;
     [SerializeField] private TextMeshProUGUI playerHungerText;
+    [SerializeField] private TextMeshProUGUI magazineText;
     [SerializeField] private RectTransform panel;
     [SerializeField] private Transform inventorySlotsGrid;
     [SerializeField] private Transform quickSlotsGrid;
@@ -80,6 +81,8 @@ public class UIController : MonoBehaviour
         // init player health and hunger text
         playerHungerText.text = PlayerStatsManager.Instance.CurrentHunger.ToString();
         playerHealthText.text = PlayerStatsManager.Instance.CurrentHealth.ToString();
+        // init magazine text
+        magazineText.text = "0";
     }
 
     void Update()
@@ -103,6 +106,11 @@ public class UIController : MonoBehaviour
     private void RefreshHealth(int currentHealth)
     {
         playerHealthText.text = currentHealth.ToString();
+    }
+
+    private void RefreshMagazine(int left)
+    {
+        magazineText.text = left.ToString();
     }
 
     private void UpdateInformation()

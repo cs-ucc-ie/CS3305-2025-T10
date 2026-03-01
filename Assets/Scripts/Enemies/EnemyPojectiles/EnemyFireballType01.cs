@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,13 +11,14 @@ public class EnemyFireballType01 : MonoBehaviour
     [SerializeField] private float ttl = 20f;
     [SerializeField] private float fps = 6f;
     [SerializeField] private int damage = 10;
+    [SerializeField] private bool destroyWhenHitEnemy = false;
     public GameObject father;
     private Camera mainCam;
     private SpriteRenderer sr;
     private int currentFrame = 0;
     private float spriteTimer = 0f;
     private float ttlTimer;
-    
+
 
     void Start()
     {
@@ -33,7 +35,7 @@ public class EnemyFireballType01 : MonoBehaviour
         if (mainCam != null)
         {
             Vector3 lookDir = mainCam.transform.position - transform.position;
-            lookDir.y = 0f; 
+            lookDir.y = 0f;
             if (lookDir != Vector3.zero)
                 transform.rotation = Quaternion.LookRotation(lookDir);
         }
@@ -54,7 +56,7 @@ public class EnemyFireballType01 : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
+
     }
 
     public void SetFather(GameObject father)
@@ -65,12 +67,12 @@ public class EnemyFireballType01 : MonoBehaviour
     // 碰到墙壁或玩家后销毁
     private void OnTriggerEnter(Collider other)
     {
-        
+
         // // 忽略自己 / 其他子弹
         // if (HasParentWithTag(other.transform, "Enemy") || HasParentWithTag(other.transform, "EnemyProjectile"))
         //     return;
 
-        if(other == father)
+        if (other == father)
         {
             Debug.Log("Fireball hit its father, ignoring: " + other.name);
             return;
@@ -81,21 +83,32 @@ public class EnemyFireballType01 : MonoBehaviour
             Debug.Log("Fireball hit enemy projectile: " + other.name);
             return;
         }
-            
 
-        if(HasParentWithTag(other.transform, "Enemy"))
+
+        if (HasParentWithTag(other.transform, "Enemy"))
         {
             Debug.Log("Fireball hit enemy: " + other.name);
             EnemyAI enemyAI = other.GetComponentInParent<EnemyAI>();
-            if(enemyAI != null)            {
-                enemyAI.TakeDamage(damage); 
-                //Destroy(gameObject);
+            Debug.Log("EnemyAI component: " + (enemyAI != null ? "found" : "not found") + other.name);
+            if (enemyAI != null)
+            {
+                if (!enemyAI.enabled)
+                {
+                    Debug.Log("EnemyAI is disabled, not applying damage to: " + other.name);
+                    if (destroyWhenHitEnemy)
+                        Destroy(gameObject);
+                    return;
+                }
+                enemyAI.TakeDamage(damage);
+                if (destroyWhenHitEnemy)
+                    Destroy(gameObject);
                 return;
+            }
 
-        }}
+        }
 
         // 命中玩家
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             Debug.Log("Fireball hit player: " + other.name);
             PlayerStatsManager.Instance.TakeDamage(damage);
@@ -105,16 +118,16 @@ public class EnemyFireballType01 : MonoBehaviour
         Destroy(gameObject);
     }
 
-private bool HasParentWithTag(Transform start, string tag)
-{
-    Transform t = start;
-    while (t != null)
+    private bool HasParentWithTag(Transform start, string tag)
     {
-        if (t.CompareTag(tag))
-            return true;
-        t = t.parent;
+        Transform t = start;
+        while (t != null)
+        {
+            if (t.CompareTag(tag))
+                return true;
+            t = t.parent;
+        }
+        return false;
     }
-    return false;
-}
 
 }

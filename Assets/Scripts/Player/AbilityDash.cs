@@ -18,6 +18,9 @@ public class AbilityDash : MonoBehaviour
     private CharacterController characterController;
     private Coroutine dashCoroutine;
 
+    public static event Action OnDashUsed;
+
+
     void OnEnable()
     {
         InputManager.OnDashPressed += Use;
@@ -87,6 +90,7 @@ public class AbilityDash : MonoBehaviour
     private IEnumerator DashCoroutine(Vector3 dashDirection)
     {
         PlayerStatsManager.Instance.ReduceHunger(hungerCost);
+        OnDashUsed?.Invoke();
         float elapsedTime = 0f;
         Vector3 startPosition = transform.position;
 

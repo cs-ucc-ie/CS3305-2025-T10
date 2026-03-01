@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class InventorySlotUI : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class InventorySlotUI : MonoBehaviour
     public TMP_Text nameText;
     public Button button;
     private InventorySlot slot;
+    public static Action OnQuickSlotClicked;
 
     public void SetSlot(InventorySlot slot)
     {
@@ -22,7 +24,7 @@ public class InventorySlotUI : MonoBehaviour
         icon.sprite = this.slot.item.icon;
 
         countText.text = this.slot.count.ToString();
-        nameText.text = this.slot.item.name;
+        nameText.text = this.slot.item.itemName;
 
     }
 
@@ -40,7 +42,7 @@ public class InventorySlotUI : MonoBehaviour
         if (slot != null && slot.item != null)
         {
             countText.text = slot.count.ToString();
-            nameText.text = slot.item.name;
+            nameText.text = slot.item.itemName;
         }
         else
         {
@@ -56,6 +58,7 @@ public class InventorySlotUI : MonoBehaviour
         if (slot != null)
         {
             InventoryManager.Instance.ChangeSelectedQuickSlot(slot);
+            OnQuickSlotClicked?.Invoke();
         }
     }
 }
