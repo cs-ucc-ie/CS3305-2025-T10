@@ -2,7 +2,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Inventory/Item/BulletItem")]
-public class BulletItem : ScriptableObject
+public class BulletItem : Item
 {
     [Header("Prefab")]
     public GameObject bulletPrefab;
@@ -55,7 +55,7 @@ public class BulletItem : ScriptableObject
         Vector3 velocity = direction * bulletSpeed;
 
         bullet.Launch(velocity);
-
+        Destroy(bulletObj);
         return true;
     }
 }
