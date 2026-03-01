@@ -14,10 +14,4 @@ public class pistol : WeaponFramework
             Magazine.Enqueue(bullet);
         }
     }
-
-    // Convenience method for testing
-    public override bool TryReload()
-    {
-        return TryStartLoadBullet(shellItem);
-    }
 }

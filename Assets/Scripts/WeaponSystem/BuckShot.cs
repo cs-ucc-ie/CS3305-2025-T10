@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShotgunBullet : MonoBehaviour
+public class BuckShot : MonoBehaviour
 {
 
     public GameObject pelletPrefab;   
