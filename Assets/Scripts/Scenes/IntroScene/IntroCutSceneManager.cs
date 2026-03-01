@@ -13,8 +13,14 @@ public class CutSceneManager : MonoBehaviour
     [SerializeField] private GameObject fightingScene1Actors;
     [SerializeField] private GameObject[] fightingScene1MovingActors;
     [SerializeField] private GameObject fightingScene2Actors;
+    [SerializeField] private GameObject ocelot;
+    [SerializeField] private AudioSource ocelotAudioSource;
+    [SerializeField] private AudioClip ocelotFire;
+    [SerializeField] private GameObject Vcam2OrbitCenter;
+    private float rotateTimer;
     [SerializeField] private GameObject npcActor;
     [SerializeField] private GameObject npcBulletPrefab;
+    [SerializeField] private GameObject enemyBulletPrefab;
     [SerializeField] private GameObject protagonistActor;
     [SerializeField] private GameObject[] chasingActors;
     [SerializeField] private GameObject chasingProtagonistActor;
@@ -67,7 +73,7 @@ public class CutSceneManager : MonoBehaviour
         foreach (GameObject actor in fightingScene1MovingActors)
         {
             var motor = actor.GetComponent<HumanFormEnemyMotor>();
-            motor.MoveTo(actor.transform.position + actor.transform.forward * 10f, 1f);
+            motor.MoveTo(actor.transform.position + actor.transform.forward * 10f, 2f);
             var animator = actor.GetComponent<HumanFormEnemyAnimator>();
             yield return new WaitForSeconds(0.1f);
             animator.BeginAnimation(HumanFormEnemyAnimationState.Walk);
@@ -80,6 +86,47 @@ public class CutSceneManager : MonoBehaviour
         middleText.text = "";
         fightingScene1Actors.SetActive(false);
         fightingScene2Actors.SetActive(true);
+        StartCoroutine(StartScene2OcelotAttack());
+        StartCoroutine(StartVcam2Rotate());
+    }
+    private IEnumerator StartVcam2Rotate()
+    {
+        float totalTime = 3f;
+        float interval = 0.02f;
+        float elapsedTime = 0f;
+        float rotateAngle = 150f;
+        while (elapsedTime < totalTime){
+            Vcam2OrbitCenter.transform.Rotate(Vector3.up, rotateAngle / totalTime * interval);
+            elapsedTime += interval;
+            yield return new WaitForSeconds(interval);
+        }
+    }
+
+    private IEnumerator StartScene2OcelotAttack()
+    {
+        var animator = ocelot.GetComponent<HumanFormEnemyAnimator>();
+        //var motor = ocelot.GetComponent<HumanFormEnemyMotor>();
+        for (int i = 0; i < 5; i++)
+        {
+            animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttack);
+
+            // 发射火球，火球生成在敌人前方偏右一点
+            ocelotAudioSource.PlayOneShot(ocelotFire);
+            Vector3 spawnPos = ocelot.transform.position + ocelot.transform.forward.normalized * 0.2f + ocelot.transform.right.normalized * 0.1f;
+            Vector3 dir = ocelot.transform.forward.normalized - ocelot.transform.right.normalized * 0.1f;
+            Instantiate(enemyBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
+
+            yield return new WaitUntil(() => animator.IsCurrentAnimationDone());
+
+            float currentY = ocelot.transform.eulerAngles.y;
+            float angle = 80f;
+            float targetY = currentY + angle;
+            ocelot.transform.rotation = Quaternion.Euler(0f, targetY, 0f);
+            var spriteRendererObject = ocelot.GetComponentInChildren<SpriteRenderer>().gameObject;
+            spriteRendererObject.transform.rotation = Quaternion.Euler(0f, spriteRendererObject.transform.eulerAngles.y - angle, 0f);
+            animator.BeginAnimation(HumanFormEnemyAnimationState.WeaponAttackStartUp);
+            yield return new WaitForSeconds(0.3f);
+        }
     }
 
     public void CamTurnToNPC()
@@ -106,6 +153,7 @@ public class CutSceneManager : MonoBehaviour
             Vector3 dir = npcActor.transform.forward.normalized - npcActor.transform.right.normalized * 0.1f;
             Instantiate(npcBulletPrefab, spawnPos, Quaternion.LookRotation(dir));
         }
+        audioSourceProtagonist.PlayOneShot(ocelotFire);
         animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
         yield return new WaitForSeconds(0.2f);
         hitNPCFireball.SetActive(true);
