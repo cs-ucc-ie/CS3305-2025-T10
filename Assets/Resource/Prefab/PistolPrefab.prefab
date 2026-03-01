@@ -56,6 +56,11 @@ MonoBehaviour:
   reloadSfx: {fileID: 8300000, guid: c65da325bbf4f4154aa0497f7350e547, type: 3}
   fireSfx: {fileID: 8300000, guid: 7e4605777a38e4627a5ad285435a60ee, type: 3}
   weaponAudioSource: {fileID: 0}
+  recoilPositionOffset: {x: 0, y: 0, z: 0}
+  recoilRotationOffset: {x: 6.5, y: 0, z: 0}
+  recoilKickTime: 0.05
+  recoilReturnTime: 0.09
+  useRecoil: 1
   shellItem: {fileID: 11400000, guid: af632ef65b35d4702a0bf2d1ce084151, type: 2}
 --- !u!1 &3544689895224899682
 GameObject:
