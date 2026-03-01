@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 /// <summary>
 /// Boss 攻击阶段枚举
@@ -43,9 +44,11 @@ public class BossBehavior : EnemyAI
 
     [Header("Object References")]
     [SerializeField] private Transform player;
-    [SerializeField] private GameObject bulletPrefab;  // Phase 1 projectile
-    [SerializeField] private GameObject phase2BulletPrefab;  // Phase 2 projectile
-    [SerializeField] private BossWeakPoint[] weakPoints;  // 四个弱点
+    [SerializeField] private GameObject bulletPrefab;  // Projectile for all phases
+    [SerializeField] private GameObject bossWeaknessPrefab; // Phase 2 生成的弱点 prefab（应包含 BossWeakPoint）
+    [SerializeField] private Transform[] phase2WeakPointSpawnPoints; // 4 个生成点
+    private BossWeakPoint[] spawnedWeakPoints;
+    private bool phase2WeakPointsSpawned;
     private BossAnimator bossAnimator;
     private BossHealthBar healthBar;
     private NavMeshAgent navAgent;
@@ -62,10 +65,6 @@ public class BossBehavior : EnemyAI
     [SerializeField] private float rangedAttackDistance = 15f;
     [SerializeField] private float rangedAttackCooldown = 2f;
     private float rangedAttackTimer;
-
-    [Header("Attack Config - Phase 2")]
-    [SerializeField] private float phase2ThrowSpeed = 10f;
-    [SerializeField, Range(0f, 1f)] private float phase2DownBias = 0.6f;
 
     [Header("Attack Config - Phase 3")]
     [SerializeField] private float meleeAttackDistance = 3f;
@@ -133,13 +132,30 @@ public class BossBehavior : EnemyAI
         }
 
         // Initialize weak points (disabled in phase 1)
-        if (weakPoints != null)
+        SetWeakPointsActive(false);
+        Debug.Log("[Boss][Init] Phase1 start: weak points disabled.");
+
+        // Validate Phase 2 weak point setup
+        if (bossWeaknessPrefab == null)
         {
-            foreach (var weakPoint in weakPoints)
-            {
-                if (weakPoint != null)
-                    weakPoint.SetActive(false);
-            }
+            Debug.LogError("[Boss][Init] ❌ bossWeaknessPrefab is NOT assigned! Phase 2 weak points will not spawn.");
+        }
+        else
+        {
+            Debug.Log("[Boss][Init] ✅ bossWeaknessPrefab assigned.");
+        }
+
+        if (phase2WeakPointSpawnPoints == null || phase2WeakPointSpawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[Boss][Init] ⚠️ phase2WeakPointSpawnPoints not assigned. Will auto-generate default spawn points in Phase2.");
+        }
+        else if (phase2WeakPointSpawnPoints.Length != 4)
+        {
+            Debug.LogWarning($"[Boss][Init] ⚠️ phase2WeakPointSpawnPoints has {phase2WeakPointSpawnPoints.Length} points, expected 4.");
+        }
+        else
+        {
+            Debug.Log($"[Boss][Init] ✅ phase2WeakPointSpawnPoints configured with 4 points.");
         }
     }
 
@@ -227,8 +243,11 @@ public class BossBehavior : EnemyAI
                 }
                 else
                 {
-                    MoveTowardsPlayer(rangedAttackDistance - 2f);
-                    bossAnimator.BeginAnimation(BossAnimationState.Walk);
+                    bool isMoving = MoveTowardsPlayer(rangedAttackDistance - 2f);
+                    if (isMoving)
+                    {
+                        PlayWalkAnimationIfNeeded();
+                    }
                 }
                 break;
 
@@ -241,8 +260,11 @@ public class BossBehavior : EnemyAI
                 }
                 else if (distanceToPlayer > 10f)
                 {
-                    MoveTowardsPlayer(8f);
-                    bossAnimator.BeginAnimation(BossAnimationState.Walk);
+                    bool isMoving = MoveTowardsPlayer(8f);
+                    if (isMoving)
+                    {
+                        PlayWalkAnimationIfNeeded();
+                    }
                 }
                 else
                 {
@@ -260,26 +282,42 @@ public class BossBehavior : EnemyAI
                 }
                 else
                 {
-                    MoveTowardsPlayer(meleeAttackDistance);
-                    bossAnimator.BeginAnimation(BossAnimationState.Walk);
+                    bool isMoving = MoveTowardsPlayer(meleeAttackDistance);
+                    if (isMoving)
+                    {
+                        PlayWalkAnimationIfNeeded();
+                    }
                 }
                 break;
         }
     }
 
-    private void MoveTowardsPlayer(float targetDistance)
+    private bool MoveTowardsPlayer(float targetDistance)
     {
-        if (player == null || navAgent == null) return;
+        if (player == null || navAgent == null || !navAgent.enabled || !navAgent.isOnNavMesh)
+            return false;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer > targetDistance)
         {
             navAgent.isStopped = false;
             navAgent.SetDestination(player.position);
+            return true;
         }
         else
         {
             navAgent.isStopped = true;
+            return false;
+        }
+    }
+
+    private void PlayWalkAnimationIfNeeded()
+    {
+        if (bossAnimator == null) return;
+
+        if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.Walk)
+        {
+            bossAnimator.BeginAnimation(BossAnimationState.Walk);
         }
     }
 
@@ -289,6 +327,11 @@ public class BossBehavior : EnemyAI
         {
             currentState = BossBehaviorState.Chase;
             return;
+        }
+
+        if (navAgent != null)
+        {
+            navAgent.isStopped = true;
         }
 
         // Face player
@@ -329,6 +372,11 @@ public class BossBehavior : EnemyAI
             return;
         }
 
+        if (navAgent != null)
+        {
+            navAgent.isStopped = true;
+        }
+
         // Face player
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
@@ -361,44 +409,23 @@ public class BossBehavior : EnemyAI
 
     private void FireProjectile()
     {
-        GameObject prefabToFire = currentPhase == BossPhase.Phase2_WeakPoints
-            ? phase2BulletPrefab
-            : bulletPrefab;
+        if (bulletPrefab == null || player == null)
+            return;
 
-        if (prefabToFire != null && player != null)
+        // Fire bullet from boss position + forward direction + slight offset to the right
+        Vector3 spawnPos = transform.position + transform.forward.normalized * 2f;
+        Vector3 direction = (player.position - spawnPos).normalized;
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(direction));
+        
+        EnemyFireballType01 fireballScript = bullet.GetComponent<EnemyFireballType01>();
+        if (fireballScript != null)
         {
-            // Fire bullet from boss position + forward direction + slight offset to the right
-            Vector3 spawnPos = transform.position + transform.forward.normalized * 2f;
-            Vector3 direction = (player.position - spawnPos).normalized;
-            GameObject bullet = Instantiate(prefabToFire, spawnPos, Quaternion.LookRotation(direction));
-            EnemyFireballType01 fireballScript = bullet.GetComponent<EnemyFireballType01>();
-            if (fireballScript != null)            {
-                fireballScript.SetFather(gameObject);
-            }
-
-            if (currentPhase == BossPhase.Phase2_WeakPoints)
-            {
-                Rigidbody rb = bullet.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-                    rb.useGravity = true;
-                    Vector3 throwDir = (transform.forward + Vector3.down * phase2DownBias).normalized;
-                    rb.linearVelocity = throwDir * phase2ThrowSpeed;
-                }
-            }
-            
-            // Set father so the bullet knows who fired it
-            EnemyFireballType01 fireball = bullet.GetComponent<EnemyFireballType01>();
-            if (fireball != null)
-            {
-                fireball.SetFather(gameObject);
-            }
-            
-            if (audioSource != null && attackSoundClip != null)
-            {
-                audioSource.PlayOneShot(attackSoundClip, audioVolume);
-            }
+            fireballScript.SetFather(gameObject);
+        }
+        
+        if (audioSource != null && attackSoundClip != null)
+        {
+            audioSource.PlayOneShot(attackSoundClip, audioVolume);
         }
     }
 
@@ -568,15 +595,9 @@ public class BossBehavior : EnemyAI
         switch (newPhase)
         {
             case BossPhase.Phase2_WeakPoints:
-                // Activate weak points
-                if (weakPoints != null)
-                {
-                    foreach (var weakPoint in weakPoints)
-                    {
-                        if (weakPoint != null)
-                            weakPoint.SetActive(true);
-                    }
-                }
+                SpawnPhase2WeakPoints();
+                SetWeakPointsActive(true);
+                Debug.Log("[Boss][Phase2] Weak points activated. Body damage should now be ignored.");
                 // Disable boss main collider so only weak points can be hit
                 if (bossMainCollider != null)
                 {
@@ -586,15 +607,9 @@ public class BossBehavior : EnemyAI
                 break;
 
             case BossPhase.Phase3_MeleeAttack:
-                // Deactivate weak points
-                if (weakPoints != null)
-                {
-                    foreach (var weakPoint in weakPoints)
-                    {
-                        if (weakPoint != null)
-                            weakPoint.SetActive(false);
-                    }
-                }
+                SetWeakPointsActive(false);
+                DespawnPhase2WeakPoints();
+                Debug.Log("[Boss][Phase3] Weak points deactivated and despawned.");
                 // Re-enable boss main collider
                 if (bossMainCollider != null)
                 {
@@ -624,14 +639,9 @@ public class BossBehavior : EnemyAI
             navAgent.enabled = false;
 
         // Deactivate weak points
-        if (weakPoints != null)
-        {
-            foreach (var weakPoint in weakPoints)
-            {
-                if (weakPoint != null)
-                    weakPoint.SetActive(false);
-            }
-        }
+        SetWeakPointsActive(false);
+        DespawnPhase2WeakPoints();
+        Debug.Log("[Boss][Dead] Weak points cleaned up.");
 
         // Disable collider after a delay
         Destroy(GetComponent<Collider>(), 0.5f);
@@ -640,7 +650,153 @@ public class BossBehavior : EnemyAI
     // Called by weak points to deal extra damage
     public void TakeDamageFromWeakPoint(int damage)
     {
-        Debug.Log($"Phase2 weak point hit. Damage: {damage}");
+        if (currentPhase != BossPhase.Phase2_WeakPoints)
+        {
+            Debug.Log($"[Boss][WeakPointHitIgnored] Current phase is {currentPhase}, weak point damage ignored: {damage}");
+            return;
+        }
+
+        Debug.Log($"[Boss][WeakPointHit] Accepted damage: {damage}");
         ApplyDamage(damage);
+    }
+
+    private void SpawnPhase2WeakPoints()
+    {
+        if (phase2WeakPointsSpawned)
+        {
+            Debug.Log("[Boss][Phase2Spawn] Weak points already spawned, skip.");
+            return;
+        }
+
+        if (bossWeaknessPrefab == null)
+        {
+            Debug.LogError("[Boss][Phase2Spawn] ❌ CRITICAL: bossWeaknessPrefab is NULL. Cannot spawn weak points!");
+            return;
+        }
+
+        Transform[] spawnPoints = phase2WeakPointSpawnPoints;
+
+        // Auto-generate default spawn points if not configured
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[Boss][Phase2Spawn] ⚠️ phase2WeakPointSpawnPoints not configured. Generating default spawn points around boss.");
+            spawnPoints = GenerateDefaultSpawnPoints();
+        }
+
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogError("[Boss][Phase2Spawn] ❌ CRITICAL: Failed to generate spawn points!");
+            return;
+        }
+
+        if (spawnPoints.Length != 4)
+        {
+            Debug.LogWarning($"[Boss][Phase2Spawn] ⚠️ Expected 4 spawn points, got {spawnPoints.Length}. Will spawn {spawnPoints.Length} weak points.");
+        }
+
+        List<BossWeakPoint> createdWeakPoints = new List<BossWeakPoint>();
+
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            Transform spawnPoint = spawnPoints[i];
+            if (spawnPoint == null)
+            {
+                Debug.LogWarning($"[Boss][Phase2Spawn] ⚠️ Spawn point at index {i} is NULL, skip.");
+                continue;
+            }
+
+            GameObject weakObj = Instantiate(
+                bossWeaknessPrefab,
+                spawnPoint.position,
+                spawnPoint.rotation,
+                spawnPoint);
+            weakObj.name = $"{bossWeaknessPrefab.name}_Phase2_{i}";
+
+            BossWeakPoint weakPoint = weakObj.GetComponent<BossWeakPoint>();
+            if (weakPoint == null)
+            {
+                weakPoint = weakObj.GetComponentInChildren<BossWeakPoint>();
+            }
+
+            if (weakPoint == null)
+            {
+                Debug.LogError($"[Boss][Phase2Spawn] ❌ Spawned prefab at index {i} ({spawnPoint.name}) has NO BossWeakPoint component! Destroying...");
+                Destroy(weakObj);
+                continue;
+            }
+
+            createdWeakPoints.Add(weakPoint);
+            Debug.Log($"[Boss][Phase2Spawn] ✅ Spawned weak point #{createdWeakPoints.Count} at {spawnPoint.name}");
+        }
+
+        spawnedWeakPoints = createdWeakPoints.ToArray();
+        phase2WeakPointsSpawned = spawnedWeakPoints.Length > 0;
+        Debug.Log($"[Boss][Phase2Spawn] ✅ Spawn completed. Total spawned: {spawnedWeakPoints.Length}/{spawnPoints.Length}");
+    }
+
+    private Transform[] GenerateDefaultSpawnPoints()
+    {
+        // Create 4 default spawn points around the boss: Front, Back, Left, Right
+        GameObject[] points = new GameObject[4];
+        string[] names = { "Phase2_SpawnPoint_Front", "Phase2_SpawnPoint_Back", "Phase2_SpawnPoint_Left", "Phase2_SpawnPoint_Right" };
+        Vector3[] offsets = 
+        {
+            Vector3.forward * 3f,   // Front
+            Vector3.back * 3f,      // Back
+            Vector3.left * 3f,      // Left
+            Vector3.right * 3f      // Right
+        };
+
+        Transform[] result = new Transform[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            points[i] = new GameObject(names[i]);
+            points[i].transform.SetParent(transform);
+            points[i].transform.localPosition = offsets[i];
+            points[i].transform.localRotation = Quaternion.identity;
+            result[i] = points[i].transform;
+
+            Debug.Log($"[Boss][Phase2Spawn] Generated default spawn point #{i + 1}: {names[i]} at {offsets[i]}");
+        }
+
+        return result;
+    }
+
+    private void DespawnPhase2WeakPoints()
+    {
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            phase2WeakPointsSpawned = false;
+            return;
+        }
+
+        int removedCount = 0;
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint == null) continue;
+            Destroy(weakPoint.gameObject);
+            removedCount++;
+        }
+
+        spawnedWeakPoints = null;
+        phase2WeakPointsSpawned = false;
+        Debug.Log($"[Boss][Phase2Despawn] Removed spawned weak points: {removedCount}");
+    }
+
+    private void SetWeakPointsActive(bool active)
+    {
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            return;
+        }
+
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint != null)
+            {
+                weakPoint.SetActive(active);
+            }
+        }
     }
 }
