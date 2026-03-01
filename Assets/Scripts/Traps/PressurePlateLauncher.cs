@@ -23,7 +23,10 @@ public class PressurePlateLauncher : MonoBehaviour
         if(fireballPrefab != null && spawnPoint != null)
         {
             GameObject fireball = Instantiate(fireballPrefab, spawnPoint.position, spawnPoint.rotation);
-            fireball.transform.LookAt(targetPos + Vector3.up);
+            //fireball.transform.LookAt(targetPos + Vector3.up);
+
+            Vector3 horizontalTarget = new Vector3(targetPos.x, spawnPoint.position.y, targetPos.z);           
+            fireball.transform.LookAt(horizontalTarget);
         }
     }
 }
