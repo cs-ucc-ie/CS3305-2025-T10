@@ -9,7 +9,7 @@ enum BossWeaknessState
 public class BossWeaknessAI : EnemyAI
 {
     [SerializeField] private int health = 20;
-    [SerializeField] private bool isDead = false;
+    public bool isDead = false;
     [SerializeField] private BossWeaknessState currentState = BossWeaknessState.WaitAttack;
     [SerializeField] private float attackInterval = 2f;
     [SerializeField] private GameObject fireballPrefab;
@@ -59,10 +59,7 @@ public class BossWeaknessAI : EnemyAI
                 if (!animator.IsCurrentAnimationDone()) return; // Wait for attack animation to finish before spawning fireball
                 GameObject fireball = Instantiate(fireballPrefab, transform.position + transform.forward.normalized * 1f, Quaternion.identity);
                 EnemyFireballType01 fireballScript = fireball.GetComponent<EnemyFireballType01>();
-                if (fireballScript != null)
-                {
-                    fireballScript.SetFather(this.gameObject);
-                }
+                    fireballScript.SetFather(gameObject);
                 currentState = BossWeaknessState.WaitAttack;
                 break;
             case BossWeaknessState.Dead:

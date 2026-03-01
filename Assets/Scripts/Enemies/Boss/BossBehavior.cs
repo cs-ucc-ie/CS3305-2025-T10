@@ -49,6 +49,7 @@ public class BossBehavior : EnemyAI
     [SerializeField] private Transform[] phase2WeakPointSpawnPoints; // 4 个生成点
     private BossWeakPoint[] spawnedWeakPoints;
     private bool phase2WeakPointsSpawned;
+    private int lastAliveWeakPointsCount = 0;  // 上一次检查时的活着弱点数量
     private BossAnimator bossAnimator;
     private BossHealthBar healthBar;
     private NavMeshAgent navAgent;
@@ -163,6 +164,12 @@ public class BossBehavior : EnemyAI
     {
         if (currentState == BossBehaviorState.Dead)
             return;
+
+        // 在Phase 2时定期检查弱点状态
+        if (currentPhase == BossPhase.Phase2_WeakPoints)
+        {
+            CheckWeakPointsStatus();
+        }
 
         // Handle knockback
         if (isKnockedBack)
@@ -502,25 +509,26 @@ public class BossBehavior : EnemyAI
 
     public override void TakeDamage(int damage)
     {
-        Debug.Log("Boss took damage: " + damage);   
+        Debug.Log($"[Boss][TakeDamage] Received {damage} damage | Current Phase: {currentPhase} | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");   
         if (currentState == BossBehaviorState.Dead) return;
 
         if (currentPhase == BossPhase.Phase2_WeakPoints)
         {
             // Phase 2 only takes damage from weak points
-            Debug.Log($"Phase2 hit on boss body (no damage). Remaining HP: {currentHealth}/{maxHealth}");
+            Debug.Log($"[Boss][Phase2BlockedDamage] Body damage ignored in Phase 2! Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
             return;
         }
 
         ApplyDamage(damage);
     }
 
-    private void ApplyDamage(int damage)
+    public void ApplyDamage(int damage)
     {
         if (currentState == BossBehaviorState.Dead) return;
 
+        int oldHealth = currentHealth;
         currentHealth -= damage;
-        Debug.Log($"Boss HP after hit: {currentHealth}/{maxHealth}");
+        Debug.Log($"[Boss][ApplyDamage] ⚔️ Damage Applied: -{damage} | HP: {oldHealth} → {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase: {currentPhase}");
 
         // Update health bar
         if (healthBar != null)
@@ -535,6 +543,7 @@ public class BossBehavior : EnemyAI
         // Check for death
         if (currentHealth <= 0)
         {
+            Debug.Log($"[Boss][ApplyDamage] ☠️ Health dropped to {currentHealth}. Entering death state.");
             Die();
             return;
         }
@@ -566,24 +575,37 @@ public class BossBehavior : EnemyAI
     private void UpdatePhase()
     {
         BossPhase previousPhase = currentPhase;
+        BossPhase newPhase = currentPhase;
 
+        // 根据血量计算应该处于的阶段
         if (healthPercentage > phase2Threshold)
         {
-            currentPhase = BossPhase.Phase1_RangedAttack;
+            newPhase = BossPhase.Phase1_RangedAttack;
         }
         else if (healthPercentage > phase3Threshold)
         {
-            currentPhase = BossPhase.Phase2_WeakPoints;
+            newPhase = BossPhase.Phase2_WeakPoints;
         }
         else
         {
-            currentPhase = BossPhase.Phase3_MeleeAttack;
+            newPhase = BossPhase.Phase3_MeleeAttack;
         }
 
-        // Handle phase transitions
-        if (previousPhase != currentPhase)
+        // 阶段只能前进，不能后退（Phase1 -> Phase2 -> Phase3 单向）
+        if ((int)newPhase > (int)currentPhase)
         {
+            currentPhase = newPhase;
+            Debug.Log($"[Boss][UpdatePhase] ➡️ Phase Transition: {previousPhase} -> {currentPhase} | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
             OnPhaseChange(previousPhase, currentPhase);
+        }
+        else if ((int)newPhase < (int)currentPhase)
+        {
+            // 阶段不能回退
+            Debug.Log($"[Boss][UpdatePhase] 🚫 Phase rollback prevented: {currentPhase} (trying to go back to {newPhase}) | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
+        }
+        else
+        {
+            Debug.Log($"[Boss][UpdatePhase] ✅ Phase unchanged: {currentPhase} | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
         }
     }
 
@@ -595,6 +617,8 @@ public class BossBehavior : EnemyAI
         switch (newPhase)
         {
             case BossPhase.Phase2_WeakPoints:
+                Debug.Log($"[Boss][Phase2Start] 💔 Entering Phase 2! Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
+                Debug.Log($"[Boss][Phase2Start] 🎯 Phase 2 HP Range: {Mathf.CeilToInt(maxHealth * phase2Threshold)} to {Mathf.CeilToInt(maxHealth * phase3Threshold)} ({phase2Threshold * 100:F1}% to {phase3Threshold * 100:F1}%)");
                 SpawnPhase2WeakPoints();
                 SetWeakPointsActive(true);
                 Debug.Log("[Boss][Phase2] Weak points activated. Body damage should now be ignored.");
@@ -607,6 +631,7 @@ public class BossBehavior : EnemyAI
                 break;
 
             case BossPhase.Phase3_MeleeAttack:
+                Debug.Log($"[Boss][Phase3Start] ⚔️ Entering Phase 3! Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase 3 threshold: {Mathf.CeilToInt(maxHealth * phase3Threshold)} ({phase3Threshold * 100:F1}%)");
                 SetWeakPointsActive(false);
                 DespawnPhase2WeakPoints();
                 Debug.Log("[Boss][Phase3] Weak points deactivated and despawned.");
@@ -652,12 +677,79 @@ public class BossBehavior : EnemyAI
     {
         if (currentPhase != BossPhase.Phase2_WeakPoints)
         {
-            Debug.Log($"[Boss][WeakPointHitIgnored] Current phase is {currentPhase}, weak point damage ignored: {damage}");
+            Debug.Log($"[Boss][WeakPointHitIgnored] ❌ Current phase is {currentPhase}, weak point damage ignored: {damage} | HP: {currentHealth}/{maxHealth}");
             return;
         }
 
-        Debug.Log($"[Boss][WeakPointHit] Accepted damage: {damage}");
+        Debug.Log($"[Boss][WeakPointHit] ✅ Weak point damage accepted: {damage} | Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase: {currentPhase}");
         ApplyDamage(damage);
+    }
+
+    private void CheckWeakPointsStatus()
+    {
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            return;
+        }
+
+        // 计算当前还活着的弱点（检查 BossWeaknessAI.isDead 属性）
+        int currentAliveWeakPoints = 0;
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint == null)
+                continue;
+
+            BossWeaknessAI weaknessAI = weakPoint.GetComponentInParent<BossWeaknessAI>();
+            if (weaknessAI != null && !weaknessAI.isDead)
+            {
+                currentAliveWeakPoints++;
+            }
+        }
+
+        // 如果活着的弱点数减少了，说明有弱点被摧毁
+        if (currentAliveWeakPoints < lastAliveWeakPointsCount)
+        {
+            Debug.Log($"[Boss][CheckWeakPointsStatus] 🔔 检测到弱点被摧毁! {lastAliveWeakPointsCount} → {currentAliveWeakPoints}");
+            lastAliveWeakPointsCount = currentAliveWeakPoints;
+            OnWeakPointDestroyed();
+        }
+    }
+
+    public void OnWeakPointDestroyed()
+    {
+        Debug.Log($"[Boss][OnWeakPointDestroyed] 🔔 方法被调用!");
+        
+        // 检查是否所有弱点都已被摧毁
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            Debug.LogWarning("[Boss][OnWeakPointDestroyed] ⚠️ spawnedWeakPoints 为null或空数组");
+            return;
+        }
+
+        // 计算还活着的弱点（检查 BossWeaknessAI.isDead 属性）
+        int aliveWeakPoints = 0;
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint == null)
+                continue;
+                
+            // 获取弱点的父对象上的 BossWeaknessAI 组件
+            BossWeaknessAI weaknessAI = weakPoint.GetComponentInParent<BossWeaknessAI>();
+            if (weaknessAI != null && !weaknessAI.isDead)
+            {
+                aliveWeakPoints++;
+            }
+        }
+
+        Debug.Log($"[Boss][WeakPointDestroyed] 💥 弱点被摧毁! 当前HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | 剩余活着的弱点: {aliveWeakPoints}/{spawnedWeakPoints.Length}");
+
+        // 如果所有弱点都被摧毁，强制进入Phase 3
+        if (aliveWeakPoints == 0)
+        {
+            Debug.Log($"[Boss][WeakPointDestroyed] ⚔️ 所有弱点已被摧毁！当前HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase 3阈值: {Mathf.CeilToInt(maxHealth * phase3Threshold)}");
+            currentPhase = BossPhase.Phase3_MeleeAttack;
+            OnPhaseChange(BossPhase.Phase2_WeakPoints, BossPhase.Phase3_MeleeAttack);
+        }
     }
 
     private void SpawnPhase2WeakPoints()
@@ -694,6 +786,15 @@ public class BossBehavior : EnemyAI
             Debug.LogWarning($"[Boss][Phase2Spawn] ⚠️ Expected 4 spawn points, got {spawnPoints.Length}. Will spawn {spawnPoints.Length} weak points.");
         }
 
+        // 计算每个弱点摧毁时应该造成的伤害
+        // Phase 2血量范围 = maxHealth * (phase2Threshold - phase3Threshold)
+        int phase2HealthRange = Mathf.CeilToInt(maxHealth * (phase2Threshold - phase3Threshold));
+        int damagePerWeakPoint = Mathf.CeilToInt((float)phase2HealthRange / spawnPoints.Length);
+        int totalDamageFromAllWeakPoints = damagePerWeakPoint * spawnPoints.Length;
+        Debug.Log($"[Boss][Phase2Spawn] 📊 Phase 2血量范围: {phase2HealthRange} HP ({phase2Threshold * 100:F0}% - {phase3Threshold * 100:F0}%)");
+        Debug.Log($"[Boss][Phase2Spawn] 💥 每个弱点伤害: {damagePerWeakPoint} HP | 弱点数量: {spawnPoints.Length} | 总伤害: {totalDamageFromAllWeakPoints} HP");
+        Debug.Log($"[Boss][Phase2Spawn] 🎯 预期结果: {currentHealth} HP → {currentHealth - totalDamageFromAllWeakPoints} HP (全部弱点摧毁后)");
+
         List<BossWeakPoint> createdWeakPoints = new List<BossWeakPoint>();
 
         for (int i = 0; i < spawnPoints.Length; i++)
@@ -725,12 +826,16 @@ public class BossBehavior : EnemyAI
                 continue;
             }
 
+            // 设置弱点被摧毁时对Boss造成的伤害
+            weakPoint.SetDamageOnDestroy(damagePerWeakPoint);
+
             createdWeakPoints.Add(weakPoint);
-            Debug.Log($"[Boss][Phase2Spawn] ✅ Spawned weak point #{createdWeakPoints.Count} at {spawnPoint.name}");
+            Debug.Log($"[Boss][Phase2Spawn] ✅ 生成弱点 #{createdWeakPoints.Count} at {spawnPoint.name} (摧毁时伤害: {damagePerWeakPoint} HP)");
         }
 
         spawnedWeakPoints = createdWeakPoints.ToArray();
         phase2WeakPointsSpawned = spawnedWeakPoints.Length > 0;
+        lastAliveWeakPointsCount = spawnedWeakPoints.Length;  // 初始化为生成的弱点数量
         Debug.Log($"[Boss][Phase2Spawn] ✅ Spawn completed. Total spawned: {spawnedWeakPoints.Length}/{spawnPoints.Length}");
     }
 
