@@ -119,7 +119,7 @@ public class CutSceneManager : MonoBehaviour
             yield return new WaitUntil(() => animator.IsCurrentAnimationDone());
 
             float currentY = ocelot.transform.eulerAngles.y;
-            float angle = 80f;
+            float angle = 73f;
             float targetY = currentY + angle;
             ocelot.transform.rotation = Quaternion.Euler(0f, targetY, 0f);
             var spriteRendererObject = ocelot.GetComponentInChildren<SpriteRenderer>().gameObject;
