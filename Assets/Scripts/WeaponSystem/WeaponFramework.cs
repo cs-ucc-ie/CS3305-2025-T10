@@ -92,6 +92,11 @@ public abstract class WeaponFramework : MonoBehaviour
         return true;
     }
 
+    public int CheckBulletsLeft()
+    {
+        return Magazine.Count;
+    }
+
     private bool CheckBulletSuitability(BulletItem bullet)
     {
         if (SuitableBullets.Contains(bullet.bulletCategory)) return true;
