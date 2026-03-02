@@ -34,8 +34,11 @@ public class BulletBehavior : MonoBehaviour
 
         Debug.Log("Bullet hit: " + collision.gameObject.name);
         var ai = collision.gameObject.GetComponent<EnemyAI>();
-        ai.KnockBack(transform.position, 3f, 1);
-        ai.TakeDamage(25);
+        if (ai != null)
+        {
+            ai.KnockBack(transform.position, 3f, 1);
+            ai.TakeDamage(25);
+        }
 
         Destroy(gameObject);
     }

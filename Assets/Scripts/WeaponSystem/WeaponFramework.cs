@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 
 public abstract class WeaponFramework : MonoBehaviour
@@ -14,6 +15,7 @@ public abstract class WeaponFramework : MonoBehaviour
     [SerializeField] protected Transform firePoint;
     [SerializeField] protected Vector3 mountPositionOffset;
     [SerializeField] protected Vector3 mountRotationOffset;
+    [SerializeField] protected HashSet<string> SuitableBullets = new HashSet<string>();
 
     [Header("SFX")]
     [SerializeField] protected AudioClip reloadSfx;
@@ -37,7 +39,7 @@ public abstract class WeaponFramework : MonoBehaviour
     protected float nextFireTime = 0f;
     protected bool isReloading = false;
 
-    public abstract bool TryReload();
+    //public abstract bool TryReload();
 
     protected virtual void Awake()
     {
@@ -90,11 +92,18 @@ public abstract class WeaponFramework : MonoBehaviour
         return true;
     }
 
+    private bool CheckBulletSuitability(BulletItem bullet)
+    {
+        if (SuitableBullets.Contains(bullet.bulletCategory)) return true;
+        return false;
+    }
+
     public bool TryStartLoadBullet(BulletItem bullet)
     {
         if (isReloading) return false;
         if (Magazine.Count >= magazineSize) return false;
         if (bullet == null) return false;
+        if (!CheckBulletSuitability(bullet)) return false;
 
         if (weaponAudioSource != null && reloadSfx != null)
         {
@@ -192,7 +201,7 @@ public abstract class WeaponFramework : MonoBehaviour
         if (firePoint == null) return false;
 
         BulletItem bullet = Magazine.Dequeue();
-        bool success = bullet.Use(firePoint);
+        bool success = bullet.FireBullet(firePoint);
 
         if (success)
         {

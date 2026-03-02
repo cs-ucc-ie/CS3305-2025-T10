@@ -366,8 +366,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: 120}
-  m_SizeDelta: {x: 800, y: 50}
+  m_AnchoredPosition: {x: 250, y: 120}
+  m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7855560757391553398
 CanvasRenderer:
@@ -514,6 +514,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BGMPlayer
   bgmClip: {fileID: 8300000, guid: 7d389095512fc476486b76b1cdf8dc66, type: 3}
+  uiClickClip: {fileID: 8300000, guid: aff1b09cd0e69c5439c557ce15363843, type: 3}
+  InteractPressedClip: {fileID: 8300000, guid: faf4b538892d70642ac19017509c9fbc, type: 3}
+  InventoryToggleClip: {fileID: 8300000, guid: 54bae63999fd4274ea625a6e0a2f0d14, type: 3}
+  DashClip: {fileID: 8300000, guid: b7f83816c482b6e468aff41c5d1b7517, type: 3}
+  SlowTimeEnableClip: {fileID: 8300000, guid: 429a1f1eeda22ac4ba6592560b67c2a3, type: 3}
+  SlowTimeDisableClip: {fileID: 8300000, guid: 12f9d4ab870b7114aa98b1014f4e0882, type: 3}
 --- !u!1 &1719806452277177134
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,19 +613,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
   allSlots:
+  - item: {fileID: 11400000, guid: 0b4e57bb92eea40fd9781e44625515eb, type: 2}
+    count: 2
   - item: {fileID: 11400000, guid: e674cb47ccd8c4b8cbf86838cfa8f771, type: 2}
     count: 1
   - item: {fileID: 11400000, guid: 42013618ad05142f6800019bb512a935, type: 2}
     count: 3
   - item: {fileID: 11400000, guid: 0c5e1f0814822498890b36bb41bc9d06, type: 2}
-    count: 3
-  - item: {fileID: 11400000, guid: a5f9dd8f9e10148a4893492fd8301881, type: 2}
-    count: 3
-  - item: {fileID: 11400000, guid: f2f4a95cc096f4bd1b8024647c496461, type: 2}
-    count: 3
-  - item: {fileID: 11400000, guid: 06699b85b42184076b36d217ed96f0d6, type: 2}
-    count: 3
-  - item: {fileID: 11400000, guid: 042e1092b32c842f688fbbb047beebbd, type: 2}
     count: 3
   quickSlots: []
   selectedQuickSlotIndex: 0
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84fa6821ce406401880335d6ac22dad6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatsManager
-  currentHealth: 10
+  currentHealth: 80
   maxHealth: 100
   currentHunger: 70
   maxHunger: 100
@@ -1182,7 +1182,7 @@ MonoBehaviour:
   weapons:
   - {fileID: 8728342395402407006, guid: eb6fcd16b46ca4dc6b7b733d0a722711, type: 3}
   - {fileID: 2874968856775422781, guid: 5f2e57f3b0fa6462181c1f4d574bed78, type: 3}
-  swapWeaponSfx: {fileID: 0}
+  swapWeaponSfx: {fileID: 8300000, guid: e857837e55cb34d2db57950fb0774854, type: 3}
   audioSource: {fileID: 0}
 --- !u!1 &6528813094213186258
 GameObject:
