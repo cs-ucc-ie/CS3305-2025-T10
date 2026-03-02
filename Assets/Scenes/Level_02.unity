@@ -451,6 +451,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6288075070886715106, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: DashClip
+      value: 
+      objectReference: {fileID: 8300000, guid: b7f83816c482b6e468aff41c5d1b7517, type: 3}
+    - target: {fileID: 6288075070886715106, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: uiClickClip
+      value: 
+      objectReference: {fileID: 8300000, guid: aff1b09cd0e69c5439c557ce15363843, type: 3}
+    - target: {fileID: 6288075070886715106, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: SlowTimeEnableClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 429a1f1eeda22ac4ba6592560b67c2a3, type: 3}
+    - target: {fileID: 6288075070886715106, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: InteractPressedClip
+      value: 
+      objectReference: {fileID: 8300000, guid: faf4b538892d70642ac19017509c9fbc, type: 3}
+    - target: {fileID: 6288075070886715106, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: InventoryToggleClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 54bae63999fd4274ea625a6e0a2f0d14, type: 3}
+    - target: {fileID: 6288075070886715106, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: SlowTimeDisableClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 12f9d4ab870b7114aa98b1014f4e0882, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
