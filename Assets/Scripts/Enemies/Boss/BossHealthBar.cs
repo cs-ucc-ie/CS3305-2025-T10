@@ -8,9 +8,7 @@ using UnityEngine;
 public class BossHealthBar : MonoBehaviour
 {
     [Header("Sprite References")]
-    [SerializeField] private SpriteRenderer frameSprite;        // 框
-    [SerializeField] private SpriteRenderer backgroundSprite;   // 背景
-    [SerializeField] private SpriteRenderer healthBarSprite;    // 血量条
+    [SerializeField] private SpriteRenderer healthBarSprite;    // 血量条 Sprite
 
     [Header("Color Config")]
     [SerializeField] private Color phase1Color = Color.green;     // 100%-67%
@@ -30,14 +28,18 @@ public class BossHealthBar : MonoBehaviour
     private int currentHealth;
     private Transform parentTransform;
     private Vector3 healthBarOriginalScale;
+    private Vector3 healthBarOriginalPosition;
 
     void Start()
     {
         parentTransform = transform.parent;
 
-        // 保存原始 Scale
+        // 保存原始 Scale 和 Position
         if (healthBarSprite != null)
+        {
             healthBarOriginalScale = healthBarSprite.transform.localScale;
+            healthBarOriginalPosition = healthBarSprite.transform.localPosition;
+        }
     }
 
     void Update()
@@ -60,14 +62,23 @@ public class BossHealthBar : MonoBehaviour
         maxHealth = health;
         currentHealth = health;
 
-        // 延迟初始化原始 Scale（确保 healthBarSprite 已赋值）
+        // 延迟初始化原始 Scale 和 Position（确保 healthBarSprite 已赋值）
         if (healthBarSprite != null && healthBarOriginalScale == Vector3.zero)
         {
             healthBarOriginalScale = healthBarSprite.transform.localScale;
+            healthBarOriginalPosition = healthBarSprite.transform.localPosition;
             Debug.Log("✅ HealthBar original scale saved: " + healthBarOriginalScale);
+            Debug.Log("✅ HealthBar original position saved: " + healthBarOriginalPosition);
         }
 
         UpdateHealthBar();
+        
+        // 调试：确保颜色被设置
+        if (healthBarSprite != null)
+        {
+            Debug.Log($"🎨 [SetMaxHealth] Initial color set: {healthBarSprite.color}, changeColor enabled: {changeColor}");
+            Debug.Log($"📊 [SetMaxHealth] Health set to {currentHealth}/{maxHealth} ({(float)currentHealth / maxHealth * 100:F1}%)");
+        }
     }
 
     public void SetHealth(int health)
@@ -88,7 +99,14 @@ public class BossHealthBar : MonoBehaviour
             Vector3 newScale = healthBarOriginalScale;
             newScale.x = healthBarOriginalScale.x * healthPercentage;
             healthBarSprite.transform.localScale = newScale;
-            Debug.Log($"📏 HealthBar length updated: {healthPercentage * 100:F1}% (scale.x = {newScale.x:F2})");
+            
+            // 调整位置，使血条从左向右缩短（左边保持，右边移动）
+            Vector3 newPosition = healthBarOriginalPosition;
+            float widthDifference = healthBarOriginalScale.x - newScale.x;
+            newPosition.x = healthBarOriginalPosition.x + widthDifference / 2f;
+            healthBarSprite.transform.localPosition = newPosition;
+            
+            Debug.Log($"📏 HealthBar length updated: {healthPercentage * 100:F1}% (scale.x = {newScale.x:F2}, position.x = {newPosition.x:F3})");
         }
 
         // 改变血量条颜色
@@ -104,25 +122,30 @@ public class BossHealthBar : MonoBehaviour
 
         Color newColor;
         string phaseName;
+        
+        Debug.Log($"🔍 [UpdateHealthBarColor] healthPercentage: {healthPercentage * 100:F1}%, threshold2: {phase2Threshold * 100}%, threshold3: {phase3Threshold * 100}%");
 
         if (healthPercentage > phase2Threshold)
         {
             newColor = phase1Color;
-            phaseName = "Phase 1 (绿色)";
+            phaseName = "Phase 1";
+            Debug.Log($"📊 [Color] Phase 1 detected (>{phase2Threshold * 100:F0}%), color: {phase1Color}");
         }
         else if (healthPercentage > phase3Threshold)
         {
             newColor = phase2Color;
-            phaseName = "Phase 2 (黄色)";
+            phaseName = "Phase 2";
+            Debug.Log($"📊 [Color] Phase 2 detected ({phase3Threshold * 100:F0}%-{phase2Threshold * 100:F0}%), color: {phase2Color}");
         }
         else
         {
             newColor = phase3Color;
-            phaseName = "Phase 3 (红色)";
+            phaseName = "Phase 3";
+            Debug.Log($"📊 [Color] Phase 3 detected (<{phase3Threshold * 100:F0}%), color: {phase3Color}");
         }
 
         healthBarSprite.color = newColor;
-        Debug.Log($"🎨 HealthBar color changed: {phaseName} (HP: {healthPercentage * 100:F1}%)");
+        Debug.Log($"🎨 HealthBar color changed to: {phaseName} | RGB({newColor.r:F2}, {newColor.g:F2}, {newColor.b:F2})");
     }
 
     public float GetHealthPercentage()
