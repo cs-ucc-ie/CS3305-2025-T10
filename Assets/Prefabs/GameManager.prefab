@@ -613,11 +613,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
   allSlots:
-  - item: {fileID: 11400000, guid: cf3037a4fc18243eb87ce4bd66763ef8, type: 2}
+  - item: {fileID: 11400000, guid: 0b4e57bb92eea40fd9781e44625515eb, type: 2}
     count: 2
   - item: {fileID: 11400000, guid: e674cb47ccd8c4b8cbf86838cfa8f771, type: 2}
     count: 1
   - item: {fileID: 11400000, guid: 42013618ad05142f6800019bb512a935, type: 2}
+    count: 3
+  - item: {fileID: 11400000, guid: 0c5e1f0814822498890b36bb41bc9d06, type: 2}
     count: 3
   quickSlots: []
   selectedQuickSlotIndex: 0
@@ -744,6 +746,7 @@ MonoBehaviour:
   interactPromptText: {fileID: 2023422957563240410}
   playerHealthText: {fileID: 4912411526765253871}
   playerHungerText: {fileID: 5514769312631237826}
+  magazineText: {fileID: 0}
   panel: {fileID: 1009471877274268150}
   inventorySlotsGrid: {fileID: 6594305460384101785}
   quickSlotsGrid: {fileID: 779954654634062596}
