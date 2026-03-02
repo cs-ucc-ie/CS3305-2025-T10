@@ -11,6 +11,8 @@ public class ClosedDoor : InteractableObject
     public bool openPermanently;
     public float waitTime = 2.0f;
 
+    public CrushZone bottomCrushZone;
+
     private bool isMoving = false;
     private bool isOpen = false;
 
@@ -31,6 +33,7 @@ public class ClosedDoor : InteractableObject
         Vector3 openPos = closedPos + (Vector3.up * moveDistance);
 
         // Move up
+        bottomCrushZone.isActive = false;
         yield return StartCoroutine(MoveToPosition(doorObject.transform, openPos));
         isOpen = true;
         interactPrompt = openPermanently ? "Open" : "About to close";
@@ -38,8 +41,10 @@ public class ClosedDoor : InteractableObject
         if (!openPermanently) 
         {
             yield return new WaitForSeconds(waitTime);
+            bottomCrushZone.isActive = true;
             yield return StartCoroutine(MoveToPosition(doorObject.transform, closedPos));
             isOpen = false;
+            bottomCrushZone.isActive = false;
             interactPrompt = "Open";
         }
         isMoving = false;
