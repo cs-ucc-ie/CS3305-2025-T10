@@ -1,18 +1,20 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Inventory/Item/BulletItem")]
-public class BulletItem : ScriptableObject
+public class BulletItem : Item
 {
     [Header("Prefab")]
     public GameObject bulletPrefab;
+    public String bulletCategory;
 
     [Header("Fire Settings")]
     public float bulletSpeed = 30f;
     public float bulletLifeTime = 5f;
     public float bulletDamage = 10f;
 
-    public bool Use(Transform firePoint)
+    public bool FireBullet(Transform firePoint)
     {
         // if (bulletPrefab == null)
         // {
@@ -55,7 +57,7 @@ public class BulletItem : ScriptableObject
         Vector3 velocity = direction * bulletSpeed;
 
         bullet.Launch(velocity);
-
         return true;
     }
+
 }

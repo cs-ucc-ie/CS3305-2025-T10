@@ -15,10 +15,4 @@ public class Shotgun : WeaponFramework
             Magazine.Enqueue(bullet);
         }
     }
-
-    // Convenience method for testing
-    public override bool TryReload()
-    {
-        return TryStartLoadBullet(shellItem);
-    }
 }
