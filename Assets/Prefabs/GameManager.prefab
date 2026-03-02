@@ -514,6 +514,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BGMPlayer
   bgmClip: {fileID: 8300000, guid: 7d389095512fc476486b76b1cdf8dc66, type: 3}
+  uiClickClip: {fileID: 8300000, guid: aff1b09cd0e69c5439c557ce15363843, type: 3}
+  InteractPressedClip: {fileID: 8300000, guid: faf4b538892d70642ac19017509c9fbc, type: 3}
+  InventoryToggleClip: {fileID: 8300000, guid: 54bae63999fd4274ea625a6e0a2f0d14, type: 3}
+  DashClip: {fileID: 8300000, guid: b7f83816c482b6e468aff41c5d1b7517, type: 3}
+  SlowTimeEnableClip: {fileID: 8300000, guid: 429a1f1eeda22ac4ba6592560b67c2a3, type: 3}
+  SlowTimeDisableClip: {fileID: 8300000, guid: 12f9d4ab870b7114aa98b1014f4e0882, type: 3}
 --- !u!1 &1719806452277177134
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,6 +1179,8 @@ MonoBehaviour:
   weapons:
   - {fileID: 8728342395402407006, guid: eb6fcd16b46ca4dc6b7b733d0a722711, type: 3}
   - {fileID: 2874968856775422781, guid: 5f2e57f3b0fa6462181c1f4d574bed78, type: 3}
+  swapWeaponSfx: {fileID: 8300000, guid: e857837e55cb34d2db57950fb0774854, type: 3}
+  audioSource: {fileID: 0}
 --- !u!1 &6528813094213186258
 GameObject:
   m_ObjectHideFlags: 0
