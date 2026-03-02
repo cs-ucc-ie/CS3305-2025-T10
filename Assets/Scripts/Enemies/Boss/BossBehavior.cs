@@ -63,7 +63,7 @@ public class BossBehavior : EnemyAI
     private AudioSource audioSource;
 
     [Header("Attack Config - Phase 1")]
-    [SerializeField] private float rangedAttackDistance = 15f;
+    [SerializeField] private float rangedAttackDistance = 8f;
     [SerializeField] private float rangedAttackCooldown = 2f;
     private float rangedAttackTimer;
 
@@ -77,6 +77,11 @@ public class BossBehavior : EnemyAI
     [Header("Movement Config")]
     [SerializeField] private float chaseSpeed = 5f;
     [SerializeField] private float stopChaseDistance = 2f;
+    [SerializeField] private float phase12TurnSpeed = 30f;
+
+    [Header("Dash Config")]
+    private bool isDashing = false;
+    private Vector3 dashDirection = Vector3.zero;
 
     [Header("Knockback Config")]
     [SerializeField] private float knockbackResistance = 0.5f;  // Boss 对击退的抗性
@@ -233,10 +238,7 @@ public class BossBehavior : EnemyAI
         // Face player
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
-        if (directionToPlayer.sqrMagnitude > 0.01f)
-        {
-            transform.forward = directionToPlayer.normalized;
-        }
+        FacePlayerByPhase(directionToPlayer);
 
         // Phase-specific behavior
         switch (currentPhase)
@@ -250,10 +252,14 @@ public class BossBehavior : EnemyAI
                 }
                 else
                 {
-                    bool isMoving = MoveTowardsPlayer(rangedAttackDistance - 2f);
+                    bool isMoving = MoveTowardsPlayer(rangedAttackDistance - 3f);
                     if (isMoving)
                     {
                         PlayWalkAnimationIfNeeded();
+                    }
+                    else
+                    {
+                        if (navAgent != null) navAgent.isStopped = true;
                     }
                 }
                 break;
@@ -265,17 +271,20 @@ public class BossBehavior : EnemyAI
                     currentState = BossBehaviorState.RangedAttack;
                     if (navAgent != null) navAgent.isStopped = true;
                 }
-                else if (distanceToPlayer > 10f)
+                else if (distanceToPlayer > 8f)
                 {
-                    bool isMoving = MoveTowardsPlayer(8f);
+                    bool isMoving = MoveTowardsPlayer(6f);
                     if (isMoving)
                     {
                         PlayWalkAnimationIfNeeded();
                     }
+                    else
+                    {
+                        if (navAgent != null) navAgent.isStopped = true;
+                    }
                 }
                 else
                 {
-                    currentState = BossBehaviorState.Chase;
                     if (navAgent != null) navAgent.isStopped = true;
                 }
                 break;
@@ -294,6 +303,10 @@ public class BossBehavior : EnemyAI
                     {
                         PlayWalkAnimationIfNeeded();
                     }
+                    else
+                    {
+                        if (navAgent != null) navAgent.isStopped = true;
+                    }
                 }
                 break;
         }
@@ -301,21 +314,45 @@ public class BossBehavior : EnemyAI
 
     private bool MoveTowardsPlayer(float targetDistance)
     {
-        if (player == null || navAgent == null || !navAgent.enabled || !navAgent.isOnNavMesh)
+        if (player == null)
             return false;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer > targetDistance)
+        if (distanceToPlayer <= targetDistance)
         {
-            navAgent.isStopped = false;
-            navAgent.SetDestination(player.position);
-            return true;
-        }
-        else
-        {
-            navAgent.isStopped = true;
+            if (navAgent != null && navAgent.enabled)
+            {
+                navAgent.isStopped = true;
+            }
             return false;
         }
+
+        // Prefer NavMeshAgent movement when available
+        if (navAgent != null)
+        {
+            if (!navAgent.enabled)
+            {
+                navAgent.enabled = true;
+            }
+
+            if (navAgent.enabled && navAgent.isOnNavMesh)
+            {
+                navAgent.isStopped = false;
+                navAgent.SetDestination(player.position);
+                return true;
+            }
+        }
+
+        // Fallback movement when NavMesh is unavailable
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+        if (direction.sqrMagnitude > 0.0001f)
+        {
+            transform.position += direction.normalized * chaseSpeed * Time.deltaTime;
+            return true;
+        }
+
+        return false;
     }
 
     private void PlayWalkAnimationIfNeeded()
@@ -344,10 +381,7 @@ public class BossBehavior : EnemyAI
         // Face player
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
-        if (directionToPlayer.sqrMagnitude > 0.01f)
-        {
-            transform.forward = directionToPlayer.normalized;
-        }
+        FacePlayerByPhase(directionToPlayer);
 
         // Attack animation sequence
         if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackStartUp &&
@@ -376,6 +410,7 @@ public class BossBehavior : EnemyAI
         if (player == null)
         {
             currentState = BossBehaviorState.Chase;
+            isDashing = false;
             return;
         }
 
@@ -384,33 +419,63 @@ public class BossBehavior : EnemyAI
             navAgent.isStopped = true;
         }
 
-        // Face player
+        // Calculate direction to player (normalized, no Y)
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
+        directionToPlayer.Normalize();
+
         if (directionToPlayer.sqrMagnitude > 0.01f)
         {
-            transform.forward = directionToPlayer.normalized;
+            transform.forward = directionToPlayer;
         }
 
-        // Attack animation sequence
-        if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackStartUp &&
-            bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackOnce)
+        // Start dash animation if not already dashing
+        if (!isDashing)
         {
-            bossAnimator.BeginAnimation(BossAnimationState.WeaponAttackStartUp);
+            isDashing = true;
+            dashDirection = directionToPlayer;
+            bossAnimator.BeginAnimation(BossAnimationState.Dash);
+            Debug.Log($"[Boss][Dash] Starting dash towards player in direction: {dashDirection}");
         }
 
-        // Deal damage when attack animation completes
-        if (bossAnimator.GetCurrentAnimationState() == BossAnimationState.WeaponAttackOnce && 
-            bossAnimator.IsCurrentAnimationDone())
+        // Move towards player during dash
+        if (isDashing && bossAnimator.GetCurrentAnimationState() == BossAnimationState.Dash)
+        {
+            transform.position += dashDirection * chaseSpeed * 1.5f * Time.deltaTime;
+        }
+
+        // Deal damage when dash animation completes
+        if (isDashing && bossAnimator.IsCurrentAnimationDone() && 
+            bossAnimator.GetCurrentAnimationState() == BossAnimationState.Dash)
         {
             PerformMeleeAttack();
             meleeAttackTimer = meleeAttackCooldown;
+            isDashing = false;
             currentState = BossBehaviorState.Chase;
+            
+            if (navAgent != null)
+            {
+                navAgent.isStopped = false;
+            }
+            Debug.Log($"[Boss][Dash] Dash complete, returning to Chase state");
         }
-        else if (bossAnimator.IsCurrentAnimationDone() && 
-                 bossAnimator.GetCurrentAnimationState() == BossAnimationState.WeaponAttackStartUp)
+    }
+
+    private void FacePlayerByPhase(Vector3 flatDirectionToPlayer)
+    {
+        if (flatDirectionToPlayer.sqrMagnitude <= 0.01f)
+            return;
+
+        Vector3 targetForward = flatDirectionToPlayer.normalized;
+
+        if (currentPhase == BossPhase.Phase1_RangedAttack || currentPhase == BossPhase.Phase2_WeakPoints)
         {
-            bossAnimator.BeginAnimation(BossAnimationState.WeaponAttackOnce);
+            float maxRadiansDelta = phase12TurnSpeed * Mathf.Deg2Rad * Time.deltaTime;
+            transform.forward = Vector3.RotateTowards(transform.forward, targetForward, maxRadiansDelta, 0f);
+        }
+        else
+        {
+            transform.forward = targetForward;
         }
     }
 
@@ -556,6 +621,8 @@ public class BossBehavior : EnemyAI
     {
         if (currentState == BossBehaviorState.Dead) return;
 
+        isDashing = false;
+
         // Boss has knockback resistance
         force *= knockbackResistance;
         duration *= knockbackResistance;
@@ -652,6 +719,7 @@ public class BossBehavior : EnemyAI
     {
         currentState = BossBehaviorState.Dead;
         currentPhase = BossPhase.Dead;
+        isDashing = false;
 
         bossAnimator.BeginAnimation(BossAnimationState.Dead);
 
