@@ -15,7 +15,7 @@ public abstract class WeaponFramework : MonoBehaviour
     [SerializeField] protected Transform firePoint;
     [SerializeField] protected Vector3 mountPositionOffset;
     [SerializeField] protected Vector3 mountRotationOffset;
-    [SerializeField] protected HashSet<string> SuitableBullets = new HashSet<string>();
+    [SerializeField] public List<string> SuitableBullets = new List<string>();
 
     [Header("SFX")]
     [SerializeField] protected AudioClip reloadSfx;
@@ -92,7 +92,7 @@ public abstract class WeaponFramework : MonoBehaviour
         return true;
     }
 
-    public int CheckBulletsLeft()
+    public int GetBulletsLeft()
     {
         return Magazine.Count;
     }

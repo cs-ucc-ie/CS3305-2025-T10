@@ -22,6 +22,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private Transform quickSlotsGrid;
     [SerializeField] private InventorySlotUI inventorySlotPrefab;
     [SerializeField] private QuickSlotUI quickSlotPrefab;
+    [SerializeField] private WeaponTestDriver weaponTestDriver;
     [Header("Foldable Panel Setting")]
     [SerializeField] private float panelVisibleHeight = 230f;
     [SerializeField] private float panelMoveSpeed = 5000f;
@@ -90,6 +91,7 @@ public class UIController : MonoBehaviour
         UpdateFoldableInventoryAnimation();
         UpdateCrosshair();
         UpdateInformation();
+        RefreshMagazine();
     }
 
     public void AddNewInformation(string info)
@@ -108,9 +110,10 @@ public class UIController : MonoBehaviour
         playerHealthText.text = currentHealth.ToString();
     }
 
-    private void RefreshMagazine(int left)
+    private void RefreshMagazine()
     {
-        magazineText.text = left.ToString();
+        WeaponFramework currentlyEquippedWeapon = weaponTestDriver.GetCurrentlyEquipped();
+        magazineText.text = currentlyEquippedWeapon.GetBulletsLeft().ToString();
     }
 
     private void UpdateInformation()

@@ -1192,10 +1192,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1856815473214980027, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: swapWeaponSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: e857837e55cb34d2db57950fb0774854, type: 3}
     - target: {fileID: 2844289637028677826, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.51191
@@ -1234,14 +1230,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2844289637028677826, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900758572981775643, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3022752824535034166, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4285496090448729228, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
