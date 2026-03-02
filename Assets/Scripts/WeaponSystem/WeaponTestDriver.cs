@@ -9,6 +9,7 @@ public class WeaponTestDriver : MonoBehaviour
     [SerializeField] private List<WeaponFramework> weapons = new List<WeaponFramework>();
     [SerializeField] protected AudioClip swapWeaponSfx;
     [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected InventoryManager inventoryManager;
     private readonly List<WeaponFramework> weaponInstances = new List<WeaponFramework>(); 
     //this is the list that stores the actual weapon instances with all the additional data like magazine content
 
@@ -79,8 +80,26 @@ public class WeaponTestDriver : MonoBehaviour
         // Reload one shell
         if (Input.GetKeyDown(KeyCode.R))
         {
-            bool started = currentlyEquipped.TryReload();
-            Debug.Log("Reload started: " + started);
+            Item slotItem = inventoryManager.GetSelectedQuickSlotItem();
+            if (slotItem == null)
+            {
+                Debug.Log("Reload failed: selected quick slot is empty.");
+                return;
+            }
+
+            // Type check + cast in one step
+            if (slotItem is BulletItem selectedBullet)
+            {
+                bool started = currentlyEquipped.TryStartLoadBullet(selectedBullet);
+                Debug.Log("Reload started: " + started);
+
+                // OPTIONAL (only if you want ammo consumption to happen here)
+                // if (started) inventoryManager.UseSelectedQuickSlotItem();
+            }
+            else
+            {
+                Debug.Log($"Reload failed: selected item '{slotItem.itemName}' is not a BulletItem.");
+            }
         }
 
         // Fire
@@ -114,5 +133,10 @@ public class WeaponTestDriver : MonoBehaviour
         audioSource.PlayOneShot(swapWeaponSfx);
         Debug.Log("Swap weapon sound played");
         Debug.Log("Weapon switched to: " + currentlyEquipped.weaponName);
+    }
+
+    public WeaponFramework GetCurrentlyEquipped()
+    {
+        return currentlyEquipped;
     }
 }

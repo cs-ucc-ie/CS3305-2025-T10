@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 7865000049699997236}
   - component: {fileID: 5533019229591533167}
   - component: {fileID: 5688067466052702517}
+  - component: {fileID: 5868687410360524956}
   m_Layer: 0
   m_Name: BossWeakness
   m_TagString: Enemy
@@ -328,3 +329,20 @@ MonoBehaviour:
   idleFrames: 3
   deadFrames: 5
   animationFrameRate: 5
+--- !u!114 &5868687410360524956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6368384168668927572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24dd6cc7bd84a4d718d96d68fa05f536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossWeakPoint
+  damageMultiplier: 3
+  isActive: 0
+  visualIndicator: {fileID: 0}
+  activeColor: {r: 1, g: 0, b: 0, a: 1}
+  inactiveColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

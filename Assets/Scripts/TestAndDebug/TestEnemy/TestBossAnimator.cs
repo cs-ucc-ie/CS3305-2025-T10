@@ -31,5 +31,9 @@ public class TestBossAnimator : MonoBehaviour
         {
             bossAnimator.BeginAnimation(BossAnimationState.Dead);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            bossAnimator.BeginAnimation(BossAnimationState.Dash);
+        }
     }
 }

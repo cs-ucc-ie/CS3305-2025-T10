@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 /// <summary>
 /// Boss 攻击阶段枚举
@@ -43,9 +44,12 @@ public class BossBehavior : EnemyAI
 
     [Header("Object References")]
     [SerializeField] private Transform player;
-    [SerializeField] private GameObject bulletPrefab;  // Phase 1 projectile
-    [SerializeField] private GameObject phase2BulletPrefab;  // Phase 2 projectile
-    [SerializeField] private BossWeakPoint[] weakPoints;  // 四个弱点
+    [SerializeField] private GameObject bulletPrefab;  // Projectile for all phases
+    [SerializeField] private GameObject bossWeaknessPrefab; // Phase 2 生成的弱点 prefab（应包含 BossWeakPoint）
+    [SerializeField] private Transform[] phase2WeakPointSpawnPoints; // 4 个生成点
+    private BossWeakPoint[] spawnedWeakPoints;
+    private bool phase2WeakPointsSpawned;
+    private int lastAliveWeakPointsCount = 0;  // 上一次检查时的活着弱点数量
     private BossAnimator bossAnimator;
     private BossHealthBar healthBar;
     private NavMeshAgent navAgent;
@@ -59,13 +63,9 @@ public class BossBehavior : EnemyAI
     private AudioSource audioSource;
 
     [Header("Attack Config - Phase 1")]
-    [SerializeField] private float rangedAttackDistance = 15f;
+    [SerializeField] private float rangedAttackDistance = 8f;
     [SerializeField] private float rangedAttackCooldown = 2f;
     private float rangedAttackTimer;
-
-    [Header("Attack Config - Phase 2")]
-    [SerializeField] private float phase2ThrowSpeed = 10f;
-    [SerializeField, Range(0f, 1f)] private float phase2DownBias = 0.6f;
 
     [Header("Attack Config - Phase 3")]
     [SerializeField] private float meleeAttackDistance = 3f;
@@ -77,6 +77,11 @@ public class BossBehavior : EnemyAI
     [Header("Movement Config")]
     [SerializeField] private float chaseSpeed = 5f;
     [SerializeField] private float stopChaseDistance = 2f;
+    [SerializeField] private float phase12TurnSpeed = 30f;
+
+    [Header("Dash Config")]
+    private bool isDashing = false;
+    private Vector3 dashDirection = Vector3.zero;
 
     [Header("Knockback Config")]
     [SerializeField] private float knockbackResistance = 0.5f;  // Boss 对击退的抗性
@@ -133,13 +138,30 @@ public class BossBehavior : EnemyAI
         }
 
         // Initialize weak points (disabled in phase 1)
-        if (weakPoints != null)
+        SetWeakPointsActive(false);
+        Debug.Log("[Boss][Init] Phase1 start: weak points disabled.");
+
+        // Validate Phase 2 weak point setup
+        if (bossWeaknessPrefab == null)
         {
-            foreach (var weakPoint in weakPoints)
-            {
-                if (weakPoint != null)
-                    weakPoint.SetActive(false);
-            }
+            Debug.LogError("[Boss][Init] ❌ bossWeaknessPrefab is NOT assigned! Phase 2 weak points will not spawn.");
+        }
+        else
+        {
+            Debug.Log("[Boss][Init] ✅ bossWeaknessPrefab assigned.");
+        }
+
+        if (phase2WeakPointSpawnPoints == null || phase2WeakPointSpawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[Boss][Init] ⚠️ phase2WeakPointSpawnPoints not assigned. Will auto-generate default spawn points in Phase2.");
+        }
+        else if (phase2WeakPointSpawnPoints.Length != 4)
+        {
+            Debug.LogWarning($"[Boss][Init] ⚠️ phase2WeakPointSpawnPoints has {phase2WeakPointSpawnPoints.Length} points, expected 4.");
+        }
+        else
+        {
+            Debug.Log($"[Boss][Init] ✅ phase2WeakPointSpawnPoints configured with 4 points.");
         }
     }
 
@@ -147,6 +169,12 @@ public class BossBehavior : EnemyAI
     {
         if (currentState == BossBehaviorState.Dead)
             return;
+
+        // 在Phase 2时定期检查弱点状态
+        if (currentPhase == BossPhase.Phase2_WeakPoints)
+        {
+            CheckWeakPointsStatus();
+        }
 
         // Handle knockback
         if (isKnockedBack)
@@ -210,10 +238,7 @@ public class BossBehavior : EnemyAI
         // Face player
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
-        if (directionToPlayer.sqrMagnitude > 0.01f)
-        {
-            transform.forward = directionToPlayer.normalized;
-        }
+        FacePlayerByPhase(directionToPlayer);
 
         // Phase-specific behavior
         switch (currentPhase)
@@ -227,8 +252,15 @@ public class BossBehavior : EnemyAI
                 }
                 else
                 {
-                    MoveTowardsPlayer(rangedAttackDistance - 2f);
-                    bossAnimator.BeginAnimation(BossAnimationState.Walk);
+                    bool isMoving = MoveTowardsPlayer(rangedAttackDistance - 3f);
+                    if (isMoving)
+                    {
+                        PlayWalkAnimationIfNeeded();
+                    }
+                    else
+                    {
+                        if (navAgent != null) navAgent.isStopped = true;
+                    }
                 }
                 break;
 
@@ -239,14 +271,20 @@ public class BossBehavior : EnemyAI
                     currentState = BossBehaviorState.RangedAttack;
                     if (navAgent != null) navAgent.isStopped = true;
                 }
-                else if (distanceToPlayer > 10f)
+                else if (distanceToPlayer > 8f)
                 {
-                    MoveTowardsPlayer(8f);
-                    bossAnimator.BeginAnimation(BossAnimationState.Walk);
+                    bool isMoving = MoveTowardsPlayer(6f);
+                    if (isMoving)
+                    {
+                        PlayWalkAnimationIfNeeded();
+                    }
+                    else
+                    {
+                        if (navAgent != null) navAgent.isStopped = true;
+                    }
                 }
                 else
                 {
-                    currentState = BossBehaviorState.Chase;
                     if (navAgent != null) navAgent.isStopped = true;
                 }
                 break;
@@ -260,26 +298,70 @@ public class BossBehavior : EnemyAI
                 }
                 else
                 {
-                    MoveTowardsPlayer(meleeAttackDistance);
-                    bossAnimator.BeginAnimation(BossAnimationState.Walk);
+                    bool isMoving = MoveTowardsPlayer(meleeAttackDistance);
+                    if (isMoving)
+                    {
+                        PlayWalkAnimationIfNeeded();
+                    }
+                    else
+                    {
+                        if (navAgent != null) navAgent.isStopped = true;
+                    }
                 }
                 break;
         }
     }
 
-    private void MoveTowardsPlayer(float targetDistance)
+    private bool MoveTowardsPlayer(float targetDistance)
     {
-        if (player == null || navAgent == null) return;
+        if (player == null)
+            return false;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer > targetDistance)
+        if (distanceToPlayer <= targetDistance)
         {
-            navAgent.isStopped = false;
-            navAgent.SetDestination(player.position);
+            if (navAgent != null && navAgent.enabled)
+            {
+                navAgent.isStopped = true;
+            }
+            return false;
         }
-        else
+
+        // Prefer NavMeshAgent movement when available
+        if (navAgent != null)
         {
-            navAgent.isStopped = true;
+            if (!navAgent.enabled)
+            {
+                navAgent.enabled = true;
+            }
+
+            if (navAgent.enabled && navAgent.isOnNavMesh)
+            {
+                navAgent.isStopped = false;
+                navAgent.SetDestination(player.position);
+                return true;
+            }
+        }
+
+        // Fallback movement when NavMesh is unavailable
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+        if (direction.sqrMagnitude > 0.0001f)
+        {
+            transform.position += direction.normalized * chaseSpeed * Time.deltaTime;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void PlayWalkAnimationIfNeeded()
+    {
+        if (bossAnimator == null) return;
+
+        if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.Walk)
+        {
+            bossAnimator.BeginAnimation(BossAnimationState.Walk);
         }
     }
 
@@ -291,13 +373,15 @@ public class BossBehavior : EnemyAI
             return;
         }
 
+        if (navAgent != null)
+        {
+            navAgent.isStopped = true;
+        }
+
         // Face player
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
-        if (directionToPlayer.sqrMagnitude > 0.01f)
-        {
-            transform.forward = directionToPlayer.normalized;
-        }
+        FacePlayerByPhase(directionToPlayer);
 
         // Attack animation sequence
         if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackStartUp &&
@@ -326,79 +410,94 @@ public class BossBehavior : EnemyAI
         if (player == null)
         {
             currentState = BossBehaviorState.Chase;
+            isDashing = false;
             return;
         }
 
-        // Face player
+        if (navAgent != null)
+        {
+            navAgent.isStopped = true;
+        }
+
+        // Calculate direction to player (normalized, no Y)
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
+        directionToPlayer.Normalize();
+
         if (directionToPlayer.sqrMagnitude > 0.01f)
         {
-            transform.forward = directionToPlayer.normalized;
+            transform.forward = directionToPlayer;
         }
 
-        // Attack animation sequence
-        if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackStartUp &&
-            bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackOnce)
+        // Start dash animation if not already dashing
+        if (!isDashing)
         {
-            bossAnimator.BeginAnimation(BossAnimationState.WeaponAttackStartUp);
+            isDashing = true;
+            dashDirection = directionToPlayer;
+            bossAnimator.BeginAnimation(BossAnimationState.Dash);
+            Debug.Log($"[Boss][Dash] Starting dash towards player in direction: {dashDirection}");
         }
 
-        // Deal damage when attack animation completes
-        if (bossAnimator.GetCurrentAnimationState() == BossAnimationState.WeaponAttackOnce && 
-            bossAnimator.IsCurrentAnimationDone())
+        // Move towards player during dash
+        if (isDashing && bossAnimator.GetCurrentAnimationState() == BossAnimationState.Dash)
+        {
+            transform.position += dashDirection * chaseSpeed * 1.5f * Time.deltaTime;
+        }
+
+        // Deal damage when dash animation completes
+        if (isDashing && bossAnimator.IsCurrentAnimationDone() && 
+            bossAnimator.GetCurrentAnimationState() == BossAnimationState.Dash)
         {
             PerformMeleeAttack();
             meleeAttackTimer = meleeAttackCooldown;
+            isDashing = false;
             currentState = BossBehaviorState.Chase;
+            
+            if (navAgent != null)
+            {
+                navAgent.isStopped = false;
+            }
+            Debug.Log($"[Boss][Dash] Dash complete, returning to Chase state");
         }
-        else if (bossAnimator.IsCurrentAnimationDone() && 
-                 bossAnimator.GetCurrentAnimationState() == BossAnimationState.WeaponAttackStartUp)
+    }
+
+    private void FacePlayerByPhase(Vector3 flatDirectionToPlayer)
+    {
+        if (flatDirectionToPlayer.sqrMagnitude <= 0.01f)
+            return;
+
+        Vector3 targetForward = flatDirectionToPlayer.normalized;
+
+        if (currentPhase == BossPhase.Phase1_RangedAttack || currentPhase == BossPhase.Phase2_WeakPoints)
         {
-            bossAnimator.BeginAnimation(BossAnimationState.WeaponAttackOnce);
+            float maxRadiansDelta = phase12TurnSpeed * Mathf.Deg2Rad * Time.deltaTime;
+            transform.forward = Vector3.RotateTowards(transform.forward, targetForward, maxRadiansDelta, 0f);
+        }
+        else
+        {
+            transform.forward = targetForward;
         }
     }
 
     private void FireProjectile()
     {
-        GameObject prefabToFire = currentPhase == BossPhase.Phase2_WeakPoints
-            ? phase2BulletPrefab
-            : bulletPrefab;
+        if (bulletPrefab == null || player == null)
+            return;
 
-        if (prefabToFire != null && player != null)
+        // Fire bullet from boss position + forward direction + slight offset to the right
+        Vector3 spawnPos = transform.position + transform.forward.normalized * 2f;
+        Vector3 direction = (player.position - spawnPos).normalized;
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(direction));
+        
+        EnemyFireballType01 fireballScript = bullet.GetComponent<EnemyFireballType01>();
+        if (fireballScript != null)
         {
-            // Fire bullet from boss position + forward direction + slight offset to the right
-            Vector3 spawnPos = transform.position + transform.forward.normalized * 2f;
-            Vector3 direction = (player.position - spawnPos).normalized;
-            GameObject bullet = Instantiate(prefabToFire, spawnPos, Quaternion.LookRotation(direction));
-            EnemyFireballType01 fireballScript = bullet.GetComponent<EnemyFireballType01>();
-            if (fireballScript != null)            {
-                fireballScript.SetFather(gameObject);
-            }
-
-            if (currentPhase == BossPhase.Phase2_WeakPoints)
-            {
-                Rigidbody rb = bullet.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-                    rb.useGravity = true;
-                    Vector3 throwDir = (transform.forward + Vector3.down * phase2DownBias).normalized;
-                    rb.linearVelocity = throwDir * phase2ThrowSpeed;
-                }
-            }
-            
-            // Set father so the bullet knows who fired it
-            EnemyFireballType01 fireball = bullet.GetComponent<EnemyFireballType01>();
-            if (fireball != null)
-            {
-                fireball.SetFather(gameObject);
-            }
-            
-            if (audioSource != null && attackSoundClip != null)
-            {
-                audioSource.PlayOneShot(attackSoundClip, audioVolume);
-            }
+            fireballScript.SetFather(gameObject);
+        }
+        
+        if (audioSource != null && attackSoundClip != null)
+        {
+            audioSource.PlayOneShot(attackSoundClip, audioVolume);
         }
     }
 
@@ -475,25 +574,26 @@ public class BossBehavior : EnemyAI
 
     public override void TakeDamage(int damage)
     {
-        Debug.Log("Boss took damage: " + damage);   
+        Debug.Log($"[Boss][TakeDamage] Received {damage} damage | Current Phase: {currentPhase} | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");   
         if (currentState == BossBehaviorState.Dead) return;
 
         if (currentPhase == BossPhase.Phase2_WeakPoints)
         {
             // Phase 2 only takes damage from weak points
-            Debug.Log($"Phase2 hit on boss body (no damage). Remaining HP: {currentHealth}/{maxHealth}");
+            Debug.Log($"[Boss][Phase2BlockedDamage] Body damage ignored in Phase 2! Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
             return;
         }
 
         ApplyDamage(damage);
     }
 
-    private void ApplyDamage(int damage)
+    public void ApplyDamage(int damage)
     {
         if (currentState == BossBehaviorState.Dead) return;
 
+        int oldHealth = currentHealth;
         currentHealth -= damage;
-        Debug.Log($"Boss HP after hit: {currentHealth}/{maxHealth}");
+        Debug.Log($"[Boss][ApplyDamage] ⚔️ Damage Applied: -{damage} | HP: {oldHealth} → {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase: {currentPhase}");
 
         // Update health bar
         if (healthBar != null)
@@ -508,6 +608,7 @@ public class BossBehavior : EnemyAI
         // Check for death
         if (currentHealth <= 0)
         {
+            Debug.Log($"[Boss][ApplyDamage] ☠️ Health dropped to {currentHealth}. Entering death state.");
             Die();
             return;
         }
@@ -519,6 +620,8 @@ public class BossBehavior : EnemyAI
     public override void KnockBack(Vector3 sourcePosition, float force, float duration)
     {
         if (currentState == BossBehaviorState.Dead) return;
+
+        isDashing = false;
 
         // Boss has knockback resistance
         force *= knockbackResistance;
@@ -539,24 +642,37 @@ public class BossBehavior : EnemyAI
     private void UpdatePhase()
     {
         BossPhase previousPhase = currentPhase;
+        BossPhase newPhase = currentPhase;
 
+        // 根据血量计算应该处于的阶段
         if (healthPercentage > phase2Threshold)
         {
-            currentPhase = BossPhase.Phase1_RangedAttack;
+            newPhase = BossPhase.Phase1_RangedAttack;
         }
         else if (healthPercentage > phase3Threshold)
         {
-            currentPhase = BossPhase.Phase2_WeakPoints;
+            newPhase = BossPhase.Phase2_WeakPoints;
         }
         else
         {
-            currentPhase = BossPhase.Phase3_MeleeAttack;
+            newPhase = BossPhase.Phase3_MeleeAttack;
         }
 
-        // Handle phase transitions
-        if (previousPhase != currentPhase)
+        // 阶段只能前进，不能后退（Phase1 -> Phase2 -> Phase3 单向）
+        if ((int)newPhase > (int)currentPhase)
         {
+            currentPhase = newPhase;
+            Debug.Log($"[Boss][UpdatePhase] ➡️ Phase Transition: {previousPhase} -> {currentPhase} | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
             OnPhaseChange(previousPhase, currentPhase);
+        }
+        else if ((int)newPhase < (int)currentPhase)
+        {
+            // 阶段不能回退
+            Debug.Log($"[Boss][UpdatePhase] 🚫 Phase rollback prevented: {currentPhase} (trying to go back to {newPhase}) | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
+        }
+        else
+        {
+            Debug.Log($"[Boss][UpdatePhase] ✅ Phase unchanged: {currentPhase} | HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
         }
     }
 
@@ -568,15 +684,11 @@ public class BossBehavior : EnemyAI
         switch (newPhase)
         {
             case BossPhase.Phase2_WeakPoints:
-                // Activate weak points
-                if (weakPoints != null)
-                {
-                    foreach (var weakPoint in weakPoints)
-                    {
-                        if (weakPoint != null)
-                            weakPoint.SetActive(true);
-                    }
-                }
+                Debug.Log($"[Boss][Phase2Start] 💔 Entering Phase 2! Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
+                Debug.Log($"[Boss][Phase2Start] 🎯 Phase 2 HP Range: {Mathf.CeilToInt(maxHealth * phase2Threshold)} to {Mathf.CeilToInt(maxHealth * phase3Threshold)} ({phase2Threshold * 100:F1}% to {phase3Threshold * 100:F1}%)");
+                SpawnPhase2WeakPoints();
+                SetWeakPointsActive(true);
+                Debug.Log("[Boss][Phase2] Weak points activated. Body damage should now be ignored.");
                 // Disable boss main collider so only weak points can be hit
                 if (bossMainCollider != null)
                 {
@@ -586,15 +698,10 @@ public class BossBehavior : EnemyAI
                 break;
 
             case BossPhase.Phase3_MeleeAttack:
-                // Deactivate weak points
-                if (weakPoints != null)
-                {
-                    foreach (var weakPoint in weakPoints)
-                    {
-                        if (weakPoint != null)
-                            weakPoint.SetActive(false);
-                    }
-                }
+                Debug.Log($"[Boss][Phase3Start] ⚔️ Entering Phase 3! Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase 3 threshold: {Mathf.CeilToInt(maxHealth * phase3Threshold)} ({phase3Threshold * 100:F1}%)");
+                SetWeakPointsActive(false);
+                DespawnPhase2WeakPoints();
+                Debug.Log("[Boss][Phase3] Weak points deactivated and despawned.");
                 // Re-enable boss main collider
                 if (bossMainCollider != null)
                 {
@@ -612,6 +719,7 @@ public class BossBehavior : EnemyAI
     {
         currentState = BossBehaviorState.Dead;
         currentPhase = BossPhase.Dead;
+        isDashing = false;
 
         bossAnimator.BeginAnimation(BossAnimationState.Dead);
 
@@ -624,14 +732,9 @@ public class BossBehavior : EnemyAI
             navAgent.enabled = false;
 
         // Deactivate weak points
-        if (weakPoints != null)
-        {
-            foreach (var weakPoint in weakPoints)
-            {
-                if (weakPoint != null)
-                    weakPoint.SetActive(false);
-            }
-        }
+        SetWeakPointsActive(false);
+        DespawnPhase2WeakPoints();
+        Debug.Log("[Boss][Dead] Weak points cleaned up.");
 
         // Disable collider after a delay
         Destroy(GetComponent<Collider>(), 0.5f);
@@ -640,7 +743,233 @@ public class BossBehavior : EnemyAI
     // Called by weak points to deal extra damage
     public void TakeDamageFromWeakPoint(int damage)
     {
-        Debug.Log($"Phase2 weak point hit. Damage: {damage}");
+        if (currentPhase != BossPhase.Phase2_WeakPoints)
+        {
+            Debug.Log($"[Boss][WeakPointHitIgnored] ❌ Current phase is {currentPhase}, weak point damage ignored: {damage} | HP: {currentHealth}/{maxHealth}");
+            return;
+        }
+
+        Debug.Log($"[Boss][WeakPointHit] ✅ Weak point damage accepted: {damage} | Current HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase: {currentPhase}");
         ApplyDamage(damage);
+    }
+
+    private void CheckWeakPointsStatus()
+    {
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            return;
+        }
+
+        // 计算当前还活着的弱点（检查 BossWeaknessAI.isDead 属性）
+        int currentAliveWeakPoints = 0;
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint == null)
+                continue;
+
+            BossWeaknessAI weaknessAI = weakPoint.GetComponentInParent<BossWeaknessAI>();
+            if (weaknessAI != null && !weaknessAI.isDead)
+            {
+                currentAliveWeakPoints++;
+            }
+        }
+
+        // 如果活着的弱点数减少了，说明有弱点被摧毁
+        if (currentAliveWeakPoints < lastAliveWeakPointsCount)
+        {
+            Debug.Log($"[Boss][CheckWeakPointsStatus] 🔔 检测到弱点被摧毁! {lastAliveWeakPointsCount} → {currentAliveWeakPoints}");
+            lastAliveWeakPointsCount = currentAliveWeakPoints;
+            OnWeakPointDestroyed();
+        }
+    }
+
+    public void OnWeakPointDestroyed()
+    {
+        Debug.Log($"[Boss][OnWeakPointDestroyed] 🔔 方法被调用!");
+        
+        // 检查是否所有弱点都已被摧毁
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            Debug.LogWarning("[Boss][OnWeakPointDestroyed] ⚠️ spawnedWeakPoints 为null或空数组");
+            return;
+        }
+
+        // 计算还活着的弱点（检查 BossWeaknessAI.isDead 属性）
+        int aliveWeakPoints = 0;
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint == null)
+                continue;
+                
+            // 获取弱点的父对象上的 BossWeaknessAI 组件
+            BossWeaknessAI weaknessAI = weakPoint.GetComponentInParent<BossWeaknessAI>();
+            if (weaknessAI != null && !weaknessAI.isDead)
+            {
+                aliveWeakPoints++;
+            }
+        }
+
+        Debug.Log($"[Boss][WeakPointDestroyed] 💥 弱点被摧毁! 当前HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | 剩余活着的弱点: {aliveWeakPoints}/{spawnedWeakPoints.Length}");
+
+        // 如果所有弱点都被摧毁，强制进入Phase 3
+        if (aliveWeakPoints == 0)
+        {
+            Debug.Log($"[Boss][WeakPointDestroyed] ⚔️ 所有弱点已被摧毁！当前HP: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%) | Phase 3阈值: {Mathf.CeilToInt(maxHealth * phase3Threshold)}");
+            currentPhase = BossPhase.Phase3_MeleeAttack;
+            OnPhaseChange(BossPhase.Phase2_WeakPoints, BossPhase.Phase3_MeleeAttack);
+        }
+    }
+
+    private void SpawnPhase2WeakPoints()
+    {
+        if (phase2WeakPointsSpawned)
+        {
+            Debug.Log("[Boss][Phase2Spawn] Weak points already spawned, skip.");
+            return;
+        }
+
+        if (bossWeaknessPrefab == null)
+        {
+            Debug.LogError("[Boss][Phase2Spawn] ❌ CRITICAL: bossWeaknessPrefab is NULL. Cannot spawn weak points!");
+            return;
+        }
+
+        Transform[] spawnPoints = phase2WeakPointSpawnPoints;
+
+        // Auto-generate default spawn points if not configured
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[Boss][Phase2Spawn] ⚠️ phase2WeakPointSpawnPoints not configured. Generating default spawn points around boss.");
+            spawnPoints = GenerateDefaultSpawnPoints();
+        }
+
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogError("[Boss][Phase2Spawn] ❌ CRITICAL: Failed to generate spawn points!");
+            return;
+        }
+
+        if (spawnPoints.Length != 4)
+        {
+            Debug.LogWarning($"[Boss][Phase2Spawn] ⚠️ Expected 4 spawn points, got {spawnPoints.Length}. Will spawn {spawnPoints.Length} weak points.");
+        }
+
+        // 计算每个弱点摧毁时应该造成的伤害
+        // Phase 2血量范围 = maxHealth * (phase2Threshold - phase3Threshold)
+        int phase2HealthRange = Mathf.CeilToInt(maxHealth * (phase2Threshold - phase3Threshold));
+        int damagePerWeakPoint = Mathf.CeilToInt((float)phase2HealthRange / spawnPoints.Length);
+        int totalDamageFromAllWeakPoints = damagePerWeakPoint * spawnPoints.Length;
+        Debug.Log($"[Boss][Phase2Spawn] 📊 Phase 2血量范围: {phase2HealthRange} HP ({phase2Threshold * 100:F0}% - {phase3Threshold * 100:F0}%)");
+        Debug.Log($"[Boss][Phase2Spawn] 💥 每个弱点伤害: {damagePerWeakPoint} HP | 弱点数量: {spawnPoints.Length} | 总伤害: {totalDamageFromAllWeakPoints} HP");
+        Debug.Log($"[Boss][Phase2Spawn] 🎯 预期结果: {currentHealth} HP → {currentHealth - totalDamageFromAllWeakPoints} HP (全部弱点摧毁后)");
+
+        List<BossWeakPoint> createdWeakPoints = new List<BossWeakPoint>();
+
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            Transform spawnPoint = spawnPoints[i];
+            if (spawnPoint == null)
+            {
+                Debug.LogWarning($"[Boss][Phase2Spawn] ⚠️ Spawn point at index {i} is NULL, skip.");
+                continue;
+            }
+
+            GameObject weakObj = Instantiate(
+                bossWeaknessPrefab,
+                spawnPoint.position,
+                spawnPoint.rotation,
+                spawnPoint);
+            weakObj.name = $"{bossWeaknessPrefab.name}_Phase2_{i}";
+
+            BossWeakPoint weakPoint = weakObj.GetComponent<BossWeakPoint>();
+            if (weakPoint == null)
+            {
+                weakPoint = weakObj.GetComponentInChildren<BossWeakPoint>();
+            }
+
+            if (weakPoint == null)
+            {
+                Debug.LogError($"[Boss][Phase2Spawn] ❌ Spawned prefab at index {i} ({spawnPoint.name}) has NO BossWeakPoint component! Destroying...");
+                Destroy(weakObj);
+                continue;
+            }
+
+            // 设置弱点被摧毁时对Boss造成的伤害
+            weakPoint.SetDamageOnDestroy(damagePerWeakPoint);
+
+            createdWeakPoints.Add(weakPoint);
+            Debug.Log($"[Boss][Phase2Spawn] ✅ 生成弱点 #{createdWeakPoints.Count} at {spawnPoint.name} (摧毁时伤害: {damagePerWeakPoint} HP)");
+        }
+
+        spawnedWeakPoints = createdWeakPoints.ToArray();
+        phase2WeakPointsSpawned = spawnedWeakPoints.Length > 0;
+        lastAliveWeakPointsCount = spawnedWeakPoints.Length;  // 初始化为生成的弱点数量
+        Debug.Log($"[Boss][Phase2Spawn] ✅ Spawn completed. Total spawned: {spawnedWeakPoints.Length}/{spawnPoints.Length}");
+    }
+
+    private Transform[] GenerateDefaultSpawnPoints()
+    {
+        // Create 4 default spawn points around the boss: Front, Back, Left, Right
+        GameObject[] points = new GameObject[4];
+        string[] names = { "Phase2_SpawnPoint_Front", "Phase2_SpawnPoint_Back", "Phase2_SpawnPoint_Left", "Phase2_SpawnPoint_Right" };
+        Vector3[] offsets = 
+        {
+            Vector3.forward * 3f,   // Front
+            Vector3.back * 3f,      // Back
+            Vector3.left * 3f,      // Left
+            Vector3.right * 3f      // Right
+        };
+
+        Transform[] result = new Transform[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            points[i] = new GameObject(names[i]);
+            points[i].transform.SetParent(transform);
+            points[i].transform.localPosition = offsets[i];
+            points[i].transform.localRotation = Quaternion.identity;
+            result[i] = points[i].transform;
+
+            Debug.Log($"[Boss][Phase2Spawn] Generated default spawn point #{i + 1}: {names[i]} at {offsets[i]}");
+        }
+
+        return result;
+    }
+
+    private void DespawnPhase2WeakPoints()
+    {
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            phase2WeakPointsSpawned = false;
+            return;
+        }
+
+        int removedCount = 0;
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint == null) continue;
+            Destroy(weakPoint.gameObject);
+            removedCount++;
+        }
+
+        spawnedWeakPoints = null;
+        phase2WeakPointsSpawned = false;
+        Debug.Log($"[Boss][Phase2Despawn] Removed spawned weak points: {removedCount}");
+    }
+
+    private void SetWeakPointsActive(bool active)
+    {
+        if (spawnedWeakPoints == null || spawnedWeakPoints.Length == 0)
+        {
+            return;
+        }
+
+        foreach (var weakPoint in spawnedWeakPoints)
+        {
+            if (weakPoint != null)
+            {
+                weakPoint.SetActive(active);
+            }
+        }
     }
 }
