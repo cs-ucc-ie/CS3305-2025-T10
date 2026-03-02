@@ -321,7 +321,7 @@ MonoBehaviour:
   phase2Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   phase3Color: {r: 1, g: 0, b: 0, a: 1}
   phase2Threshold: 0.67
-  phase3Threshold: 0.34
+  phase3Threshold: 0.4
   alwaysFaceCamera: 1
   offset: {x: 0, y: 3, z: 0}
   maxBarWidth: 2
@@ -353,7 +353,7 @@ Transform:
   m_GameObject: {fileID: 413044849}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.86, z: -0.66}
+  m_LocalPosition: {x: 0, y: 0.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -540,7 +540,7 @@ Transform:
   m_GameObject: {fileID: 732268400}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.86, z: -0.66}
+  m_LocalPosition: {x: 0, y: 0.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -693,7 +693,7 @@ Transform:
   m_GameObject: {fileID: 1010116846}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.86, z: -0.65}
+  m_LocalPosition: {x: -0, y: 0.86, z: -0.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
