@@ -66,12 +66,13 @@ public class BossBehavior : EnemyAI
     [SerializeField] private float rangedAttackDistance = 8f;
     [SerializeField] private float rangedAttackCooldown = 2f;
     private float rangedAttackTimer;
+    private bool rangedAttackSequenceStarted;
 
     [Header("Attack Config - Phase 3")]
     [SerializeField] private float meleeAttackDistance = 3f;
     [SerializeField] private float meleeAttackRange = 4f;
     [SerializeField] private int meleeAttackDamage = 20;
-    [SerializeField] private float meleeAttackCooldown = 1.5f;
+    [SerializeField] private float meleeAttackCooldown = 3.0f;
     private float meleeAttackTimer;
 
     [Header("Movement Config")]
@@ -82,6 +83,11 @@ public class BossBehavior : EnemyAI
     [Header("Dash Config")]
     private bool isDashing = false;
     private Vector3 dashDirection = Vector3.zero;
+    private bool isCollidingWithPlayer = false;  // Track collision with player for melee phase
+    private bool shouldKnockbackPlayer = false;  // Flag to knockback after dash animation completes
+    private bool shouldDealDamage = false;  // Flag to deal damage during dash animation
+    private Collider playerCollider = null;  // Reference to player collider for knockback
+    private float attackCooldownTimer = 0f;  // Cooldown between attacks
 
     [Header("Knockback Config")]
     [SerializeField] private float knockbackResistance = 0.5f;  // Boss 对击退的抗性
@@ -369,6 +375,7 @@ public class BossBehavior : EnemyAI
     {
         if (player == null)
         {
+            rangedAttackSequenceStarted = false;
             currentState = BossBehaviorState.Chase;
             return;
         }
@@ -383,10 +390,10 @@ public class BossBehavior : EnemyAI
         directionToPlayer.y = 0;
         FacePlayerByPhase(directionToPlayer);
 
-        // Attack animation sequence
-        if (bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackStartUp &&
-            bossAnimator.GetCurrentAnimationState() != BossAnimationState.WeaponAttackOnce)
+        // Ensure every ranged attack starts from startup animation
+        if (!rangedAttackSequenceStarted)
         {
+            rangedAttackSequenceStarted = true;
             bossAnimator.BeginAnimation(BossAnimationState.WeaponAttackStartUp);
         }
 
@@ -396,6 +403,7 @@ public class BossBehavior : EnemyAI
         {
             FireProjectile();
             rangedAttackTimer = rangedAttackCooldown;
+            rangedAttackSequenceStarted = false;
             currentState = BossBehaviorState.Chase;
         }
         else if (bossAnimator.IsCurrentAnimationDone() && 
@@ -414,50 +422,104 @@ public class BossBehavior : EnemyAI
             return;
         }
 
-        if (navAgent != null)
-        {
-            navAgent.isStopped = true;
-        }
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // Calculate direction to player (normalized, no Y)
+        // Always face player in melee state
         Vector3 directionToPlayer = (player.position - transform.position);
         directionToPlayer.y = 0;
         directionToPlayer.Normalize();
-
         if (directionToPlayer.sqrMagnitude > 0.01f)
         {
             transform.forward = directionToPlayer;
         }
 
-        // Start dash animation if not already dashing
-        if (!isDashing)
+        // Update cooldown timer
+        if (attackCooldownTimer > 0f)
         {
-            isDashing = true;
-            dashDirection = directionToPlayer;
-            bossAnimator.BeginAnimation(BossAnimationState.Dash);
-            Debug.Log($"[Boss][Dash] Starting dash towards player in direction: {dashDirection}");
+            attackCooldownTimer -= Time.deltaTime;
         }
 
-        // Move towards player during dash
+        // Currently dashing - wait for animation to complete
         if (isDashing && bossAnimator.GetCurrentAnimationState() == BossAnimationState.Dash)
         {
-            transform.position += dashDirection * chaseSpeed * 1.5f * Time.deltaTime;
+            if (navAgent != null)
+                navAgent.isStopped = true;
+
+            // Deal damage once when dash animation starts (not every frame)
+            if (shouldDealDamage)
+            {
+                if (PlayerStatsManager.Instance != null)
+                {
+                    PlayerStatsManager.Instance.TakeDamage(meleeAttackDamage);
+                    Debug.Log($"[Boss][MeleeAttack] Dealt {meleeAttackDamage} damage during Dash animation");
+                }
+                shouldDealDamage = false;  // Only deal damage once
+            }
+
+            // Wait for dash animation to complete
+            if (bossAnimator.IsCurrentAnimationDone())
+            {
+                // Animation finished, now apply knockback if needed
+                if (shouldKnockbackPlayer && playerCollider != null)
+                {
+                    ApplyPlayerKnockback();
+                    shouldKnockbackPlayer = false;
+                    playerCollider = null;
+                }
+                
+                isDashing = false;
+                Debug.Log($"[Boss][Dash] Dash animation complete, knockback applied");
+            }
+            return;
         }
 
-        // Deal damage when dash animation completes
-        if (isDashing && bossAnimator.IsCurrentAnimationDone() && 
-            bossAnimator.GetCurrentAnimationState() == BossAnimationState.Dash)
+        // In attack range and cooldown expired - start attack sequence
+        if (distanceToPlayer <= meleeAttackDistance && attackCooldownTimer <= 0f && !isDashing)
         {
-            PerformMeleeAttack();
-            meleeAttackTimer = meleeAttackCooldown;
-            isDashing = false;
-            currentState = BossBehaviorState.Chase;
+            // Step 1: Start dash animation FIRST
+            isDashing = true;
+            bossAnimator.BeginAnimation(BossAnimationState.Dash);
             
-            if (navAgent != null)
+            // Step 2: Schedule damage to happen during animation
+            shouldDealDamage = true;
+            
+            // Step 3: Store player reference for knockback
+            PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
+            if (playerMovement != null)
             {
-                navAgent.isStopped = false;
+                playerCollider = playerMovement.GetComponent<Collider>();
+                shouldKnockbackPlayer = true;
             }
-            Debug.Log($"[Boss][Dash] Dash complete, returning to Chase state");
+            
+            attackCooldownTimer = meleeAttackCooldown;
+            return;
+        }
+
+        // Not in range yet - chase player
+        if (distanceToPlayer > meleeAttackDistance)
+        {
+            if (navAgent != null)
+                navAgent.isStopped = false;
+
+            if (MoveTowardsPlayer(meleeAttackDistance))
+            {
+                PlayWalkAnimationIfNeeded();
+            }
+        }
+        else
+        {
+            // In range but on cooldown - stop moving
+            if (navAgent != null)
+                navAgent.isStopped = true;
+        }
+
+        // If player moves way too far, return to chase
+        if (distanceToPlayer > meleeAttackDistance * 3f)
+        {
+            currentState = BossBehaviorState.Chase;
+            if (navAgent != null)
+                navAgent.isStopped = false;
+            Debug.Log($"[Boss][MeleeState] Player too far, returning to Chase");
         }
     }
 
@@ -621,6 +683,7 @@ public class BossBehavior : EnemyAI
     {
         if (currentState == BossBehaviorState.Dead) return;
 
+        rangedAttackSequenceStarted = false;
         isDashing = false;
 
         // Boss has knockback resistance
@@ -719,6 +782,7 @@ public class BossBehavior : EnemyAI
     {
         currentState = BossBehaviorState.Dead;
         currentPhase = BossPhase.Dead;
+        rangedAttackSequenceStarted = false;
         isDashing = false;
 
         bossAnimator.BeginAnimation(BossAnimationState.Dead);
@@ -971,5 +1035,22 @@ public class BossBehavior : EnemyAI
                 weakPoint.SetActive(active);
             }
         }
+    }
+
+    /// <summary>
+    /// Apply knockback to push player away from boss after dash animation
+    /// </summary>
+    private void ApplyPlayerKnockback()
+    {
+        if (playerCollider == null || player == null) return;
+        
+        Vector3 knockbackDirection = (player.position - transform.position).normalized;
+        knockbackDirection.y = 0;  // Keep knockback horizontal to avoid pushing into ground
+        
+        // Push player back beyond melee attack range
+        float knockbackDistance = meleeAttackRange + 2f;  // Push beyond range so boss needs to chase again
+        player.position += knockbackDirection * knockbackDistance;
+        
+        Debug.Log($"[Boss][Knockback] Pushed player back {knockbackDistance}m after dash animation");
     }
 }
