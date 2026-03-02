@@ -42,10 +42,6 @@ public class ExplosiveDecorationTrap : InteractableObject {
         if (isPrimed) return;
         isPrimed = true;
 
-        if (explosionEffect != null) {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        }
-
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in colliders) {
             if (hit.CompareTag("Player")) {
@@ -54,6 +50,12 @@ public class ExplosiveDecorationTrap : InteractableObject {
             }
         }
 
+        StartCoroutine(ExplodeLightAndDestroy());
+    }
+
+    private IEnumerator ExplodeLightAndDestroy(){
+        explosionEffect.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
         Destroy(gameObject);
     }
 
