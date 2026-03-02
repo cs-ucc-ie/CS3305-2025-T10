@@ -134,4 +134,9 @@ public class WeaponTestDriver : MonoBehaviour
         Debug.Log("Swap weapon sound played");
         Debug.Log("Weapon switched to: " + currentlyEquipped.weaponName);
     }
+
+    public WeaponFramework GetCurrentlyEquipped()
+    {
+        return currentlyEquipped;
+    }
 }
