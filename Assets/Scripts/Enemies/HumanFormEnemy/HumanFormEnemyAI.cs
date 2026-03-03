@@ -40,6 +40,9 @@ public class HumanFormEnemyAI : EnemyAI
     [SerializeField] private float hurtStunDuration;
     private float hurtStunTimer;
 
+    // 公开属性：让外部脚本可以检查敌人是否死亡
+    public bool IsDead => aiState == HumanFormEnemyAIState.Dead;
+
     [Header("AI State For Debug")]
     [SerializeField] private HumanFormEnemyAIState aiState;
     [SerializeField] private HumanFormEnemyIdleState idleState;

@@ -34,6 +34,9 @@ public class BossBehavior : EnemyAI
     [SerializeField] private int currentHealth;
     private float healthPercentage => (float)currentHealth / maxHealth;
 
+    // 公开属性：让外部脚本可以检查Boss是否死亡
+    public bool IsDead => currentState == BossBehaviorState.Dead;
+
     [Header("Phase Thresholds")]
     [SerializeField] private float phase2Threshold = 0.5f;
     [SerializeField] private float phase3Threshold = 0.34f;  // 34%
@@ -548,13 +551,20 @@ public class BossBehavior : EnemyAI
         if (bulletPrefab == null || player == null)
             return;
 
-        Vector3 fireDirection = transform.forward.normalized;
+        // Calculate target point 10 units in front of the boss
+        Vector3 targetPoint = transform.position + transform.forward * 10f;
 
-        Vector3 spawnPosLeft = transform.position + transform.forward.normalized * 2f + transform.right.normalized * -1f;
-        GameObject bulletLeft = Instantiate(bulletPrefab, spawnPosLeft, Quaternion.LookRotation(fireDirection));
+        // Left projectile spawn position
+        Vector3 spawnPosLeft = transform.position + transform.forward.normalized * 2f - transform.right.normalized * 0.5f;
+        // Direction from left spawn position to target point
+        Vector3 directionToTargetLeft = (targetPoint - spawnPosLeft).normalized;
+        GameObject bulletLeft = Instantiate(bulletPrefab, spawnPosLeft, Quaternion.LookRotation(directionToTargetLeft));
 
-        Vector3 spawnPosRight = transform.position + transform.forward.normalized * 2f +    transform.right.normalized * 1f;
-        GameObject bulletRight = Instantiate(bulletPrefab, spawnPosRight, Quaternion.LookRotation(fireDirection));
+        // Right projectile spawn position
+        Vector3 spawnPosRight = transform.position + transform.forward.normalized * 2f + transform.right.normalized * 0.5f;
+        // Direction from right spawn position to target point
+        Vector3 directionToTargetRight = (targetPoint - spawnPosRight).normalized;
+        GameObject bulletRight = Instantiate(bulletPrefab, spawnPosRight, Quaternion.LookRotation(directionToTargetRight));
         
         EnemyFireballType01 fireballScriptLeft = bulletLeft.GetComponent<EnemyFireballType01>();
         if (fireballScriptLeft != null)
