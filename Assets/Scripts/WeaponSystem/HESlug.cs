@@ -18,23 +18,22 @@ public class HESlug : BulletFramework
         Debug.Log("Got center of explosion");
 
         Collider[] cols = Physics.OverlapSphere(center, explosionRadius);
-        Debug.Log("Got: " + cols.Count());
+        Debug.Log("Got: " + cols.Length);
 
         for (int i = 0; i < cols.Length; i++)
         {
- 
             Rigidbody hitRb = cols[i].attachedRigidbody;
-            hitRb.AddExplosionForce(explosionForce, center, explosionRadius);
+            if (hitRb != null)
+            {
+                hitRb.AddExplosionForce(explosionForce, center, explosionRadius);
+            }
 
-
-            EnemyAI ai = cols[i].GetComponent<EnemyAI>();
+            EnemyAI ai = cols[i].GetComponentInParent<EnemyAI>(); // IMPORTANT: often on parent
             if (ai != null)
             {
                 ai.KnockBack(center, knockBackForce, knockBackDir);
-                ai.TakeDamage((int)(damage));
+                ai.TakeDamage((int)damage);
             }
         }
-
-        
     }
 }

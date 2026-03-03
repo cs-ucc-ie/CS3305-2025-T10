@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2854179984045054140}
   - component: {fileID: 8626489941585055901}
   - component: {fileID: 6151908156769421616}
-  - component: {fileID: 1980925697996172839}
+  - component: {fileID: -537860566655774895}
   m_Layer: 0
-  m_Name: HESlug
+  m_Name: FlashSlug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,7 +143,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1980925697996172839
+--- !u!114 &-537860566655774895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,12 +152,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4774939303787880640}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15963f9c92699174c9deb410193abcbf, type: 3}
+  m_Script: {fileID: 11500000, guid: e1c0d2d874cbd054eb0cba811e0ded42, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HESlug
+  m_EditorClassIdentifier: Assembly-CSharp::FlashBullet
   lifeTime: 5
-  damage: 15
-  explosionRadius: 3
-  explosionForce: 600
-  knockBackForce: 3
-  knockBackDir: 1
+  damage: 1
+  flashRadius: 4
+  knockSpeed: 0.3
+  flashDuration: 2
+  affectLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  ignoreTriggers: 1

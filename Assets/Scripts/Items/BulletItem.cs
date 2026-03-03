@@ -10,7 +10,7 @@ public class BulletItem : Item
     public String bulletCategory;
 
     [Header("Fire Settings")]
-    public float bulletSpeed = 30f;
+    public float bulletSpeed = 3f;
     public float bulletLifeTime = 5f;
     public float bulletDamage = 10f;
 
