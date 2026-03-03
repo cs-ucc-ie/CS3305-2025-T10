@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class HESlug : BulletFramework
@@ -6,19 +5,23 @@ public class HESlug : BulletFramework
     [Header("Explosion Settings")]
     [SerializeField] private float explosionRadius = 3f;
     [SerializeField] private float explosionForce = 600f;
+    [SerializeField] private AudioClip explosionSound;
 
     [Header("Optional Enemy Knockback")]
     [SerializeField] private float knockBackForce = 3f;
     [SerializeField] private int knockBackDir = 1;
 
-
     protected override void OnHit(Collision collision)
     {
         Vector3 center = transform.position;
-        Debug.Log("Got center of explosion");
+
+        // Play explosion sound at hit position (safe even if bullet is destroyed right after)
+        if (explosionSound != null)
+        {
+            AudioSource.PlayClipAtPoint(explosionSound, center, 1f);
+        }
 
         Collider[] cols = Physics.OverlapSphere(center, explosionRadius);
-        Debug.Log("Got: " + cols.Length);
 
         for (int i = 0; i < cols.Length; i++)
         {
@@ -28,7 +31,7 @@ public class HESlug : BulletFramework
                 hitRb.AddExplosionForce(explosionForce, center, explosionRadius);
             }
 
-            EnemyAI ai = cols[i].GetComponentInParent<EnemyAI>(); // IMPORTANT: often on parent
+            EnemyAI ai = cols[i].GetComponentInParent<EnemyAI>();
             if (ai != null)
             {
                 ai.KnockBack(center, knockBackForce, knockBackDir);
