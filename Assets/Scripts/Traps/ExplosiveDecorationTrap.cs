@@ -49,15 +49,10 @@ public class ExplosiveDecorationTrap : InteractableObject {
                 Debug.Log("Player Exploded");
             }
         }
-
-        StartCoroutine(ExplodeLightAndDestroy());
-    }
-
-    private IEnumerator ExplodeLightAndDestroy(){
-        explosionEffect.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
+        Instantiate(explosionEffect, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
+
 
     // Visual aid to help see the blast radius
     private void OnDrawGizmosSelected(){
