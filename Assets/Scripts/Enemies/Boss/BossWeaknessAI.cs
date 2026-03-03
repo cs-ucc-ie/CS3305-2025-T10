@@ -57,7 +57,8 @@ public class BossWeaknessAI : EnemyAI
                 break;
             case BossWeaknessState.Attacking:
                 if (!animator.IsCurrentAnimationDone()) return; // Wait for attack animation to finish before spawning fireball
-                GameObject fireball = Instantiate(fireballPrefab, transform.position + transform.forward.normalized * 1f, Quaternion.identity);
+                Transform playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+                GameObject fireball = Instantiate(fireballPrefab, transform.position + transform.forward.normalized * 1f, transform.rotation);
                 EnemyFireballType01 fireballScript = fireball.GetComponent<EnemyFireballType01>();
                     fireballScript.SetFather(gameObject);
                 currentState = BossWeaknessState.WaitAttack;
