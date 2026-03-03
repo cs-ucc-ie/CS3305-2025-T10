@@ -17,6 +17,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 825c2681dc8304863ab35b6964e09b04, type: 3}
   bulletPrefab: {fileID: 4774939303787880640, guid: 0528c4e6cb5d05e439b83b2f51a89145, type: 3}
   bulletCategory: APSlug
-  bulletSpeed: 30
+  bulletSpeed: 100
   bulletLifeTime: 5
   bulletDamage: 10
