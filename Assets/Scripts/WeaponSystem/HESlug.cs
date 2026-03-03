@@ -6,6 +6,7 @@ public class HESlug : BulletFramework
     [Header("Explosion Settings")]
     [SerializeField] private float explosionRadius = 3f;
     [SerializeField] private float explosionForce = 600f;
+    [SerializeField] private GameObject hitEffect;
 
     [Header("Optional Enemy Knockback")]
     [SerializeField] private float knockBackForce = 3f;
@@ -16,6 +17,8 @@ public class HESlug : BulletFramework
     {
         Vector3 center = transform.position;
         Debug.Log("Got center of explosion");
+        var effect = Instantiate(hitEffect, center, Quaternion.identity);
+        effect.transform.localScale = Vector3.one * 2f; // scale effect to match explosion radius
 
         Collider[] cols = Physics.OverlapSphere(center, explosionRadius);
         Debug.Log("Got: " + cols.Length);
