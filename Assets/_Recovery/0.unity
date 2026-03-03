@@ -1194,34 +1194,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.data[5].item
       value: 
       objectReference: {fileID: 11400000, guid: f47f4e5dac8a142ed8e238283751483e, type: 2}
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: allSlots.Array.data[6].item
-      value: 
-      objectReference: {fileID: 11400000, guid: f9f77e862df3a462a96ded43eee20b4b, type: 2}
-    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: allSlots.Array.data[7].item
-      value: 
-      objectReference: {fileID: 11400000, guid: 5cf5be1b9240e4c03bd424460eb9a211, type: 2}
-    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.data[4].count
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.data[5].count
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: allSlots.Array.data[6].count
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-      propertyPath: allSlots.Array.data[7].count
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2844289637028677826, guid: 159da13428f1641c0bed1726814a83a7, type: 3}

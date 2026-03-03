@@ -30,8 +30,10 @@ public class FlashBullet : BulletFramework
 
             Vector3 dir = ai.transform.position - center;
             dir.Normalize();
-
+            if (ai != null)
+            {
             ai.KnockBack(dir, knockSpeed, flashDuration);
+            }
         }
 
 
