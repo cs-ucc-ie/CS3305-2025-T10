@@ -1192,6 +1192,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[4].count
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 2844289637028677826, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.51191

@@ -182,6 +182,9 @@ MonoBehaviour:
   mountRotationOffset: {x: 0, y: 0, z: 0}
   SuitableBullets:
   - APSlug
+  - HESlug
+  - FlashShell
+  - ShrapnelShell
   reloadSfx: {fileID: 8300000, guid: be8325baff8034ae5b1e5fb36a049db5, type: 3}
   fireSfx: {fileID: 8300000, guid: b0d80e11c3a974310a4f0339480b2da4, type: 3}
   weaponAudioSource: {fileID: 0}
