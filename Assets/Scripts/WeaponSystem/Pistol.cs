@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using NUnit.Framework;
 
 public class pistol : WeaponFramework
 {
@@ -11,8 +12,14 @@ public class pistol : WeaponFramework
 
         while (Magazine.Count < magazineSize && bullet != null)
         {
-            inventoryManager.UseSelectedQuickSlotItem();
-            Magazine.Enqueue(bullet);
+            bool success = inventoryManager.UseSelectedQuickSlotItem();
+            if (success)
+            {
+                Magazine.Enqueue(bullet);
+            } else
+            {
+                break;
+            }
         }
     }
 }

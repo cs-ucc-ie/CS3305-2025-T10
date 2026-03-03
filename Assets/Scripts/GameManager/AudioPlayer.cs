@@ -50,6 +50,13 @@ public class AudioPlayer : MonoBehaviour
         PlayBGM();
     }
 
+    // void Start()
+    // {
+    //     Camera mainCamera = Camera.main;
+    //     AudioSource existingAudioSource = mainCamera.GetComponent<AudioSource>();
+    //     audioSource = existingAudioSource;
+    // }
+
     private void PlayBGM()
     {
         audioSource.clip = bgmClip;

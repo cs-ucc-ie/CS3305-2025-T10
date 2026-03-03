@@ -77,11 +77,15 @@ public class InventoryManager : MonoBehaviour
         quickSlots[quickSlotIndex] = slot;
         OnQuickSlotsChanged?.Invoke();
     }
-    public void UseSelectedQuickSlotItem()
+    public bool UseSelectedQuickSlotItem()
     {
         if (quickSlots[selectedQuickSlotIndex] != null && quickSlots[selectedQuickSlotIndex].count > 0)
         {
-            quickSlots[selectedQuickSlotIndex].Use();
+            bool success = quickSlots[selectedQuickSlotIndex].Use();
+            if (!success)
+            {
+                return false;
+            }
             if (quickSlots[selectedQuickSlotIndex].count == 0)
             {
                 allSlots.Remove(quickSlots[selectedQuickSlotIndex]);
@@ -89,7 +93,9 @@ public class InventoryManager : MonoBehaviour
             }
             // item may used so count changed
             OnInventoryChanged?.Invoke();
+            return true;
         }
+        return false;
     }
 
     public Item GetSelectedQuickSlotItem()

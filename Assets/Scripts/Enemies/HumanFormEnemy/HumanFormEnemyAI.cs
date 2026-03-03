@@ -98,6 +98,7 @@ public class HumanFormEnemyAI : EnemyAI
         aiState = HumanFormEnemyAIState.Idle;
         idleState = HumanFormEnemyIdleState.AssignNewMoveTargetAndMoveTo;
         engageState = HumanFormEnemyEngageState.TryMoveCloserToAttackTarget;
+        EnsureAttackTarget();
     }
 
     public override void TakeDamage(int damage)
@@ -156,6 +157,10 @@ public class HumanFormEnemyAI : EnemyAI
     }
     void Update()
     {
+        // If player isn't available yet (during scene transition), stay idle and try again next frame
+        if (!EnsureAttackTarget())
+            return;
+
         switch (aiState)
         {
             case HumanFormEnemyAIState.Idle:
@@ -187,6 +192,18 @@ public class HumanFormEnemyAI : EnemyAI
         }
 
     }
+
+    private bool EnsureAttackTarget()
+{
+    // Unity destroyed-object check works with == null
+    if (attackTarget != null) return true;
+
+    GameObject playerObj = GameObject.FindWithTag("Player");
+    if (playerObj == null) return false;
+
+    attackTarget = playerObj.transform;
+    return true;
+}
 
     private void UpdateKnockBackState()
     {
@@ -435,6 +452,8 @@ public class HumanFormEnemyAI : EnemyAI
 
     private bool CanSeeAttackTarget()
     {
+        if (!EnsureAttackTarget())
+            return false;
         Vector3 toAttackTarget = attackTarget.position - transform.position;
         float distance = toAttackTarget.magnitude;
 
