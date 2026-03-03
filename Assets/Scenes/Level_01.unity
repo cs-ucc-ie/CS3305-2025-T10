@@ -3510,6 +3510,10 @@ PrefabInstance:
       value: Dash Ability chest
       objectReference: {fileID: 0}
     - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: containedItems.Array.data[0].item
       value: 
       objectReference: {fileID: 11400000, guid: 0b58340679569414b8c03bd15518656b, type: 2}
@@ -3518,11 +3522,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: a5f9dd8f9e10148a4893492fd8301881, type: 2}
     - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: f2f4a95cc096f4bd1b8024647c496461, type: 2}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: containedItems.Array.data[0].amount
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: containedItems.Array.data[1].amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[2].amount
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4530431594201519164, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
@@ -4233,6 +4245,14 @@ PrefabInstance:
     - target: {fileID: 1920886352476729075, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: m_Name
       value: tresure_box (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[0].item
+      value: 
+      objectReference: {fileID: 11400000, guid: af632ef65b35d4702a0bf2d1ce084151, type: 2}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[0].amount
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4530431594201519164, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5349,6 +5369,30 @@ PrefabInstance:
     - target: {fileID: 1920886352476729075, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: m_Name
       value: tresure_box
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[0].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 42013618ad05142f6800019bb512a935, type: 2}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[1].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 042e1092b32c842f688fbbb047beebbd, type: 2}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 1139eff15fa8448ab843120162ff74a0, type: 2}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[0].amount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[2].amount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4530431594201519164, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: m_LocalPosition.x
