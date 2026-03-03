@@ -9,6 +9,7 @@ public abstract class WeaponFramework : MonoBehaviour
     public string weaponName;
 
     [SerializeField] protected Queue<BulletItem> Magazine = new Queue<BulletItem>();
+    public int bulletsLeft => Magazine.Count;
     [SerializeField] protected int magazineSize = 6;
     [SerializeField] protected float reloadTime = 0.8f;
     [SerializeField] protected float fireInterval = 0.3f;
@@ -95,6 +96,11 @@ public abstract class WeaponFramework : MonoBehaviour
     public int GetBulletsLeft()
     {
         return Magazine.Count;
+    }
+
+    public List<BulletItem> GetBulletsInMagazine()
+    {
+        return new List<BulletItem>(Magazine);
     }
 
     private bool CheckBulletSuitability(BulletItem bullet)

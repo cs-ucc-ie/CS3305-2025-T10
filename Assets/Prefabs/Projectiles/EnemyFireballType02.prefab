@@ -261,6 +261,7 @@ MonoBehaviour:
   ttl: 20
   fps: 6
   damage: 9
+  ignoreEnemies: 0
   destroyWhenHitEnemy: 0
   father: {fileID: 0}
 --- !u!1 &7616445518623472666

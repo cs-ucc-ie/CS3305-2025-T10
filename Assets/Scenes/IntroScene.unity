@@ -215298,53 +215298,9 @@ PrefabInstance:
       value: HumanOfficer
       objectReference: {fileID: 0}
     - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: aiState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: detectAngle
-      value: 360
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: detectRange
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: engageState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
       propertyPath: attackTarget
       value: 
       objectReference: {fileID: 837075293}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: idleMoveSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: idleMoveMaxDistance
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: idleMoveMinDistance
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: engageMoveMaxDistance
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7532992414333130455, guid: 95476d5eeeae942ab953befc52d33c6f, type: 3}
-      propertyPath: engageMoveMinDistance
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

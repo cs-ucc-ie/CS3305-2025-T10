@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class WeaponTestDriver : MonoBehaviour
@@ -18,6 +19,36 @@ public class WeaponTestDriver : MonoBehaviour
     private GameObject playerInstance;
     private Transform weaponMountPoint;
 
+
+    void OnEnable()
+    {
+        SceneManager    .sceneLoaded += OnSceneLoaded;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene loaded: " + scene.name);
+        for (int i = 0; i < weaponInstances.Count; i++)
+        {
+            if (weaponInstances[i] != null)
+            {
+                WeaponFramework currentlyEquipped = weaponInstances[i];
+                List<BulletItem> bulletsToReturn = currentlyEquipped.GetBulletsInMagazine();
+                for (int j = 0; j < bulletsToReturn.Count; j++)
+                {
+                    inventoryManager.AddItem(bulletsToReturn[j]);
+                    Debug.Log($"Returned {bulletsToReturn.Count} bullets to inventory from {currentlyEquipped.weaponName}.");
+                }
+                Destroy(weaponInstances[i].gameObject);
+                Debug.Log($"Destroyed weapon instance of {currentlyEquipped.weaponName} from previous scene.");
+            }
+        }
+        Awake();
+    }
 
     private void Awake()
     {

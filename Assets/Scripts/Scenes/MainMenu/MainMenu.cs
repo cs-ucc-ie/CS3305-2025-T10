@@ -64,32 +64,32 @@ public class MainMenu : MonoBehaviour
 
     public void NewGameSlot1()
     {
-        StartNewGame(1);
+        StartNewGame(0);
     }
 
     public void NewGameSlot2()
     {
-        StartNewGame(2);
+        StartNewGame(1);
     }
 
     public void NewGameSlot3()
     {
-        StartNewGame(3);
+        StartNewGame(2);
     }
 
     public void LoadGameSlot1()
     {
-        LoadGame(1);
+        LoadGame(0);
     }
 
     public void LoadGameSlot2()
     {
-        LoadGame(2);
+        LoadGame(1);
     }
 
     public void LoadGameSlot3()
     {
-        LoadGame(3);
+        LoadGame(2);
     }
     public void StartNewGame(int slot)
     {
