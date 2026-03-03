@@ -1,51 +1,35 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Collider))]
-public class ExplosiveBullet : MonoBehaviour
+public class ExplosiveBullet : BulletFramework
 {
-    [Header("Bullet Settings")]
-    public float lifeTime = 5f;
-    public float explosionRadius = 3f;
-    public float explosionForce = 600f;
-    public float damage = 25f;
+    [Header("Explosion Settings")]
+    [SerializeField] private float explosionRadius = 3f;
+    [SerializeField] private float explosionForce = 600f;
 
-    private Rigidbody rb;
+    [Header("Optional Enemy Knockback")]
+    [SerializeField] private float knockBackForce = 3f;
+    [SerializeField] private int knockBackDir = 1;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
 
-    private void Start()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-
-    public void Launch(Vector3 velocity)
-    {
-        rb.linearVelocity = velocity;
-    }
-
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnHit(Collision collision)
     {
         Vector3 center = transform.position;
+
 
         Collider[] cols = Physics.OverlapSphere(center, explosionRadius);
 
         for (int i = 0; i < cols.Length; i++)
         {
-
+ 
             Rigidbody hitRb = cols[i].attachedRigidbody;
-
-                hitRb.AddExplosionForce(explosionForce, center, explosionRadius);
+            hitRb.AddExplosionForce(explosionForce, center, explosionRadius);
 
 
             EnemyAI ai = cols[i].GetComponent<EnemyAI>();
 
-                ai.KnockBack(center, 3f, 1);
-                ai.TakeDamage((int)damage);
+            ai.KnockBack(center, knockBackForce, knockBackDir);
+            ai.TakeDamage((int)(damage));
         }
-        Destroy(gameObject);
+
     }
 }

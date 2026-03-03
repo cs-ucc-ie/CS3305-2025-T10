@@ -13,11 +13,9 @@ GameObject:
   - component: {fileID: 9069019282463521200}
   - component: {fileID: 7580981928797828588}
   - component: {fileID: 2511575946769149590}
-  - component: {fileID: 7238350853611904494}
-  - component: {fileID: 1661480020677742711}
-  - component: {fileID: 6167603166003445019}
+  - component: {fileID: -5212552582065443452}
   m_Layer: 0
-  m_Name: ShellPrefab
+  m_Name: pelletPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.4754, y: 0, z: 6.8549}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -143,7 +141,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7238350853611904494
+--- !u!114 &-5212552582065443452
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,47 +150,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8783163424719778165}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dc20d4612259aa4ab642144013dd913, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a8acaf7e0698f74db212cbca50fb7bf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NormalBullet
-  lifeTime: 5
-  damage: 10
---- !u!114 &1661480020677742711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8783163424719778165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15963f9c92699174c9deb410193abcbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExplosiveBullet
-  lifeTime: 5
-  damage: 10
-  explosionRadius: 3
-  explosionForce: 600
-  knockBackForce: 3
-  knockBackDir: 1
---- !u!114 &6167603166003445019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8783163424719778165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1c0d2d874cbd054eb0cba811e0ded42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FlashBullet
-  lifeTime: 5
-  damage: 10
-  flashRadius: 4
-  knockSpeed: 0
-  flashDuration: 0.6
-  affectLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  ignoreTriggers: 1
+  m_EditorClassIdentifier: Assembly-CSharp::ShotgunBullet
+  pelletPrefab: {fileID: 0}
+  pelletCount: 10
+  pelletSpeed: 30
+  spreadAngle: 8
+  lifeTime: 0.1

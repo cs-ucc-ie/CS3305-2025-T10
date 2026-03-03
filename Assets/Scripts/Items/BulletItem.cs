@@ -5,7 +5,7 @@ using UnityEngine;
 public class BulletItem : ScriptableObject
 {
     [Header("Prefab")]
-    public GameObject bulletPrefab;
+    [SerializeField] private BulletFramework bulletPrefab;
 
     [Header("Fire Settings")]
     public float bulletSpeed = 30f;
@@ -14,18 +14,6 @@ public class BulletItem : ScriptableObject
 
     public bool Use(Transform firePoint)
     {
-        // if (bulletPrefab == null)
-        // {
-        //     Debug.LogError("BulletItem: bulletPrefab is not assigned!");
-        //     return false;
-        // }
-
-        // if (firePoint == null)
-        // {
-        //     Debug.LogError("BulletItem: firePoint is null!");
-        //     return false;
-        // }
-
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f));
         RaycastHit hit;
         Vector3 TargetPoint;
@@ -38,18 +26,10 @@ public class BulletItem : ScriptableObject
         }
 
 
-        GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-        BulletBehavior bullet = bulletObj.GetComponent<BulletBehavior>();
-        if (bullet == null)
-        {
-            Debug.LogError("BulletItem: bulletPrefab has no BulletBehavior component!");
-            Destroy(bulletObj);
-            return false;
-        }
+        BulletFramework bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-        bullet.lifeTime = bulletLifeTime;
-        bullet.damage = bulletDamage;
+        bullet.Init(bulletLifeTime, bulletDamage);
 
         Vector3 direction = (TargetPoint - firePoint.position).normalized;
         Vector3 velocity = direction * bulletSpeed;
