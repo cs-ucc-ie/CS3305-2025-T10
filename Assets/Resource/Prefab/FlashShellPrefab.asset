@@ -19,4 +19,4 @@ MonoBehaviour:
   bulletCategory: APSlug
   bulletSpeed: 30
   bulletLifeTime: 5
-  bulletDamage: 10
+  bulletDamage: 1
