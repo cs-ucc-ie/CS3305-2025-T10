@@ -31,11 +31,11 @@ public class BossBehavior : EnemyAI
 {
     [Header("Health Config")]
     [SerializeField] private int maxHealth = 300;
-    private int currentHealth;
+    [SerializeField] private int currentHealth;
     private float healthPercentage => (float)currentHealth / maxHealth;
 
     [Header("Phase Thresholds")]
-    [SerializeField] private float phase2Threshold = 0.67f;  // 67%
+    [SerializeField] private float phase2Threshold = 0.5f;
     [SerializeField] private float phase3Threshold = 0.34f;  // 34%
 
     [Header("AI State For Debug")]
@@ -107,6 +107,8 @@ public class BossBehavior : EnemyAI
         navAgent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
         bossMainCollider = GetComponent<Collider>();
+        UIController.Instance.UpdateHealthBar(maxHealth, maxHealth);
+        UIController.Instance.ToggleHealthBar(true);
 
         // Debug: Check if healthBar was found
         if (healthBar == null)
@@ -546,15 +548,26 @@ public class BossBehavior : EnemyAI
         if (bulletPrefab == null || player == null)
             return;
 
-        // Fire bullet from boss position + forward direction + slight offset to the right
-        Vector3 spawnPos = transform.position + transform.forward.normalized * 2f;
-        Vector3 direction = (player.position - spawnPos).normalized;
-        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.LookRotation(direction));
+        Vector3 fireDirection = transform.forward.normalized;
+
+        Vector3 spawnPosLeft = transform.position + transform.forward.normalized * 2f + transform.right.normalized * -1f;
+        GameObject bulletLeft = Instantiate(bulletPrefab, spawnPosLeft, Quaternion.LookRotation(fireDirection));
+
+        Vector3 spawnPosRight = transform.position + transform.forward.normalized * 2f +    transform.right.normalized * 1f;
+        GameObject bulletRight = Instantiate(bulletPrefab, spawnPosRight, Quaternion.LookRotation(fireDirection));
         
-        EnemyFireballType01 fireballScript = bullet.GetComponent<EnemyFireballType01>();
-        if (fireballScript != null)
+        EnemyFireballType01 fireballScriptLeft = bulletLeft.GetComponent<EnemyFireballType01>();
+        if (fireballScriptLeft != null)
         {
-            fireballScript.SetFather(gameObject);
+            fireballScriptLeft.SetFather(gameObject);
+            fireballScriptLeft.ignoreEnemies = true;  // Set left fireball to ignore enemies
+        }
+
+        EnemyFireballType01 fireballScriptRight = bulletRight.GetComponent<EnemyFireballType01>();
+        if (fireballScriptRight != null)
+        {
+            fireballScriptRight.SetFather(gameObject);
+            fireballScriptRight.ignoreEnemies = true;
         }
         
         if (audioSource != null && attackSoundClip != null)
@@ -674,6 +687,8 @@ public class BossBehavior : EnemyAI
             Die();
             return;
         }
+
+        UIController.Instance.UpdateHealthBar(maxHealth, currentHealth);
 
         // Check for phase transition
         UpdatePhase();
@@ -802,6 +817,7 @@ public class BossBehavior : EnemyAI
 
         // Disable collider after a delay
         Destroy(GetComponent<Collider>(), 0.5f);
+        UIController.Instance.ToggleHealthBar(false);
     }
 
     // Called by weak points to deal extra damage

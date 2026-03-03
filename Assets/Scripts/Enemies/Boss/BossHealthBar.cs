@@ -100,10 +100,13 @@ public class BossHealthBar : MonoBehaviour
             newScale.x = healthBarOriginalScale.x * healthPercentage;
             healthBarSprite.transform.localScale = newScale;
             
-            // 调整位置，使血条从左向右缩短（左边保持，右边移动）
+            // 调整位置，使血条从右向左缩短（左边保持，右边移动）
             Vector3 newPosition = healthBarOriginalPosition;
-            float widthDifference = healthBarOriginalScale.x - newScale.x;
-            newPosition.x = healthBarOriginalPosition.x + widthDifference / 2f;
+            float originalHalfWidth = Mathf.Abs(healthBarOriginalScale.x) * 0.5f;
+            float newHalfWidth = Mathf.Abs(newScale.x) * 0.5f;
+            float halfWidthDifference = originalHalfWidth - newHalfWidth;
+            float positionOffset = -Mathf.Sign(healthBarOriginalScale.x) * halfWidthDifference;
+            newPosition.x = healthBarOriginalPosition.x + positionOffset;
             healthBarSprite.transform.localPosition = newPosition;
             
             Debug.Log($"📏 HealthBar length updated: {healthPercentage * 100:F1}% (scale.x = {newScale.x:F2}, position.x = {newPosition.x:F3})");
