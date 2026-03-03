@@ -34,6 +34,7 @@ public class BossAnimator : MonoBehaviour
     private int currentFrame;
     private float frameTimer;
     private bool stayInSpecificFrame;
+    private int loopCount;
 
     void Start()
     {
@@ -84,10 +85,11 @@ public class BossAnimator : MonoBehaviour
     public void BeginAnimation(BossAnimationState state)
     {
         isAnimationDone = false;
-            animationState = state;
-            currentFrame = 0;
-            frameTimer = 0f;
+        animationState = state;
+        currentFrame = 0;
+        frameTimer = 0f;
         stayInSpecificFrame = false;
+        loopCount = 0;
     }
 
     public void StayInSpecificFrame(int frame, BossAnimationState state)
@@ -153,7 +155,15 @@ public class BossAnimator : MonoBehaviour
             {
                 int maxFrame = spriteMappings.Count(m => m.state == animationState && m.direction == animationDirection);
                 currentFrame = (currentFrame + 1) % maxFrame;
-                isAnimationDone = true;
+
+                if (currentFrame == 0)
+                {
+                    loopCount++;
+                    if (loopCount >= 1)
+                    {
+                        isAnimationDone = true;
+                    }
+                }
             }
             else if (animationState == BossAnimationState.WeaponAttackOnce || animationState == BossAnimationState.Dead)
             {
