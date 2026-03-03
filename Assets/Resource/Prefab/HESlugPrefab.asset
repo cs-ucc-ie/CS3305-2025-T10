@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: HESlug
   itemType: 7
   icon: {fileID: 21300000, guid: f2d6f50d4088a4cba99eac88a1c3def7, type: 3}
-  bulletPrefab: {fileID: 8783163424719778165, guid: d16275066bc7343539ea325e8ca82efc, type: 3}
+  bulletPrefab: {fileID: 4774939303787880640, guid: 1fe7642eab0aa43aaacb361882aea457, type: 3}
   bulletCategory: HESlug
   bulletSpeed: 30
   bulletLifeTime: 5

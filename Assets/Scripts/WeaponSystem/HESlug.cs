@@ -1,6 +1,7 @@
+using System.Linq;
 using UnityEngine;
 
-public class ExplosiveSlug : BulletFramework
+public class HESlug : BulletFramework
 {
     [Header("Explosion Settings")]
     [SerializeField] private float explosionRadius = 3f;
@@ -14,9 +15,10 @@ public class ExplosiveSlug : BulletFramework
     protected override void OnHit(Collision collision)
     {
         Vector3 center = transform.position;
-
+        Debug.Log("Got center of explosion");
 
         Collider[] cols = Physics.OverlapSphere(center, explosionRadius);
+        Debug.Log("Got: " + cols.Count());
 
         for (int i = 0; i < cols.Length; i++)
         {
@@ -26,10 +28,13 @@ public class ExplosiveSlug : BulletFramework
 
 
             EnemyAI ai = cols[i].GetComponent<EnemyAI>();
-
-            ai.KnockBack(center, knockBackForce, knockBackDir);
-            ai.TakeDamage((int)(damage));
+            if (ai != null)
+            {
+                ai.KnockBack(center, knockBackForce, knockBackDir);
+                ai.TakeDamage((int)(damage));
+            }
         }
 
+        
     }
 }

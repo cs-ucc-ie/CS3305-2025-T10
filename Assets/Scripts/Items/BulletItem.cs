@@ -1,3 +1,4 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -5,13 +6,13 @@ using UnityEngine;
 public class BulletItem : Item
 {
     [Header("Prefab")]
-    [SerializeField] private BulletFramework bulletPrefab;
+    public GameObject bulletPrefab;
+    public String bulletCategory;
 
     [Header("Fire Settings")]
     public float bulletSpeed = 30f;
     public float bulletLifeTime = 5f;
     public float bulletDamage = 10f;
-    public string bulletCategory;
 
     public override bool Use()
     {
@@ -32,8 +33,15 @@ public class BulletItem : Item
         }
 
 
+        GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-        BulletFramework bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        BulletFramework bullet = bulletObj.GetComponent<BulletFramework>();
+        if (bullet == null)
+        {
+            Debug.LogError("BulletItem: bulletPrefab has no BulletBehavior component!");
+            Destroy(bulletObj);
+            return false;
+        }
 
         bullet.Init(bulletLifeTime, bulletDamage);
 
@@ -41,7 +49,7 @@ public class BulletItem : Item
         Vector3 velocity = direction * bulletSpeed;
 
         bullet.Launch(velocity);
-
         return true;
     }
+
 }

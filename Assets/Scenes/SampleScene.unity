@@ -1193,7 +1193,19 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[5].item
+      value: 
+      objectReference: {fileID: 11400000, guid: f47f4e5dac8a142ed8e238283751483e, type: 2}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.data[4].count
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[5].count
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2844289637028677826, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
