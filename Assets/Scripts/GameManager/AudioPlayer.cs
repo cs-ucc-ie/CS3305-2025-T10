@@ -44,18 +44,18 @@ public class AudioPlayer : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Camera mainCamera = Camera.main;
+        // AudioSource existingAudioSource = mainCamera.GetComponent<AudioSource>();
+        // audioSource = existingAudioSource;
+        // PlayBGM();
+    }
+
+    void Start()
+    {
         Camera mainCamera = Camera.main;
         AudioSource existingAudioSource = mainCamera.GetComponent<AudioSource>();
         audioSource = existingAudioSource;
-        PlayBGM();
     }
-
-    // void Start()
-    // {
-    //     Camera mainCamera = Camera.main;
-    //     AudioSource existingAudioSource = mainCamera.GetComponent<AudioSource>();
-    //     audioSource = existingAudioSource;
-    // }
 
     private void PlayBGM()
     {
@@ -64,36 +64,50 @@ public class AudioPlayer : MonoBehaviour
         audioSource.Play();
     }
 
+    private void TestIfNoAudioSource()
+    {
+        if(audioSource == null)
+        {
+            audioSource = Camera.main.GetComponent<AudioSource>();
+        }
+    }
+
     // 用 audioSource.PlayOneShot(AudioClip) 来播放一次性音效，而不打断 BGM
     private void PlayUIClickSound()
     {
+        TestIfNoAudioSource();
         // 在这里替换音效
         audioSource.PlayOneShot(uiClickClip);
     }
 
     private void PlayInteractPressedSound() 
     {
+        TestIfNoAudioSource();
         audioSource.PlayOneShot(InteractPressedClip);
         //audioSource.Play(InteractPressedClip);
     }
 
     private void PlayInventoryToggleSound()
     {
+        TestIfNoAudioSource();
         audioSource.PlayOneShot(InventoryToggleClip);
     }
 
     private void PlayDashSound()
     {
+        TestIfNoAudioSource();
         audioSource.PlayOneShot(DashClip);
     }
 
     private void PlaySlowTimeEnableSound()
     {
+        TestIfNoAudioSource();
         audioSource.PlayOneShot(SlowTimeEnableClip);
     }
 
     private void PlaySlowTimeDisableSound()
     {
+        TestIfNoAudioSource();
         audioSource.PlayOneShot(SlowTimeDisableClip);
     }
 }
