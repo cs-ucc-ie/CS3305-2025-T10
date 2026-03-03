@@ -92,6 +92,13 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public Item GetSelectedQuickSlotItem()
+    {
+        InventorySlot slot = GetSelectedQuickSlot();
+        if (slot == null) return null;
+        return slot.item;
+    }
+
     public void SetQuickSlotIndex(int index)
     {
         selectedQuickSlotIndex = index;
@@ -163,7 +170,7 @@ public class InventorySlot
             bool wasUsedUp = item.Use();
             if (wasUsedUp)
             {
-                count--;
+                this.count--;
             }
             return wasUsedUp;
         }

@@ -134,9 +134,9 @@ MonoBehaviour:
   growingVisual: {fileID: 0}
   matureVisual: {fileID: 0}
   growthSpriteRenderer: {fileID: 5341687791030227610}
-  emptyPrompt: "Plant a seed (\u79CD\u690D\u79CD\u5B50)"
-  growingPrompt: "Growing... (\u6B63\u5728\u751F\u957F...)"
-  maturePrompt: "Harvest (\u6536\u83B7)"
+  emptyPrompt: Plant a seed
+  growingPrompt: Growing...
+  maturePrompt: Harvest
   state: 0
 --- !u!1 &8293976743731907788
 GameObject:

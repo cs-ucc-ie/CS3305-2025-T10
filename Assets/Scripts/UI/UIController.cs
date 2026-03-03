@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+using UnityEngine.Animations;
 
 public class UIController : MonoBehaviour
 {
@@ -16,11 +18,13 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI interactPromptText;
     [SerializeField] private TextMeshProUGUI playerHealthText;
     [SerializeField] private TextMeshProUGUI playerHungerText;
+    [SerializeField] private TextMeshProUGUI magazineText;
     [SerializeField] private RectTransform panel;
     [SerializeField] private Transform inventorySlotsGrid;
     [SerializeField] private Transform quickSlotsGrid;
     [SerializeField] private InventorySlotUI inventorySlotPrefab;
     [SerializeField] private QuickSlotUI quickSlotPrefab;
+    [SerializeField] private WeaponTestDriver weaponTestDriver;
     [Header("Foldable Panel Setting")]
     [SerializeField] private float panelVisibleHeight = 230f;
     [SerializeField] private float panelMoveSpeed = 5000f;
@@ -35,6 +39,14 @@ public class UIController : MonoBehaviour
     [SerializeField] private float informationDisplayDuration = 2f;
     private List<string> informationList = new List<string>();
     private float informationDeleteTimer = 0f;
+    [Header("HealthBar Setting")]
+    [SerializeField] private GameObject healthBar;
+    [SerializeField] private GameObject healthBarFill;
+    [SerializeField] private Image healthBarFillImage;
+    [SerializeField] public bool enableHealthBar = false;
+    [SerializeField] private Color healthBarFullColor = Color.green;
+    [SerializeField] private Color healthBarMediumColor = Color.yellow;
+    [SerializeField] private Color healthBarLowColor = Color.red;
 
     private void OnEnable()
     {
@@ -80,6 +92,8 @@ public class UIController : MonoBehaviour
         // init player health and hunger text
         playerHungerText.text = PlayerStatsManager.Instance.CurrentHunger.ToString();
         playerHealthText.text = PlayerStatsManager.Instance.CurrentHealth.ToString();
+        // init magazine text
+        magazineText.text = "0";
     }
 
     void Update()
@@ -87,6 +101,34 @@ public class UIController : MonoBehaviour
         UpdateFoldableInventoryAnimation();
         UpdateCrosshair();
         UpdateInformation();
+        RefreshMagazine();
+    }
+
+    public void ToggleHealthBar(bool show)
+    {
+        if (healthBar != null)
+        {
+            enableHealthBar = show;
+            healthBar.SetActive(show);
+        }
+    }
+
+    public void UpdateHealthBar(int max, int current)
+    {
+        healthBarFill.transform.localScale = new Vector3((float)current / max, 1, 1);
+        Debug.Log($"Updating health bar: {current}/{max} ({(float)current / max * 100}%)");
+        if ((float)current / max >= 0.6f)
+        {
+            healthBarFillImage.color = healthBarFullColor;
+        }
+        else if ((float)current / max >= 0.3f)
+        {
+            healthBarFillImage.color = healthBarMediumColor;
+        }
+        else
+        {
+            healthBarFillImage.color = healthBarLowColor;
+        }
     }
 
     public void AddNewInformation(string info)
@@ -103,6 +145,12 @@ public class UIController : MonoBehaviour
     private void RefreshHealth(int currentHealth)
     {
         playerHealthText.text = currentHealth.ToString();
+    }
+
+    private void RefreshMagazine()
+    {
+        WeaponFramework currentlyEquippedWeapon = weaponTestDriver.GetCurrentlyEquipped();
+        magazineText.text = currentlyEquippedWeapon.GetBulletsLeft().ToString();
     }
 
     private void UpdateInformation()
@@ -175,10 +223,17 @@ public class UIController : MonoBehaviour
         {
             originalTimeScale = Time.timeScale;
             Time.timeScale = 0f;
+            healthBar.SetActive(false); // Hide health bar when inventory is shown
         }
         else
         {
             Time.timeScale = originalTimeScale;
+            Debug.Log("ENABLE HEALTH BAR: " + enableHealthBar);
+            if (enableHealthBar)
+            {
+                Debug.Log("ENABLE HEALTH BAR: " + enableHealthBar);
+                healthBar.SetActive(true); // Show health bar when inventory is hidden
+            }
         }
     }
 

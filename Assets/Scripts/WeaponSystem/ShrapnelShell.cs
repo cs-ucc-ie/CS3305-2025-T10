@@ -1,12 +1,13 @@
 using UnityEngine;
 
-public class ShotgunBullet : MonoBehaviour
+public class SharpnelShell : MonoBehaviour
 {
 
     public GameObject pelletPrefab;   
     public int pelletCount = 10;       
     public float pelletSpeed = 30f;    
-    public float spreadAngle = 8f;     
+    public float spreadAngle = 8f;   
+
 
     public float lifeTime = 0.1f;      
 

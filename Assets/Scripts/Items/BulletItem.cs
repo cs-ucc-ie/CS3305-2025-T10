@@ -1,31 +1,26 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Inventory/Item/BulletItem")]
-public class BulletItem : ScriptableObject
+public class BulletItem : Item
 {
     [Header("Prefab")]
     public GameObject bulletPrefab;
+    public String bulletCategory;
 
     [Header("Fire Settings")]
     public float bulletSpeed = 30f;
     public float bulletLifeTime = 5f;
     public float bulletDamage = 10f;
 
-    public bool Use(Transform firePoint)
+    public override bool Use()
     {
-        // if (bulletPrefab == null)
-        // {
-        //     Debug.LogError("BulletItem: bulletPrefab is not assigned!");
-        //     return false;
-        // }
+        return true;
+    }
 
-        // if (firePoint == null)
-        // {
-        //     Debug.LogError("BulletItem: firePoint is null!");
-        //     return false;
-        // }
-
+    public bool FireBullet(Transform firePoint)
+    {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f));
         RaycastHit hit;
         Vector3 TargetPoint;
@@ -40,7 +35,7 @@ public class BulletItem : ScriptableObject
 
         GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-        BulletBehavior bullet = bulletObj.GetComponent<BulletBehavior>();
+        BulletFramework bullet = bulletObj.GetComponent<BulletFramework>();
         if (bullet == null)
         {
             Debug.LogError("BulletItem: bulletPrefab has no BulletBehavior component!");
@@ -48,14 +43,13 @@ public class BulletItem : ScriptableObject
             return false;
         }
 
-        bullet.lifeTime = bulletLifeTime;
-        bullet.damage = bulletDamage;
+        bullet.Init(bulletLifeTime, bulletDamage);
 
         Vector3 direction = (TargetPoint - firePoint.position).normalized;
         Vector3 velocity = direction * bulletSpeed;
 
         bullet.Launch(velocity);
-
         return true;
     }
+
 }

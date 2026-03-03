@@ -1,40 +1,39 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Collider))]
-public class FlashBullet : MonoBehaviour
+public class FlashBullet : BulletFramework
 {
-    public float lifeTime = 5f;
-    public float flashRadius = 4f;
-    public float knockSpeed = 0f;    
-    public float flashDuration = 0.6f;
+    [Header("Flash Settings")]
+    [SerializeField] private float flashRadius = 4f;
+    [SerializeField] private float knockSpeed = 0f;
+    [SerializeField] private float flashDuration = 0.6f;
 
-    private Rigidbody rb;
+    [Header("Physics")]
+    [SerializeField] private LayerMask affectLayers = ~0;
+    [SerializeField] private bool ignoreTriggers = true;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
-   
-    void Start()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnHit(Collision collision)
     {
         Vector3 center = transform.position;
-        Collider[] cols = Physics.OverlapSphere(center, flashRadius);
+
+        Collider[] cols = Physics.OverlapSphere(
+            center,
+            flashRadius,
+            affectLayers,
+            ignoreTriggers ? QueryTriggerInteraction.Ignore : QueryTriggerInteraction.Collide
+        );
 
         for (int i = 0; i < cols.Length; i++)
         {
             EnemyAI ai = cols[i].GetComponentInParent<EnemyAI>();
             if (ai == null) continue;
 
+
             Vector3 dir = ai.transform.position - center;
+            dir.Normalize();
+
             ai.KnockBack(dir, knockSpeed, flashDuration);
         }
 
-        Destroy(gameObject);
-    }
 
+    }
 }

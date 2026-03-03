@@ -15,45 +15,45 @@ public class HumanFormEnemyMotor : MonoBehaviour
         targetRotation = transform.rotation;
     }
 
-void Update()
-{
-    // Check if CharacterController is enabled before moving
-    if (!characterController.enabled) return;
-
-    // 处理旋转
-    if (isRotating)
+    void Update()
     {
-        float angleToTarget = Quaternion.Angle(transform.rotation, targetRotation);
-        if (angleToTarget > 0.1f)
-        {
-            float maxRotation = maxRotationPerFrame * Time.deltaTime * 12f; // animator 6fps
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotation);
-        }
-        else
-        {
-            transform.rotation = targetRotation;
-            isRotating = false;
-        }
-    }
+        // Check if CharacterController is enabled before moving
+        if (!characterController.enabled) return;
 
-    // 未到达目标，进行移动
-    if (!ArrivedAtTarget())
-    {
-        Vector3 diff = moveTarget - transform.position;
-        diff.y = 0f;
+        // 处理旋转
+        if (isRotating)
+        {
+            float angleToTarget = Quaternion.Angle(transform.rotation, targetRotation);
+            if (angleToTarget > 0.1f)
+            {
+                float maxRotation = maxRotationPerFrame * Time.deltaTime * 12f; // animator 6fps
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotation);
+            }
+            else
+            {
+                transform.rotation = targetRotation;
+                isRotating = false;
+            }
+        }
+
+        // 未到达目标，进行移动
+        if (!ArrivedAtTarget())
+        {
+            Vector3 diff = moveTarget - transform.position;
+            diff.y = 0f;
 
             // 线性移动：使用 normalized 确保速度恒定为 moveSpeed
             Vector3 moveVec = diff.normalized * moveSpeed;
-            moveVec.y = -9.8f; 
+            moveVec.y = -9.8f;
             characterController.Move(moveVec * Time.deltaTime);
 
+        }
+        // 已到达目标，仅仅施加重力
+        else
+        {
+            characterController.Move(new Vector3(0, -9.8f, 0) * Time.deltaTime);
+        }
     }
-    // 已到达目标，仅仅施加重力
-    else
-    {
-        characterController.Move(new Vector3(0, -9.8f, 0) * Time.deltaTime);
-    }
-}
 
     public void StopMovement()
     {

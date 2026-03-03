@@ -11,6 +11,7 @@ public class EnemyFireballType01 : MonoBehaviour
     [SerializeField] private float ttl = 20f;
     [SerializeField] private float fps = 6f;
     [SerializeField] private int damage = 10;
+    [SerializeField] public bool ignoreEnemies = false;
     [SerializeField] private bool destroyWhenHitEnemy = false;
     public GameObject father;
     private Camera mainCam;
@@ -87,6 +88,11 @@ public class EnemyFireballType01 : MonoBehaviour
 
         if (HasParentWithTag(other.transform, "Enemy"))
         {
+            if (ignoreEnemies)
+            {
+                Debug.Log("Fireball hit enemy but ignoring: " + other.name);
+                return;
+            }
             Debug.Log("Fireball hit enemy: " + other.name);
             EnemyAI enemyAI = other.GetComponentInParent<EnemyAI>();
             Debug.Log("EnemyAI component: " + (enemyAI != null ? "found" : "not found") + other.name);
