@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NormalBullet : BulletFramework
+public class APSlug : BulletFramework
 {
     protected override void OnHit(Collision collision)
     {

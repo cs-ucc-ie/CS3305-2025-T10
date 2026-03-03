@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ExplosiveBullet : BulletFramework
+public class ExplosiveSlug : BulletFramework
 {
     [Header("Explosion Settings")]
     [SerializeField] private float explosionRadius = 3f;

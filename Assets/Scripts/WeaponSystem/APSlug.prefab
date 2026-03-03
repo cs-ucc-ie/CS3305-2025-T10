@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9069019282463521200}
   - component: {fileID: 7580981928797828588}
   - component: {fileID: 2511575946769149590}
-  - component: {fileID: -1500987047223649400}
+  - component: {fileID: 5535522180970540748}
   m_Layer: 0
   m_Name: APSlug
   m_TagString: Untagged
@@ -141,7 +141,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-1500987047223649400
+--- !u!114 &5535522180970540748
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,8 +150,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8783163424719778165}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fd10b727494548e184f38134db71773, type: 3}
+  m_Script: {fileID: 11500000, guid: 1dc20d4612259aa4ab642144013dd913, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BulletBehavior
+  m_EditorClassIdentifier: Assembly-CSharp::APSlug
   lifeTime: 5
   damage: 10
