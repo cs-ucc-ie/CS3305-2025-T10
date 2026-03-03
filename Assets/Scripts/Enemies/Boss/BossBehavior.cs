@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -62,6 +63,7 @@ public class BossBehavior : EnemyAI
     [SerializeField] private AudioClip attackSoundClip;
     [SerializeField] private AudioClip damageSoundClip;
     [SerializeField] private AudioClip deathSoundClip;
+    [SerializeField] private AudioClip phaseTransitionSoundClip;
     [SerializeField] private float audioVolume = 1f;
     private AudioSource audioSource;
 
@@ -82,6 +84,11 @@ public class BossBehavior : EnemyAI
     [SerializeField] private float chaseSpeed = 5f;
     [SerializeField] private float stopChaseDistance = 2f;
     [SerializeField] private float phase12TurnSpeed = 30f;
+
+    [Header("Phase Transition Config")]
+    [SerializeField] private float phaseTransitionSpinDuration = 1.0f;
+    private bool isPhaseTransitioning;
+    private Coroutine phaseTransitionCoroutine;
 
     [Header("Dash Config")]
     private bool isDashing = false;
@@ -179,6 +186,9 @@ public class BossBehavior : EnemyAI
     void Update()
     {
         if (currentState == BossBehaviorState.Dead)
+            return;
+
+        if (isPhaseTransitioning)
             return;
 
         // 在Phase 2时定期检查弱点状态
@@ -769,6 +779,11 @@ public class BossBehavior : EnemyAI
         Debug.Log($"⚔️ Boss phase changed from {oldPhase} to {newPhase}");
         Debug.Log($"❤️ Remaining Health: {currentHealth}/{maxHealth} ({healthPercentage * 100:F1}%)");
 
+        if (audioSource != null && phaseTransitionSoundClip != null)
+        {
+            audioSource.PlayOneShot(phaseTransitionSoundClip, audioVolume);
+        }
+
         switch (newPhase)
         {
             case BossPhase.Phase2_WeakPoints:
@@ -801,6 +816,59 @@ public class BossBehavior : EnemyAI
 
         // Reset state
         currentState = BossBehaviorState.Chase;
+        StartPhaseTransitionSpin();
+    }
+
+    private void StartPhaseTransitionSpin()
+    {
+        if (phaseTransitionCoroutine != null)
+        {
+            StopCoroutine(phaseTransitionCoroutine);
+        }
+
+        phaseTransitionCoroutine = StartCoroutine(PhaseTransitionSpinRoutine());
+    }
+
+    private IEnumerator PhaseTransitionSpinRoutine()
+    {
+        isPhaseTransitioning = true;
+        isDashing = false;
+        rangedAttackSequenceStarted = false;
+
+        if (navAgent != null && navAgent.enabled)
+        {
+            navAgent.isStopped = true;
+        }
+
+        if (bossAnimator != null && bossAnimator.GetCurrentAnimationState() != BossAnimationState.Walk)
+        {
+            bossAnimator.BeginAnimation(BossAnimationState.Walk);
+        }
+
+        float duration = Mathf.Max(phaseTransitionSpinDuration, 0.01f);
+        float spinSpeed = 360f / duration;
+        float rotatedDegrees = 0f;
+
+        while (rotatedDegrees < 360f)
+        {
+            float step = spinSpeed * Time.deltaTime;
+            if (rotatedDegrees + step > 360f)
+            {
+                step = 360f - rotatedDegrees;
+            }
+
+            transform.Rotate(Vector3.up, step);
+            rotatedDegrees += step;
+            yield return null;
+        }
+
+        isPhaseTransitioning = false;
+        phaseTransitionCoroutine = null;
+
+        if (navAgent != null && navAgent.enabled)
+        {
+            navAgent.isStopped = false;
+        }
     }
 
     private void Die()
