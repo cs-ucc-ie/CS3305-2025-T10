@@ -14,6 +14,11 @@ public class BulletItem : Item
     public float bulletLifeTime = 5f;
     public float bulletDamage = 10f;
 
+    public override bool Use()
+    {
+        return true;
+    }
+
     public bool FireBullet(Transform firePoint)
     {
         // if (bulletPrefab == null)

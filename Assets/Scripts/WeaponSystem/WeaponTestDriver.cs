@@ -90,7 +90,7 @@ public class WeaponTestDriver : MonoBehaviour
             // Type check + cast in one step
             if (slotItem is BulletItem selectedBullet)
             {
-                bool started = currentlyEquipped.TryStartLoadBullet(selectedBullet);
+                bool started = currentlyEquipped.TryStartLoadBullet(selectedBullet, inventoryManager);
                 Debug.Log("Reload started: " + started);
 
                 // OPTIONAL (only if you want ammo consumption to happen here)

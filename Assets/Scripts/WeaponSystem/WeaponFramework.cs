@@ -103,7 +103,7 @@ public abstract class WeaponFramework : MonoBehaviour
         return false;
     }
 
-    public bool TryStartLoadBullet(BulletItem bullet)
+    public bool TryStartLoadBullet(BulletItem bullet, InventoryManager inventoryManager)
     {
         if (isReloading) return false;
         if (Magazine.Count >= magazineSize) return false;
@@ -117,18 +117,18 @@ public abstract class WeaponFramework : MonoBehaviour
         }
 
         isReloading = true;
-        StartCoroutine(ReloadWrapper(bullet));
+        StartCoroutine(ReloadWrapper(bullet, inventoryManager));
 
         return true;
     }
 
-    private IEnumerator ReloadWrapper(BulletItem bullet)
+    private IEnumerator ReloadWrapper(BulletItem bullet, InventoryManager inventoryManager)
     {
-        yield return ReloadRoutine(bullet);
+        yield return ReloadRoutine(bullet, inventoryManager);
         isReloading = false;
     }
 
-    protected abstract IEnumerator ReloadRoutine(BulletItem bullet);
+    protected abstract IEnumerator ReloadRoutine(BulletItem bullet, InventoryManager inventoryManager);
 
     protected virtual void PlayRecoil()
     {

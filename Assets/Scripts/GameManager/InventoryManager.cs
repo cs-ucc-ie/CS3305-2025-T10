@@ -170,7 +170,7 @@ public class InventorySlot
             bool wasUsedUp = item.Use();
             if (wasUsedUp)
             {
-                count--;
+                this.count--;
             }
             return wasUsedUp;
         }
