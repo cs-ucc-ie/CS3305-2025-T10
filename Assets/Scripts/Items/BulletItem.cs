@@ -47,7 +47,7 @@ public class BulletItem : Item
 
         GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-        BulletBehavior bullet = bulletObj.GetComponent<BulletBehavior>();
+        BulletFramework bullet = bulletObj.GetComponent<BulletFramework>();
         if (bullet == null)
         {
             Debug.LogError("BulletItem: bulletPrefab has no BulletBehavior component!");
