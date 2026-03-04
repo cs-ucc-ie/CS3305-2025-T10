@@ -15,4 +15,4 @@ MonoBehaviour:
   itemName: Medicine
   itemType: 5
   icon: {fileID: 21300000, guid: 8219b864f094e481faa64d59a640e924, type: 3}
-  healthRestore: 13
+  healthRestore: 30
