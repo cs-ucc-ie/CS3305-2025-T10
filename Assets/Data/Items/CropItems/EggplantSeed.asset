@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SeedItem
   itemName: Eggplant Seed
   itemType: 0
-  icon: {fileID: 1727774679, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
+  icon: {fileID: -416055213, guid: b08833ba9b7ac4e8aa35deaccc59d156, type: 3}
   cropItem: {fileID: 11400000, guid: 0b4e57bb92eea40fd9781e44625515eb, type: 2}
   growSeconds: 10
   harvestAmount: 1

@@ -26,7 +26,7 @@ public class SeedItem : Item
     // 种子不允许直接使用（按 I 不会消耗）
     public override bool Use()
     {
-        Debug.Log("Seed cannot be used directly. Plant it on soil.");
+        UIController.Instance.AddNewInformation("You can't eat the seed, plant it in soil.");
         return false; // 返回 false = 不消耗物品
     }
 }

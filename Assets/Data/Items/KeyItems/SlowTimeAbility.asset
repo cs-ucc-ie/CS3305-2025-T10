@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6fc4777e8de84765bc3fcac7d62faff, type: 3}
   m_Name: SlowTimeAbility
   m_EditorClassIdentifier: Assembly-CSharp::KeyItem
-  itemName: Slow Time Ability
+  itemName: Slow Time
   itemType: 4
   icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   prompt: Press SPACE to slow time
