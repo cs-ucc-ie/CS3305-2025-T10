@@ -164,3 +164,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   ignoreTriggers: 1
+  flashEffectPrefab: {fileID: 2222965205041011815, guid: 778d5d119c55f495390a8106ca4ac3fd, type: 3}

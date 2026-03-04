@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FlashBullet : BulletFramework
@@ -10,10 +11,12 @@ public class FlashBullet : BulletFramework
     [Header("Physics")]
     [SerializeField] private LayerMask affectLayers = ~0;
     [SerializeField] private bool ignoreTriggers = true;
+    [SerializeField] private GameObject flashEffectPrefab;
 
     protected override void OnHit(Collision collision)
     {
         Vector3 center = transform.position;
+        Instantiate(flashEffectPrefab, center, Quaternion.identity);
 
         Collider[] cols = Physics.OverlapSphere(
             center,
