@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2511575946769149590}
   - component: {fileID: 5535522180970540748}
   m_Layer: 0
-  m_Name: APSlug
+  m_Name: PistolBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,4 +154,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::APSlug
   lifeTime: 5
-  damage: 40
+  damage: 10
