@@ -70,7 +70,7 @@ public class WeaponTestDriver : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         playerInstance = GameObject.FindWithTag("Player");
-
+        audioSource = playerInstance.GetComponent<AudioSource>();
         if (currentlyEquipped == null)
             currentlyEquipped = weapons[currentWeaponIndex];
 
@@ -180,7 +180,10 @@ public class WeaponTestDriver : MonoBehaviour
 
         currentlyEquipped = weaponInstances[currentWeaponIndex];
         currentlyEquipped.gameObject.SetActive(true);
-        audioSource.PlayOneShot(swapWeaponSfx);
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(swapWeaponSfx);
+        }
         Debug.Log("Swap weapon sound played");
         Debug.Log("Weapon switched to: " + currentlyEquipped.weaponName);
     }
