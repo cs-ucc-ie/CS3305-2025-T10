@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HESlug
   lifeTime: 5
-  damage: 30
+  damage: 40
   explosionRadius: 3
   explosionForce: 600
   hitEffect: {fileID: 2474557744966018952, guid: 2f7bf25ee17de47afa44a4df9f59052b, type: 3}

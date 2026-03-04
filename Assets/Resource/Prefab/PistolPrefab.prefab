@@ -54,7 +54,7 @@ MonoBehaviour:
   mountPositionOffset: {x: 0.162, y: 0.01, z: 0.011}
   mountRotationOffset: {x: 0, y: 270, z: 0}
   SuitableBullets:
-  - APSlug
+  - PistolBullet
   reloadSfx: {fileID: 8300000, guid: c65da325bbf4f4154aa0497f7350e547, type: 3}
   fireSfx: {fileID: 8300000, guid: 7e4605777a38e4627a5ad285435a60ee, type: 3}
   weaponAudioSource: {fileID: 0}
@@ -66,7 +66,7 @@ MonoBehaviour:
   muzzleFlashLight: {fileID: 5751885587218707586}
   muzzleFlashDuration: 0.02
   useMuzzleFlash: 1
-  shellItem: {fileID: 11400000, guid: af632ef65b35d4702a0bf2d1ce084151, type: 2}
+  shellItem: {fileID: 11400000, guid: e8fc8c1c10301448cbb26f1b967a0395, type: 2}
 --- !u!1 &3544689895224899682
 GameObject:
   m_ObjectHideFlags: 0

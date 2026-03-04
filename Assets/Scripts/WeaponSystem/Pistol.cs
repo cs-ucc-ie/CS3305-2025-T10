@@ -8,18 +8,12 @@ public class pistol : WeaponFramework
 
     protected override IEnumerator ReloadRoutine(BulletItem bullet, InventoryManager inventoryManager)
     {
+        //pistol has infinite ammo
         yield return new WaitForSeconds(reloadTime);
 
-        while (Magazine.Count < magazineSize && bullet != null)
+        while (Magazine.Count < magazineSize && shellItem != null)
         {
-            bool success = inventoryManager.UseSelectedQuickSlotItem();
-            if (success)
-            {
-                Magazine.Enqueue(bullet);
-            } else
-            {
-                break;
-            }
+            Magazine.Enqueue(shellItem);
         }
     }
 }
