@@ -15,6 +15,8 @@ public class VolumeController : MonoBehaviour
     private float elapsed = 0f;
     [SerializeField] private Color startColor = new Color(1f, 0.7f, 0.7f, 1f); // light red
     [SerializeField] private Color endColor = new Color(0.6f, 0f, 0f, 1f); // dark red
+    private Vector3 defaultCameraLocalPosition;
+    private bool hasDefaultCameraLocalPosition;
 
     private void HandleSlowTimeEnabled() => SetBlackWhite(true);
     private void HandleSlowTimeDisabled() => SetBlackWhite(false);
@@ -39,6 +41,7 @@ public class VolumeController : MonoBehaviour
     {
         InitializeVolumeReferences();
         ResetPostProcessing();
+        ResetMainCameraPosition();
     }
 
     private void Awake()
@@ -101,6 +104,30 @@ public class VolumeController : MonoBehaviour
         }
     }
 
+    private void CacheMainCameraDefaultPosition()
+    {
+        if (hasDefaultCameraLocalPosition) return;
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null) return;
+
+        defaultCameraLocalPosition = mainCamera.transform.localPosition;
+        hasDefaultCameraLocalPosition = true;
+    }
+
+    private void ResetMainCameraPosition()
+    {
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null || !hasDefaultCameraLocalPosition) return;
+
+        mainCamera.transform.localPosition = defaultCameraLocalPosition;
+        CameraBob cameraBob = mainCamera != null ? mainCamera.GetComponent<CameraBob>() : null;
+        if (cameraBob != null)
+        {
+            cameraBob.enabled = true;
+        }
+    }
+
     public void QuickRedFlash(){
         StartCoroutine(QuickRedFlashCoroutine());
     }
@@ -145,8 +172,9 @@ public class VolumeController : MonoBehaviour
         elapsed = 0f; // Reset timer
         colorAdjustments.colorFilter.overrideState = true;
 
+        CacheMainCameraDefaultPosition();
         Camera mainCamera = Camera.main;
-        Vector3 startPosition = mainCamera != null ? mainCamera.transform.position : Vector3.zero;
+        Vector3 startPosition = mainCamera != null ? mainCamera.transform.localPosition : Vector3.zero;
         Vector3 endPosition = startPosition + Vector3.down * 0.5f; // Move down 0.5 unit
         CameraBob cameraBob = mainCamera != null ? mainCamera.GetComponent<CameraBob>() : null;
         if (cameraBob != null)
@@ -163,7 +191,7 @@ public class VolumeController : MonoBehaviour
             // Move camera down simultaneously
             if (mainCamera != null)
             {
-                mainCamera.transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                mainCamera.transform.localPosition = Vector3.Lerp(startPosition, endPosition, t);
             }
 
             yield return null;

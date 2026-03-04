@@ -98,13 +98,13 @@ public class EnemyFireballType01 : MonoBehaviour
             Debug.Log("EnemyAI component: " + (enemyAI != null ? "found" : "not found") + other.name);
             if (enemyAI != null)
             {
-                if (!enemyAI.enabled)
-                {
-                    Debug.Log("EnemyAI is disabled, not applying damage to: " + other.name);
-                    if (destroyWhenHitEnemy)
-                        Destroy(gameObject);
-                    return;
-                }
+                // if (!enemyAI.enabled)
+                // {
+                //     Debug.Log("EnemyAI is disabled, not applying damage to: " + other.name);
+                //     if (destroyWhenHitEnemy)
+                //         Destroy(gameObject);
+                //     return;
+                // }
                 enemyAI.TakeDamage(damage);
                 if (destroyWhenHitEnemy)
                     Destroy(gameObject);

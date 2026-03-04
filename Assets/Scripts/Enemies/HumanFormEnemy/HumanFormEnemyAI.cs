@@ -108,7 +108,7 @@ public class HumanFormEnemyAI : EnemyAI
         if (health <= 0)
         {
             aiState = HumanFormEnemyAIState.Dead;
-            animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
+            if (animator != null) animator.BeginAnimation(HumanFormEnemyAnimationState.Dead);
             if (audioSource != null && deathSoundClip != null)
             {
                 audioSource.PlayOneShot(deathSoundClip, audioVolume);
@@ -122,9 +122,10 @@ public class HumanFormEnemyAI : EnemyAI
             // only play hurt animation if not already in knockback state
             if (aiState != HumanFormEnemyAIState.KnockBack)
             {
-                audioSource.PlayOneShot(damageSoundClip, audioVolume);
+                if (audioSource != null && damageSoundClip != null)
+                    audioSource.PlayOneShot(damageSoundClip, audioVolume);
                 hurtStunTimer = hurtStunDuration;
-                animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
+                if(animator != null) animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
                 aiState = HumanFormEnemyAIState.Hurt;
             }
         }

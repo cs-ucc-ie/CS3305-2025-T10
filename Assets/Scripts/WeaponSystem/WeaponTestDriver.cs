@@ -19,6 +19,52 @@ public class WeaponTestDriver : MonoBehaviour
     private GameObject playerInstance;
     private Transform weaponMountPoint;
 
+    void OnEnable()
+    {
+        InputManager.OnFirePressed += HandleFirePressed;
+        InputManager.OnReloadPressed += HandleReloadPressed;
+        InputManager.OnSwitchWeaponPressed += CycleWeapon;
+    }
+
+    void OnDisable()
+    {
+        InputManager.OnFirePressed -= HandleFirePressed;
+        InputManager.OnReloadPressed -= HandleReloadPressed;
+        InputManager.OnSwitchWeaponPressed -= CycleWeapon;
+    }
+
+    private void HandleFirePressed()
+    {
+        bool fired = currentlyEquipped.Fire();
+        Debug.Log("Fired: " + fired);
+    }
+
+    private void HandleReloadPressed()
+    {
+        // Reload one shell
+
+            Item slotItem = inventoryManager.GetSelectedQuickSlotItem();
+            if (slotItem == null)
+            {
+                Debug.Log("Reload failed: selected quick slot is empty.");
+                return;
+            }
+
+            // Type check + cast in one step
+            if (slotItem is BulletItem selectedBullet)
+            {
+                bool started = currentlyEquipped.TryStartLoadBullet(selectedBullet, inventoryManager);
+                Debug.Log("Reload started: " + started);
+
+                // OPTIONAL (only if you want ammo consumption to happen here)
+                // if (started) inventoryManager.UseSelectedQuickSlotItem();
+            }
+            else
+            {
+                Debug.Log($"Reload failed: selected item '{slotItem.itemName}' is not a BulletItem.");
+            }
+    }
+
     void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -79,44 +125,46 @@ public class WeaponTestDriver : MonoBehaviour
 
     void Update()
     {
-        // Reload one shell
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Item slotItem = inventoryManager.GetSelectedQuickSlotItem();
-            if (slotItem == null)
-            {
-                Debug.Log("Reload failed: selected quick slot is empty.");
-                return;
-            }
+        // // Reload one shell
+        // if (Input.GetKeyDown(KeyCode.R))
+        // {
+        //     Item slotItem = inventoryManager.GetSelectedQuickSlotItem();
+        //     if (slotItem == null)
+        //     {
+        //         Debug.Log("Reload failed: selected quick slot is empty.");
+        //         return;
+        //     }
 
-            // Type check + cast in one step
-            if (slotItem is BulletItem selectedBullet)
-            {
-                bool started = currentlyEquipped.TryStartLoadBullet(selectedBullet, inventoryManager);
-                Debug.Log("Reload started: " + started);
+        //     // Type check + cast in one step
+        //     if (slotItem is BulletItem selectedBullet)
+        //     {
+        //         bool started = currentlyEquipped.TryStartLoadBullet(selectedBullet, inventoryManager);
+        //         Debug.Log("Reload started: " + started);
 
-                // OPTIONAL (only if you want ammo consumption to happen here)
-                // if (started) inventoryManager.UseSelectedQuickSlotItem();
-            }
-            else
-            {
-                Debug.Log($"Reload failed: selected item '{slotItem.itemName}' is not a BulletItem.");
-            }
-        }
+        //         // OPTIONAL (only if you want ammo consumption to happen here)
+        //         // if (started) inventoryManager.UseSelectedQuickSlotItem();
+        //     }
+        //     else
+        //     {
+        //         Debug.Log($"Reload failed: selected item '{slotItem.itemName}' is not a BulletItem.");
+        //     }
+        // }
 
         // Fire
-        if (Input.GetMouseButtonDown(0))
-        {
-            bool fired = currentlyEquipped.Fire();
-            Debug.Log("Fired: " + fired);
-        }
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     bool fired = currentlyEquipped.Fire();
+        //     Debug.Log("Fired: " + fired);
+        // }
 
         // Swap weapons
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            CycleWeapon();
-        }
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     CycleWeapon();
+        // }
     }
+
+
 
     private void CycleWeapon()
     {

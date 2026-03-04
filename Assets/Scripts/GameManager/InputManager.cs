@@ -32,7 +32,13 @@ public class InputManager : MonoBehaviour
     }
     void Update()
     {
-        if(PlayerStatsManager.Instance.CurrentHealth <=0 ) return; // don't process input when player is dead
+        if(PlayerStatsManager.Instance.CurrentHealth <=0)
+        {
+            MoveInput = Vector2.zero;
+            MouseInput = Vector2.zero;
+            return;
+        }
+        ; // don't process input when player is dead
 
         // use number key to change slot to choose item
         for (int i = 0; i < 5; i++)
@@ -83,6 +89,8 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Fire button pressed");
+            Debug.Log("Is inventory shown? " + (UIController.Instance != null ? UIController.Instance.IsInventoryShown : "UIController instance is null"));
             if (UIController.Instance.IsInventoryShown) return; // don't fire when inventory is shown
             OnFirePressed?.Invoke();
         }
