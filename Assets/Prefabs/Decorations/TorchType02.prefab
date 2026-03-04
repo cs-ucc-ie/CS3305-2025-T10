@@ -161,15 +161,15 @@ PrefabInstance:
       objectReference: {fileID: 45793219, guid: 4cfc71eb2b1d2441dbf099a30396ce17, type: 3}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 35.6
+      value: -27.948957
       objectReference: {fileID: 0}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.53
+      value: 3.54
       objectReference: {fileID: 0}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 32.3
+      value: 60.04979
       objectReference: {fileID: 0}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalRotation.w
@@ -233,9 +233,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 377329618472067213, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8908070936576859642}
-    - targetCorrespondingSourceObject: {fileID: 377329618472067213, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6550151816438298320}
   m_SourcePrefab: {fileID: 100100000, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
 --- !u!1 &217515242086914430 stripped
 GameObject:
@@ -263,23 +260,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.1969788, y: 4.680509, z: 1.6881555}
   m_Center: {x: 0.07952249, y: 0.8402543, z: 1.4462236}
---- !u!114 &6550151816438298320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 217515242086914430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f86a01b54cbeec74390a33096e82419b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExplosiveDecorationTrap
-  interactPrompt: Inspect
-  explosionRadius: 10
-  explosionDamage: 30
-  proximityTimer: 0.1
-  explosionEffect: {fileID: 8516138323237797725}
 --- !u!4 &2063552336830632802 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}

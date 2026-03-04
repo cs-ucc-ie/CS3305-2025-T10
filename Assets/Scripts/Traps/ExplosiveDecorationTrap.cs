@@ -10,10 +10,15 @@ public class ExplosiveDecorationTrap : InteractableObject {
 
     private bool isPrimed = false;
     private float currentTimer;
+    public AudioClip explodeSfx;
+    private AudioSource audioSource;
 
     private void Start(){
         interactPrompt = "Examine";
         currentTimer = proximityTimer;
+        if(audioSource == null){
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     // Trigger 1: player interaction
@@ -50,9 +55,18 @@ public class ExplosiveDecorationTrap : InteractableObject {
             }
         }
         Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        GameObject srObject = GetComponentInChildren<SpriteRenderer>().gameObject;
+        srObject.SetActive(false);
+        StartCoroutine(PlayExplodeSfxAndDestroy());
     }
 
+    private IEnumerator PlayExplodeSfxAndDestroy(){
+        if (audioSource != null && explodeSfx != null){
+            audioSource.PlayOneShot(explodeSfx);
+            yield return new WaitForSeconds(explodeSfx.length);
+        }
+        Destroy(gameObject);
+    }
 
     // Visual aid to help see the blast radius
     private void OnDrawGizmosSelected(){

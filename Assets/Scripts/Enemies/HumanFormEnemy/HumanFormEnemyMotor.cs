@@ -5,14 +5,19 @@ public class HumanFormEnemyMotor : MonoBehaviour
     private CharacterController characterController;
     private Vector3 moveTarget;
     private float moveSpeed;
+    private Vector3 lastHorizontalPosition;
+    private float noMovementTimer = 0f;
     private Quaternion targetRotation;
     private bool isRotating = false;
     private const float maxRotationPerFrame = 45f;
+    private const float stuckDurationThreshold = 0.5f;
+    private const float movementEpsilon = 0.005f;
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         targetRotation = transform.rotation;
+        lastHorizontalPosition = transform.position;
     }
 
     void Update()
@@ -46,19 +51,22 @@ public class HumanFormEnemyMotor : MonoBehaviour
             Vector3 moveVec = diff.normalized * moveSpeed;
             moveVec.y = -9.8f;
             characterController.Move(moveVec * Time.deltaTime);
-
         }
         // 已到达目标，仅仅施加重力
         else
         {
             characterController.Move(new Vector3(0, -9.8f, 0) * Time.deltaTime);
         }
+
+        UpdateNoMovementTimer();
     }
 
     public void StopMovement()
     {
         moveTarget = transform.position;
         moveSpeed = 0f;
+        noMovementTimer = 0f;
+        lastHorizontalPosition = transform.position;
     }
 
     public void RotateToDirection(Vector3 position)
@@ -76,6 +84,8 @@ public class HumanFormEnemyMotor : MonoBehaviour
     {
         moveTarget = target;
         moveSpeed = speed;
+        noMovementTimer = 0f;
+        lastHorizontalPosition = transform.position;
     }
 
     public void RotateAndMoveTo(Vector3 target, float speed)
@@ -83,6 +93,8 @@ public class HumanFormEnemyMotor : MonoBehaviour
         RotateToDirection(target);
         moveTarget = target;
         moveSpeed = speed;
+        noMovementTimer = 0f;
+        lastHorizontalPosition = transform.position;
     }
 
     public bool ArrivedAtTarget()
@@ -93,7 +105,35 @@ public class HumanFormEnemyMotor : MonoBehaviour
         horizontalDiff.y = 0f; // 只考虑 X/Z
         if (horizontalDiff.magnitude <= 0.1f)
             return true;
+
+        if (moveSpeed > 0f && noMovementTimer >= stuckDurationThreshold){
+            Debug.LogWarning(gameObject.name + " seems to be stuck. Forcing arrival at target.");
+            return true;
+        }
+            
+
         return false;
+    }
+
+    private void UpdateNoMovementTimer()
+    {
+        Vector3 currentHorizontalPosition = transform.position;
+        currentHorizontalPosition.y = 0f;
+
+        Vector3 lastPos = lastHorizontalPosition;
+        lastPos.y = 0f;
+
+        float horizontalDelta = Vector3.Distance(currentHorizontalPosition, lastPos);
+        if (horizontalDelta <= movementEpsilon)
+        {
+            noMovementTimer += Time.deltaTime;
+        }
+        else
+        {
+            noMovementTimer = 0f;
+        }
+
+        lastHorizontalPosition = transform.position;
     }
 
 }

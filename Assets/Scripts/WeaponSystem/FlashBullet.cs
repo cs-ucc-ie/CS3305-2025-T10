@@ -5,7 +5,7 @@ public class FlashBullet : BulletFramework
     [Header("Flash Settings")]
     [SerializeField] private float flashRadius = 4f;
     [SerializeField] private float knockSpeed = 0f;
-    [SerializeField] private float flashDuration = 0.6f;
+    [SerializeField] private float flashDuration = 3f;
 
     [Header("Physics")]
     [SerializeField] private LayerMask affectLayers = ~0;
@@ -32,10 +32,11 @@ public class FlashBullet : BulletFramework
             dir.Normalize();
             if (ai != null)
             {
-            ai.KnockBack(dir, knockSpeed, flashDuration);
+                Debug.Log("Applying flash effect to " + ai.name + " with knockback dir: " + flashDuration);
+                ai.KnockBack(dir, 0, flashDuration);
             }
         }
-
-
+    
+        Destroy(gameObject);
     }
 }

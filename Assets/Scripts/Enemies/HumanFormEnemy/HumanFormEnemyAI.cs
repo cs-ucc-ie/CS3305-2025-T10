@@ -136,14 +136,15 @@ public class HumanFormEnemyAI : EnemyAI
         audioSource.PlayOneShot(damageSoundClip, audioVolume);
 
         if (aiState == HumanFormEnemyAIState.Dead) return;
-        // 如果不能移动，就直接眩晕一段时间
-        if (engageMoveMaxDistance == 0)
+        // 如果不能移动，或者 speed 是 0，就直接眩晕一段时间
+        if (engageMoveMaxDistance == 0 || speed == 0)
         {
             hurtStunTimer = hurtStunDuration;
             animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
             aiState = HumanFormEnemyAIState.Hurt;
             return;
         }
+        // 否则进入击退状态
         aiState = HumanFormEnemyAIState.KnockBack;
         animator.BeginAnimation(HumanFormEnemyAnimationState.Hurt);
 
