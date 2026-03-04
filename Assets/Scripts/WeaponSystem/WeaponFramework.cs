@@ -106,6 +106,7 @@ public abstract class WeaponFramework : MonoBehaviour
     private bool CheckBulletSuitability(BulletItem bullet)
     {
         if (SuitableBullets.Contains(bullet.bulletCategory)) return true;
+        UIController.Instance.AddNewInformation($"The {bullet.itemName} cannot be loaded into the {weaponName}.");
         return false;
     }
 
