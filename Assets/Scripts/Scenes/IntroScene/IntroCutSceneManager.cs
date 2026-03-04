@@ -60,6 +60,13 @@ public class CutSceneManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            EndCutScene();
+        }
+    }
     public void StartFirstFightingCam()
     {
         blackScreen.SetActive(false);
