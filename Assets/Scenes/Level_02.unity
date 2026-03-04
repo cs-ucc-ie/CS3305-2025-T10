@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HumanFormEnemyType03 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6737718315713146155, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -235,6 +239,10 @@ PrefabInstance:
     - target: {fileID: 6737718315713146155, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
       propertyPath: m_Name
       value: HumanFormEnemyType03 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6737718315713146155, guid: 0e9a53da4ad1149a988f549952024b46, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1080,7 +1088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834345517467556143, guid: 85f2bd76c5d286e4fbd370b7193f3033, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.9999998
+      value: -0.26
       objectReference: {fileID: 0}
     - target: {fileID: 8834345517467556143, guid: 85f2bd76c5d286e4fbd370b7193f3033, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3584,6 +3592,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: de880d99655526944b01a570a0118e3f, type: 2}
+    - target: {fileID: 6131085132878257151, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6144734798639859418, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
       propertyPath: m_Enabled
       value: 1
