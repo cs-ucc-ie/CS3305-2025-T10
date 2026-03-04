@@ -45,6 +45,7 @@ public abstract class BulletFramework : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("Player")) return; // Prevent bullet from hitting the player
         OnHit(collision);
         Kill();
     }
