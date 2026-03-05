@@ -137,6 +137,12 @@ public class UIController : MonoBehaviour
         informationList.Add(info);
     }
 
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f; // Ensure time scale is reset when returning to main menu
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
     private void RefreshHunger(int currentHunger)
     {
         playerHungerText.text = currentHunger.ToString();

@@ -366,8 +366,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 250, y: 120}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 500, y: 120}
+  m_SizeDelta: {x: 600, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7855560757391553398
 CanvasRenderer:
@@ -688,16 +688,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
   allSlots:
-  - item: {fileID: 11400000, guid: 0b4e57bb92eea40fd9781e44625515eb, type: 2}
-    count: 2
   - item: {fileID: 11400000, guid: e674cb47ccd8c4b8cbf86838cfa8f771, type: 2}
+    count: 2
+  - item: {fileID: 11400000, guid: 042e1092b32c842f688fbbb047beebbd, type: 2}
     count: 1
   - item: {fileID: 11400000, guid: 42013618ad05142f6800019bb512a935, type: 2}
-    count: 3
+    count: 10
   - item: {fileID: 11400000, guid: 0c5e1f0814822498890b36bb41bc9d06, type: 2}
     count: 3
-  - item: {fileID: 11400000, guid: af632ef65b35d4702a0bf2d1ce084151, type: 2}
-    count: 100
+  - item: {fileID: 11400000, guid: e8fc8c1c10301448cbb26f1b967a0395, type: 2}
+    count: 10
   quickSlots: []
   selectedQuickSlotIndex: 0
 --- !u!1 &2900758572981775643

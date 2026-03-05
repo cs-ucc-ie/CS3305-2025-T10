@@ -7,7 +7,6 @@ public class APSlug : BulletFramework
     [SerializeField] private int knockBackDur = 1;
     protected override void OnHit(Collision collision)
     {
-       
         var ai = collision.gameObject.GetComponent<EnemyAI>();
         if (ai == null) return;
 

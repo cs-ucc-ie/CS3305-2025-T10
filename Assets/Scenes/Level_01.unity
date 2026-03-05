@@ -3758,6 +3758,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1426829775823151671, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426829775823151671, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.size
       value: 8
@@ -3793,6 +3801,10 @@ PrefabInstance:
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.data[7].count
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2023422957563240410, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2844289637028677826, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4404,12 +4416,24 @@ PrefabInstance:
       value: tresure_box (1)
       objectReference: {fileID: 0}
     - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: containedItems.Array.data[0].item
       value: 
       objectReference: {fileID: 11400000, guid: af632ef65b35d4702a0bf2d1ce084151, type: 2}
     - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: f9f77e862df3a462a96ded43eee20b4b, type: 2}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: containedItems.Array.data[0].amount
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522698616566135939, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
+      propertyPath: containedItems.Array.data[2].amount
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4530431594201519164, guid: a7ef86166f63f499abb2b3593027690c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8062,13 +8086,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511063121}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.6096679, z: -0, w: 0.792657}
-  m_LocalPosition: {x: 33.73, y: 5.55, z: 36.3}
+  m_LocalRotation: {x: -0, y: -0.25501585, z: -0, w: 0.9669369}
+  m_LocalPosition: {x: 35.81, y: 5.55, z: 33.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -29.549, z: 0}
 --- !u!1001 &1520654104
 PrefabInstance:
   m_ObjectHideFlags: 0
