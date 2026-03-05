@@ -45,7 +45,7 @@ public class ExplosiveDecorationTrap : InteractableObject {
 
     public void Explode(){
         if (isPrimed) return;
-        isPrimed = true;
+        isPrimed = true;    
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in colliders) {

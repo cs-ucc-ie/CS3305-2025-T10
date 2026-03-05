@@ -14,6 +14,7 @@ public class OneDirectionSpriteDecoration : MonoBehaviour
 
     void Update()
     {
+        if (spriteRenderer == null) return;
         if (sprite.Length > 0)
         {
             int frameIndex = (int)(Time.time * animationFrameRate) % sprite.Length;

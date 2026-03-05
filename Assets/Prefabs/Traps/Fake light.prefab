@@ -110,6 +110,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 377329618472067213, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8922448913476144371}
+    - targetCorrespondingSourceObject: {fileID: 377329618472067213, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1522190306224406308}
+    - targetCorrespondingSourceObject: {fileID: 377329618472067213, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 488446096798079461}
   m_SourcePrefab: {fileID: 100100000, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
 --- !u!1 &6814913300775019610 stripped
 GameObject:
@@ -155,3 +161,36 @@ MonoBehaviour:
   proximityTimer: 0.1
   explosionEffect: {fileID: 2474557744966018952, guid: 2f7bf25ee17de47afa44a4df9f59052b, type: 3}
   explodeSfx: {fileID: 8300000, guid: 59986a2c3ef7446c0a56776eb5bbfed3, type: 3}
+--- !u!114 &1522190306224406308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814913300775019610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e00f453da804abe8325431ff764519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExplosiveDecorationDestroyable
+--- !u!65 &488446096798079461
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814913300775019610}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
