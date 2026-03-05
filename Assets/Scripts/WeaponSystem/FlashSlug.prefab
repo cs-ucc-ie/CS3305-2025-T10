@@ -159,7 +159,7 @@ MonoBehaviour:
   damage: 1
   flashRadius: 4
   knockSpeed: 0
-  flashDuration: 4
+  flashDuration: 3
   affectLayers:
     serializedVersion: 2
     m_Bits: 4294967295
