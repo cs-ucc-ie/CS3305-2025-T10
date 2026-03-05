@@ -8,7 +8,7 @@ public abstract class WeaponFramework : MonoBehaviour
 {
     public string weaponName;
 
-    [SerializeField] protected Queue<BulletItem> Magazine = new Queue<BulletItem>();
+    [SerializeField] protected Stack<BulletItem> Magazine = new Stack<BulletItem>();
     public int bulletsLeft => Magazine.Count;
     [SerializeField] protected int magazineSize = 6;
     [SerializeField] protected float reloadTime = 0.8f;
@@ -212,7 +212,7 @@ public abstract class WeaponFramework : MonoBehaviour
         if (Magazine.Count == 0) return false;
         if (firePoint == null) return false;
 
-        BulletItem bullet = Magazine.Dequeue();
+        BulletItem bullet = Magazine.Pop();
         bool success = bullet.FireBullet(firePoint);
 
         if (success)
