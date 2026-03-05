@@ -19,6 +19,7 @@ public class MedicineItem : Item
             return false;
         }
         if (isUsing) return false; // Prevent multiple uses at the same time
+        UIController.Instance.AddNewInformation($"Using {itemName}...");
         isUsing = true;
         UseItemAsync();
         return true;

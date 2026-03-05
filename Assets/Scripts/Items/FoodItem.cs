@@ -20,6 +20,7 @@ public class FoodItem : Item
             return false;
         }
         if (isUsing) return false; // Prevent multiple uses at the same time
+        UIController.Instance.AddNewInformation($"Eating {itemName}...");
         isUsing = true;
         UseItemAsync();
         return true;
