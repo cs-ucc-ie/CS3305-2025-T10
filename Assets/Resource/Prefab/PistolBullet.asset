@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Pistol Bullet
   itemType: 7
   icon: {fileID: 21300000, guid: 99a5be3c6dfe7436a803db2ec79d857e, type: 3}
-  bulletPrefab: {fileID: 8783163424719778165, guid: d16275066bc7343539ea325e8ca82efc, type: 3}
+  bulletPrefab: {fileID: 8783163424719778165, guid: 2ec20064901fa4be39e85c24bba13a52, type: 3}
   bulletCategory: PistolBullet
   bulletSpeed: 30
   bulletLifeTime: 5

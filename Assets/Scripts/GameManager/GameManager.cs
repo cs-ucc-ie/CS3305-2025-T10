@@ -68,6 +68,12 @@ public class GameManager : MonoBehaviour
             if (existingPlayer == null)
             {
                 Instantiate(playerPrefab);
+                SetActiveObj(true);
+                var weaponMountPoint = GameObject.Find("WeaponMountPoint").transform;
+                Debug.Log("weaponMountPoint.childCount" + weaponMountPoint.childCount);
+                if(weaponMountPoint.childCount == 0){
+                    weaponTestDriverObj.GetComponent<WeaponTestDriver>().Start();
+                }
             }
             
             MovePlayerToSpawn(currentScene.name);

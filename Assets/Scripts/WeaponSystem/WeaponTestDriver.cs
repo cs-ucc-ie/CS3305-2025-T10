@@ -65,7 +65,7 @@ public class WeaponTestDriver : MonoBehaviour
             }
     }
 
-    void Start()
+    public void Start()
     {
         DontDestroyOnLoad(gameObject);
 
@@ -93,21 +93,35 @@ public class WeaponTestDriver : MonoBehaviour
             Debug.Log("Player audio source not found!");
             return;
         }
-        weaponInstances.Clear();
-        for (int i = 0; i < weapons.Count; i++)
-        {
-            WeaponFramework instance = InstanciateWeapon(weapons[i]);
-            if (instance != null)
-            {
-                instance.gameObject.SetActive(false);
-                weaponInstances.Add(instance);
-            }
-        }
 
-        currentWeaponIndex = Math.Clamp(currentWeaponIndex, 0, weaponInstances.Count - 1);
-        currentlyEquipped = weaponInstances[currentWeaponIndex];
-        currentlyEquipped.gameObject.SetActive(true);
-        Debug.Log("Equipped " + currentlyEquipped.weaponName);
+        foreach (Transform child in weaponMountPoint.transform)
+        {
+            if (child.GetComponent<WeaponFramework>() != null)
+            {
+                Debug.Log("Found existing weapon on player: " + child.name);
+                Destroy(child.gameObject);
+            }
+
+        }
+        weaponInstances.Clear();
+        
+        if (weaponInstances.Count == 0)
+        {
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                WeaponFramework instance = InstanciateWeapon(weapons[i]);
+                if (instance != null)
+                {
+                    instance.gameObject.SetActive(false);
+                    weaponInstances.Add(instance);
+                }
+            }
+
+            currentWeaponIndex = Math.Clamp(currentWeaponIndex, 0, weaponInstances.Count - 1);
+            currentlyEquipped = weaponInstances[currentWeaponIndex];
+            currentlyEquipped.gameObject.SetActive(true);
+            Debug.Log("Equipped " + currentlyEquipped.weaponName);
+        }
     }
 
     private WeaponFramework InstanciateWeapon(WeaponFramework weapon)
