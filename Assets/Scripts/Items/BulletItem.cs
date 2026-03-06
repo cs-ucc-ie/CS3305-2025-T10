@@ -15,7 +15,8 @@ public class BulletItem : Item
 
     public override bool Use()
     {
-        return true;
+        UIController.Instance.AddNewInformation($"Press R to reload with {itemName}.");
+        return false;
     }
 
     public bool FireBullet(Transform firePoint)

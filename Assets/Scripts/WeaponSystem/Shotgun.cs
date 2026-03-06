@@ -12,7 +12,8 @@ public class Shotgun : WeaponFramework
 
         if (Magazine.Count < magazineSize && bullet != null)
         {
-            inventoryManager.UseSelectedQuickSlotItem();
+            inventoryManager.RemoveItem(inventoryManager.GetSelectedQuickSlotItem(), 1);
+            // inventoryManager.UseSelectedQuickSlotItem();
             Magazine.Push(bullet);
         }
     }

@@ -123,6 +123,7 @@ public abstract class WeaponFramework : MonoBehaviour
             Debug.Log("Reload sound played");
         }
 
+        UIController.Instance.AddNewInformation($"Reloading {weaponName} with {bullet.itemName}...");
         isReloading = true;
         StartCoroutine(ReloadWrapper(bullet, inventoryManager));
 
