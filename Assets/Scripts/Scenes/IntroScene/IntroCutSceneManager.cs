@@ -188,7 +188,22 @@ public class CutSceneManager : MonoBehaviour
         chasingProtagonistActor.GetComponent<HumanFormEnemyMotor>().MoveTo(chasingProtagonistActor.transform.position + chasingProtagonistActor.transform.forward * 40f, 3.5f);
         blackScreen.SetActive(false);
         middleText.text = "";
+        StartCoroutine(EnforceWalk());
+    }
 
+    private IEnumerator EnforceWalk()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            foreach (GameObject actor in chasingActors)
+            {
+                var animator = actor.GetComponent<HumanFormEnemyAnimator>();
+                    animator.BeginAnimation(HumanFormEnemyAnimationState.Walk);
+            }
+
+            chasingProtagonistActor.GetComponent<HumanFormEnemyAnimator>().BeginAnimation(HumanFormEnemyAnimationState.Walk);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     public void CloseDoor()
