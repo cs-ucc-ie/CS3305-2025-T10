@@ -3557,7 +3557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d1e4964bc6b4178bab7c016fe0276c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapHazardSurface
-  damageAmount: 1
+  damageAmount: 10
   damageInterval: 1
 --- !u!1001 &1728688215
 PrefabInstance:

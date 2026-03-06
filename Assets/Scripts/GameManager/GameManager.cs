@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Player Bootstrapping")]
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] GameObject uiObj;
+    [SerializeField] GameObject weaponTestDriverObj;
+    [SerializeField] GameObject inputManagerObj;
 
     private void Awake()
     {
@@ -21,6 +25,13 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void SetActiveObj(bool isActive)
+    {
+        if (uiObj != null) uiObj.SetActive(isActive);
+        if (weaponTestDriverObj != null) weaponTestDriverObj.SetActive(isActive);
+        if (inputManagerObj != null) inputManagerObj.SetActive(isActive);
+    }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -33,31 +44,57 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // Covers the first scene when the game starts
-        EnsurePlayerExists();
-        MovePlayerToSpawn(SceneManager.GetActiveScene().name);
+        CheckSceneAndSpawnPlayerAndUI();
+    }
+
+    private void CheckSceneAndSpawnPlayerAndUI()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        // destroy player and disable some manager in sudden scenes
+        if (currentScene.name == "MainMenu" || currentScene.name == "IntroScene")
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null){
+                Destroy(playerObj);
+            }
+            SetActiveObj(false);
+        }
+        else
+        {
+            Debug.Log($"GameManager: Checking scene {currentScene.name} for player spawning and UI activation.");
+            // spawn player if not exists
+            GameObject existingPlayer = GameObject.FindWithTag("Player");
+            if (existingPlayer == null)
+            {
+                Instantiate(playerPrefab);
+            }
+            
+            MovePlayerToSpawn(currentScene.name);
+            SetActiveObj(true);
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        EnsurePlayerExists();
-        MovePlayerToSpawn(scene.name);
+        Debug.Log($"GameManager: Scene loaded: {scene.name}");
+        CheckSceneAndSpawnPlayerAndUI();
     }
 
-    private void EnsurePlayerExists()
-    {
-        GameObject existingPlayer = GameObject.FindWithTag("Player");
-        if (existingPlayer != null) return;
+    // private void EnsurePlayerExists()
+    // {
+    //     GameObject existingPlayer = GameObject.FindWithTag("Player");
+    //     if (existingPlayer != null) return;
 
-        if (playerPrefab == null)
-        {
-            Debug.LogError("GameManager: playerPrefab is not assigned.");
-            return;
-        }
+    //     if (playerPrefab == null)
+    //     {
+    //         Debug.LogError("GameManager: playerPrefab is not assigned.");
+    //         return;
+    //     }
 
-        Instantiate(playerPrefab);
-        Debug.Log("GameManager: Spawned Player (persistent).");
-    }
+    //     Instantiate(playerPrefab);
+    //     Debug.Log("GameManager: Spawned Player (persistent).");
+    // }
 
     private void MovePlayerToSpawn(string sceneName)
     {
@@ -75,9 +112,19 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        Debug.Log($"GameManager: Moving Player to spawn point in scene {sceneName}.");
         Transform spawn = spawnObj.transform;
+
+        Debug.Log($"GameManager: Found spawn point in scene {sceneName}. Position: {spawn.position}, Rotation: {spawn.rotation}.");
+
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+
         player.transform.SetPositionAndRotation(spawn.position, spawn.rotation);
 
+        if (cc != null) cc.enabled = true;
+
+        Debug.Log($"GameManager: Player moved to spawn point in scene {sceneName}.");
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb != null)
         {

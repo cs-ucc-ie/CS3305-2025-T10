@@ -93,7 +93,7 @@ public class BossBehavior : EnemyAI
     [Header("Dash Config")]
     private bool isDashing = false;
     private Vector3 dashDirection = Vector3.zero;
-    private bool isCollidingWithPlayer = false;  // Track collision with player for melee phase
+    // private bool isCollidingWithPlayer = false;  // Track collision with player for melee phase
     private bool shouldKnockbackPlayer = false;  // Flag to knockback after dash animation completes
     private bool shouldDealDamage = false;  // Flag to deal damage during dash animation
     private Collider playerCollider = null;  // Reference to player collider for knockback

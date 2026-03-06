@@ -637,7 +637,6 @@ MonoBehaviour:
   newGamePanel: {fileID: 1775157246}
   loadGamePanel: {fileID: 531729155}
   aboutPanel: {fileID: 1155705831}
-  gameManager: {fileID: 943764667}
 --- !u!1 &273742960
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,6 +777,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 273742960}
   m_CullTransparentMesh: 1
+--- !u!1 &382166280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4366747885429557993, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+  m_PrefabInstance: {fileID: 923424162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &434618415
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,6 +914,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434618415}
   m_CullTransparentMesh: 1
+--- !u!1 &486698264 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2900758572981775643, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+  m_PrefabInstance: {fileID: 923424162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &531729155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,6 +1541,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5932530111392688536, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: uiObj
+      value: 
+      objectReference: {fileID: 486698264}
+    - target: {fileID: 5932530111392688536, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: inputManagerObj
+      value: 
+      objectReference: {fileID: 1063350947}
+    - target: {fileID: 5932530111392688536, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: weaponTestDriverObj
+      value: 
+      objectReference: {fileID: 382166280}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1550,17 +1571,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3837270612004494215, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
   m_PrefabInstance: {fileID: 923424162}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 486698264}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5efbfe40d9ab483190775f307c52639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIController
---- !u!1 &943764667 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4285496090448729228, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
-  m_PrefabInstance: {fileID: 923424162}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &980191784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1641,6 +1657,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980191784}
   m_CullTransparentMesh: 1
+--- !u!1 &1063350947 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1294417025863305942, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+  m_PrefabInstance: {fileID: 923424162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1149394553
 GameObject:
   m_ObjectHideFlags: 0

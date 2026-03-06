@@ -5,7 +5,7 @@ public class FlashBullet : BulletFramework
 {
     [Header("Flash Settings")]
     [SerializeField] private float flashRadius = 4f;
-    [SerializeField] private float knockSpeed = 0f;
+    // [SerializeField] private float knockSpeed = 0f;
     [SerializeField] private float flashDuration = 3f;
 
     [Header("Physics")]

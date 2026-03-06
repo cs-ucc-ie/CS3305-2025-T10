@@ -12,19 +12,6 @@ public class MainMenu : MonoBehaviour
 
     private Camera mainCamera;
 
-    public GameObject gameManager;
-    public GameObject gameManagerFromOtherScene;
-
-     void OnEnable()
-    {
-        gameManager.SetActive(false);
-    }
-
-    void OnDisable()
-    {
-        gameManager.SetActive(true);
-    }
-
     void Start()
     {
         mainCamera = Camera.main;
@@ -33,12 +20,7 @@ public class MainMenu : MonoBehaviour
         aboutPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        gameManagerFromOtherScene = GameObject.Find("GameManager");
-        if (gameManagerFromOtherScene != null)        {
-            gameManagerFromOtherScene.SetActive(false);
-        }
     }
-
     void Update()
     {
         mainCamera.transform.Rotate(Vector3.left, rotationSpeedLeft * Time.deltaTime);
@@ -106,10 +88,6 @@ public class MainMenu : MonoBehaviour
     public void LoadGame(int slot)
     {
         SaveManager.saveSlotIndex = slot;
-        if (gameManagerFromOtherScene != null)
-        {
-            gameManagerFromOtherScene.SetActive(true);
-        }
         SaveManager.Load();
         UnityEngine.SceneManagement.SceneManager.LoadScene("Bridge");
     }

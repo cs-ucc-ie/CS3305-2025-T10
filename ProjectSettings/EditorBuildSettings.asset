@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/TestAbility.unity
     guid: 354f8befb4f1541dbad9d93885ee2277
   - enabled: 1
-    path: Assets/Scenes/Level_01.unity
-    guid: cf8566c4d42133747a07af9eee96c7c8
+    path: Assets/Scenes/MainMenu.unity
+    guid: 350d3e11cc99147d2904895877c672cd
   - enabled: 1
     path: Assets/Scenes/IntroScene.unity
     guid: 7e52b43622bcf4ff8aca7fc645d5a1fc
@@ -24,8 +24,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Bridge.unity
     guid: ffcb7c8393bd24b16a4f5a669bce6e3f
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 350d3e11cc99147d2904895877c672cd
+    path: Assets/Scenes/Level_01.unity
+    guid: cf8566c4d42133747a07af9eee96c7c8
   - enabled: 1
     path: Assets/Scenes/Level_02.unity
     guid: 5fec0e87923f57c4c88b7b67ced99d3a

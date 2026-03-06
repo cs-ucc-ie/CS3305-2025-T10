@@ -20,7 +20,7 @@ public class BossHealthBar : MonoBehaviour
     [Header("Display Config")]
     [SerializeField] private bool alwaysFaceCamera = true;
     [SerializeField] private Vector3 offset = new Vector3(0, 3, 0);
-    [SerializeField] private float maxBarWidth = 2f;  // 血量条满血时的宽度
+    // [SerializeField] private float maxBarWidth = 2f;  // 血量条满血时的宽度
     [SerializeField] private bool changeLength = true;   // 是否改变长度
     [SerializeField] private bool changeColor = true;    // 是否改变颜色
 
