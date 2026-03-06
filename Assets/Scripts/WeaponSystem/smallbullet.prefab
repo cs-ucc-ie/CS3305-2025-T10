@@ -155,3 +155,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::APSlug
   lifeTime: 5
   damage: 10
+  knockBackForce: 0
+  knockBackDur: 0

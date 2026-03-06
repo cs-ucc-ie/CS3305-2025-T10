@@ -44,65 +44,65 @@ public class SplitBullet : BulletFramework
         rb.useGravity = false;
     }
     
-protected override void OnHit(Collision collision)
+    protected override void OnHit(Collision collision)
     {
        
     }
 
 
 
-private void DoSplit()
-{
-    if (hasSplit) return;
-    hasSplit = true;
-
-    if (childBulletPrefab == null || childCount <= 0)
+    private void DoSplit()
     {
-        if (destroyParentOnSplit) Kill();
-        return;
-    }
+        if (hasSplit) return;
+        hasSplit = true;
 
-    Vector3 origin = transform.position;
-
-    Vector3 baseDir = transform.forward;
-    if (childInheritParentDirection && rb != null && rb.linearVelocity.sqrMagnitude > 0.001f)
-        baseDir = rb.linearVelocity.normalized;
-
-    Quaternion baseRot = Quaternion.LookRotation(baseDir, Vector3.up);
-
-    float childDamage = damage * childDamageMultiplier;
-
-    var spawnedColliders = new System.Collections.Generic.List<Collider>();
-
-    for (int i = 0; i < childCount; i++)
-    {
-        float yaw = Random.Range(-splitAngle, splitAngle);
-        float pitch = Random.Range(-splitAngle, splitAngle);
-        Quaternion spreadRot = baseRot * Quaternion.Euler(pitch, yaw, 0f);
-
-        Vector3 spawnPos = origin + Random.insideUnitSphere * 0.03f;
-        spawnPos.y = origin.y;
-
-        BulletFramework child = Instantiate(childBulletPrefab, spawnPos, spreadRot);
-
-        var childCol = child.GetComponent<Collider>();
-        if (childCol != null)
+        if (childBulletPrefab == null || childCount <= 0)
         {
-            for (int j = 0; j < spawnedColliders.Count; j++)
-            {
-                if (spawnedColliders[j] != null)
-                    Physics.IgnoreCollision(childCol, spawnedColliders[j], true);
-            }
-            spawnedColliders.Add(childCol);
+            if (destroyParentOnSplit) Kill();
+            return;
         }
 
-        child.Init(childLifeTime, childDamage);
-        child.Launch(child.transform.forward * childSpeed);
+        Vector3 origin = transform.position;
 
-        var childRb = child.GetComponent<Rigidbody>();
-        if (childRb != null) childRb.useGravity = false;
+        Vector3 baseDir = transform.forward;
+        if (childInheritParentDirection && rb != null && rb.linearVelocity.sqrMagnitude > 0.001f)
+            baseDir = rb.linearVelocity.normalized;
+
+        Quaternion baseRot = Quaternion.LookRotation(baseDir, Vector3.up);
+
+        float childDamage = damage * childDamageMultiplier;
+
+        var spawnedColliders = new System.Collections.Generic.List<Collider>();
+
+        for (int i = 0; i < childCount; i++)
+        {
+            float yaw = Random.Range(-splitAngle, splitAngle);
+            float pitch = Random.Range(-splitAngle, splitAngle);
+            Quaternion spreadRot = baseRot * Quaternion.Euler(pitch, yaw, 0f);
+
+            Vector3 spawnPos = origin + Random.insideUnitSphere * 0.03f;
+            spawnPos.y = origin.y;
+
+            BulletFramework child = Instantiate(childBulletPrefab, spawnPos, spreadRot);
+
+            var childCol = child.GetComponent<Collider>();
+            if (childCol != null)
+            {
+                for (int j = 0; j < spawnedColliders.Count; j++)
+                {
+                    if (spawnedColliders[j] != null)
+                        Physics.IgnoreCollision(childCol, spawnedColliders[j], true);
+                }
+                spawnedColliders.Add(childCol);
+            }
+
+            child.Init(childLifeTime, childDamage);
+            child.Launch(child.transform.forward * childSpeed);
+
+            var childRb = child.GetComponent<Rigidbody>();
+            if (childRb != null) childRb.useGravity = false;
+        }
+
+        if (destroyParentOnSplit) Kill();
     }
-
-    if (destroyParentOnSplit) Kill();
-}
 }

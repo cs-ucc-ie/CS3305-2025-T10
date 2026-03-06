@@ -13,7 +13,7 @@ public class pistol : WeaponFramework
 
         while (Magazine.Count < magazineSize && shellItem != null)
         {
-            Magazine.Enqueue(shellItem);
+            Magazine.Push(shellItem);
         }
     }
 }

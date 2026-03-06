@@ -10,7 +10,7 @@ public class HESlug : BulletFramework
 
     [Header("Optional Enemy Knockback")]
     [SerializeField] private float knockBackForce = 3f;
-    [SerializeField] private int knockBackDir = 1;
+    [SerializeField] private int knockBackDur = 1;
 
 
     protected override void OnHit(Collision collision)
@@ -34,7 +34,7 @@ public class HESlug : BulletFramework
             EnemyAI ai = cols[i].GetComponentInParent<EnemyAI>(); // IMPORTANT: often on parent
             if (ai != null)
             {
-                ai.KnockBack(center, knockBackForce, knockBackDir);
+                ai.KnockBack(center, knockBackForce, knockBackDur);
                 ai.TakeDamage((int)damage);
             }
         }
