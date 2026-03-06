@@ -35,7 +35,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_UseRadianceAmbientProbe: 0
@@ -3380,6 +3380,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 1a1fd02ce88bcab4cbb53f980b8db37d, type: 2}
+    - target: {fileID: 3212527210467627156, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.38
+      objectReference: {fileID: 0}
     - target: {fileID: 3605411594983972593, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
       propertyPath: m_LocalScale.x
       value: 7.0752773
@@ -3520,6 +3524,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 597bc7fecb965ed47889ff2e9ac41a74, type: 2}
+    - target: {fileID: 8568135440018081649, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.72
+      objectReference: {fileID: 0}
     - target: {fileID: 8697679408129323296, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -3531,6 +3539,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5879494388451995489, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
+    - {fileID: 3917638053968884922, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
+    - {fileID: 1310825828798411545, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 690649359304224273, guid: 2087fcee9ea868e4584cb2880a95c4f6, type: 3}
       insertIndex: -1

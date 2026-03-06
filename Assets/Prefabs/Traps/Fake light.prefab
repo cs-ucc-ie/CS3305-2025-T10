@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 45793219, guid: 4cfc71eb2b1d2441dbf099a30396ce17, type: 3}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21.46
+      value: -27.52
       objectReference: {fileID: 0}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalPosition.y
@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 34.74
+      value: 62.26
       objectReference: {fileID: 0}
     - target: {fileID: 1917260580149242513, guid: 3f55555c5c37e4e32bf184fae7e75239, type: 3}
       propertyPath: m_LocalRotation.w
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveDecorationTrap
   interactPrompt: Inspect
-  explosionRadius: 10
+  explosionRadius: 3
   explosionDamage: 30
   proximityTimer: 0.1
   explosionEffect: {fileID: 2474557744966018952, guid: 2f7bf25ee17de47afa44a4df9f59052b, type: 3}

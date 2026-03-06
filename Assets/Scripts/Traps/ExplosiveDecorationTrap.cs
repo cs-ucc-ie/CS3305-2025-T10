@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class ExplosiveDecorationTrap : InteractableObject {
 
-    public float explosionRadius = 5f;
+    public float explosionRadius = 2f;
     public int explosionDamage = 30;
     public float proximityTimer = 2.0f;
     public GameObject explosionEffect;
@@ -47,14 +48,31 @@ public class ExplosiveDecorationTrap : InteractableObject {
         if (isPrimed) return;
         isPrimed = true;    
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-        foreach (Collider hit in colliders) {
-            if (hit.CompareTag("Player")) {
-                PlayerStatsManager.Instance.TakeDamage(explosionDamage);
-                Debug.Log("Player Exploded");
+        Vector3 center = transform.position;
+        Debug.Log("Got center of explosion");
+
+        Collider[] cols = Physics.OverlapSphere(center, explosionRadius);
+        Debug.Log("Got: " + cols.Length);
+        Instantiate(explosionEffect, transform.position, Quaternion.identity);
+
+        for (int i = 0; i < cols.Length; i++)
+        {
+            CharacterController characterController = cols[i].GetComponent<CharacterController>();
+            if (characterController == null) continue;
+            GameObject character = characterController.gameObject;
+            if (character != null)
+            {
+                if (character.CompareTag("Player"))
+                {
+                    PlayerStatsManager.Instance.TakeDamage(explosionDamage);
+                } else if (character.CompareTag("Enemy")){
+                    EnemyAI enemyAI = character.GetComponent<EnemyAI>();
+                    if (enemyAI != null){
+                        enemyAI.TakeDamage(explosionDamage);
+                    }
+                }
             }
         }
-        Instantiate(explosionEffect, transform.position, Quaternion.identity);
         GameObject srObject = GetComponentInChildren<SpriteRenderer>().gameObject;
         srObject.SetActive(false);
         StartCoroutine(PlayExplodeSfxAndDestroy());

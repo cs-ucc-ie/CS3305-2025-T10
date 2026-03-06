@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveDecorationTrap
   interactPrompt: Inspect
-  explosionRadius: 10
+  explosionRadius: 2
   explosionDamage: 30
   proximityTimer: 3
   explosionEffect: {fileID: 2474557744966018952, guid: 2f7bf25ee17de47afa44a4df9f59052b, type: 3}
