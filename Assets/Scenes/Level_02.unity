@@ -2022,9 +2022,29 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: allSlots.Array.data[2].item
       value: 
       objectReference: {fileID: 11400000, guid: 0b58340679569414b8c03bd15518656b, type: 2}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[5].item
+      value: 
+      objectReference: {fileID: 11400000, guid: 42013618ad05142f6800019bb512a935, type: 2}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[6].item
+      value: 
+      objectReference: {fileID: 11400000, guid: e8fc8c1c10301448cbb26f1b967a0395, type: 2}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[5].count
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811165560900995423, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
+      propertyPath: allSlots.Array.data[6].count
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1856815473214980027, guid: 159da13428f1641c0bed1726814a83a7, type: 3}
       propertyPath: audioSource
       value: 
