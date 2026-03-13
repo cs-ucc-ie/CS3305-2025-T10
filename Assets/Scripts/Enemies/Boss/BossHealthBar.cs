@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// Boss 血量条 UI 脚本
+/// 显示在 Boss 头顶，随血量变化更新
+/// 使用三部分 Sprite：框、背景、血量条
+/// </summary>
 public class BossHealthBar : MonoBehaviour
 {
     [Header("Sprite References")]

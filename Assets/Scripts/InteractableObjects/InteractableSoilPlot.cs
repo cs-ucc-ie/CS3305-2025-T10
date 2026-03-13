@@ -9,20 +9,21 @@ public class SoilPlot : InteractableObject
         Mature
     }
 
-    [Header("Plot Colors")]
+    [Header("Plot Colors (地块颜色)")]
     public Color emptyColor = Color.gray;
     public Color growingColor = new Color(0.55f, 0.35f, 0.15f); // 土色
     public Color matureColor = Color.green;
 
-    [Header("Optional Visuals")]
+    [Header("Optional Visuals (可选显示物体)")]
     public GameObject emptyVisual;
     public GameObject growingVisual;
     public GameObject matureVisual;
 
-    [Header("Growth Sprite Display")]
+    [Header("Growth Sprite Display (生长阶段显示)")]
+    [Tooltip("用于显示作物生长阶段的2D Sprite渲染器")]
     public SpriteRenderer growthSpriteRenderer;
 
-    [Header("Interact Prompts")]
+    [Header("Interact Prompts (交互提示)")]
     public string emptyPrompt = "Plant a seed";
     public string growingPrompt = "Growing...";
     public string maturePrompt = "Harvest";
