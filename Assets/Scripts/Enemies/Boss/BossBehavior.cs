@@ -3,29 +3,21 @@ using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
 
-/// <summary>
-/// Boss 攻击阶段枚举
-/// 阶段1（100%-67%血量）：普通对枪（远程攻击）
-/// 阶段2（67%-34%血量）：攻击四个弱点大量扣血
-/// 阶段3（34%-0%血量）：近身攻击
-/// </summary>
+
 enum BossPhase
 {
-    Phase1_RangedAttack,    // 远程射击
-    Phase2_WeakPoints,      // 弱点暴露
-    Phase3_MeleeAttack,     // 近身攻击
-    Dead                    // 死亡
+    Phase1_RangedAttack,
+    Phase2_WeakPoints,
+    Phase3_MeleeAttack,
+    Dead
 }
-
-/// <summary>
-/// Boss 行为状态枚举
-/// </summary>
+    
 enum BossBehaviorState
 {
-    Chase,                  // 追逐玩家
-    RangedAttack,           // 远程攻击
-    MeleeAttack,            // 近身攻击
-    Dead                    // 死亡
+    Chase,
+    RangedAttack,
+    MeleeAttack,
+    Dead
 }
 
 public class BossBehavior : EnemyAI
@@ -1017,9 +1009,9 @@ public class BossBehavior : EnemyAI
         int phase2HealthRange = Mathf.CeilToInt(maxHealth * (phase2Threshold - phase3Threshold));
         int damagePerWeakPoint = Mathf.CeilToInt((float)phase2HealthRange / spawnPoints.Length);
         int totalDamageFromAllWeakPoints = damagePerWeakPoint * spawnPoints.Length;
-        Debug.Log($"[Boss][Phase2Spawn] 📊 Phase 2血量范围: {phase2HealthRange} HP ({phase2Threshold * 100:F0}% - {phase3Threshold * 100:F0}%)");
-        Debug.Log($"[Boss][Phase2Spawn] 💥 每个弱点伤害: {damagePerWeakPoint} HP | 弱点数量: {spawnPoints.Length} | 总伤害: {totalDamageFromAllWeakPoints} HP");
-        Debug.Log($"[Boss][Phase2Spawn] 🎯 预期结果: {currentHealth} HP → {currentHealth - totalDamageFromAllWeakPoints} HP (全部弱点摧毁后)");
+        Debug.Log($"[Boss][Phase2Spawn] : {phase2HealthRange} HP ({phase2Threshold * 100:F0}% - {phase3Threshold * 100:F0}%)");
+        Debug.Log($"[Boss][Phase2Spawn]  {damagePerWeakPoint} HP |  {spawnPoints.Length} |  {totalDamageFromAllWeakPoints} HP");
+        Debug.Log($"[Boss][Phase2Spawn]  {currentHealth} HP → {currentHealth - totalDamageFromAllWeakPoints} HP if all weak points are destroyed!");
 
         List<BossWeakPoint> createdWeakPoints = new List<BossWeakPoint>();
 
@@ -1056,7 +1048,7 @@ public class BossBehavior : EnemyAI
             weakPoint.SetDamageOnDestroy(damagePerWeakPoint);
 
             createdWeakPoints.Add(weakPoint);
-            Debug.Log($"[Boss][Phase2Spawn] ✅ 生成弱点 #{createdWeakPoints.Count} at {spawnPoint.name} (摧毁时伤害: {damagePerWeakPoint} HP)");
+            Debug.Log($"[Boss][Phase2Spawn]  #{createdWeakPoints.Count} at {spawnPoint.name} ({damagePerWeakPoint} HP)");
         }
 
         spawnedWeakPoints = createdWeakPoints.ToArray();
