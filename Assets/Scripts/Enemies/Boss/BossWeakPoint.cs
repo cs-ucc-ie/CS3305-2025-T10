@@ -1,11 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Boss 弱点脚本
-/// 在阶段2（67%-34%血量）时激活
-/// 攻击弱点会造成额外伤害
-/// 左臂、右臂、左腿、右腿共四个弱点
-/// </summary>
+
 public class BossWeakPoint : MonoBehaviour
 {
     [Header("Config")]
@@ -66,7 +61,7 @@ public class BossWeakPoint : MonoBehaviour
         // 更新视觉效果
         UpdateVisuals();
         
-        Debug.Log($"[BossWeakPoint] {gameObject.name} 弱点状态: {(active ? "激活 ✅" : "禁用 ❌")} | 摧毁伤害: {damageOnDestroy} HP | 当前生命: {currentHealth}/{maxHealth}");
+        Debug.Log($"[BossWeakPoint] {gameObject.name} is now {(isActive ? "ACTIVE" : "INACTIVE")}");
     }
 
     private void UpdateVisuals()
